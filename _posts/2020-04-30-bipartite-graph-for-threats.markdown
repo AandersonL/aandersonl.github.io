@@ -25,7 +25,7 @@ In this code, i extracted all samples strings of a given path, and applied a reg
 
 
 ```python
-# Yep, i'm using strings here
+# Yep, i'm using strings here.
 strs = subprocess.check_output(["strings", abs_dir]).decode()
 hosts = extract_hostnames(strs, compiled_rule, valid_domains)
 
