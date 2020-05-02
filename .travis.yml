@@ -27,5 +27,5 @@ deploy:
   local_dir: _site/
   target_branch: master
   on:
-    branch: development
+    branch: developement
 
