@@ -3,10 +3,10 @@
   <generator uri="http://jekyllrb.com" version="4.0.0">Jekyll</generator>
   
   
-  <link href="/feed.xml" rel="self" type="application/atom+xml" />
-  <link href="/" rel="alternate" type="text/html" />
-  <updated>2020-05-01T20:48:32-03:00</updated>
-  <id>//</id>
+  <link href="https://aandersonl.github.io/feed.xml" rel="self" type="application/atom+xml" />
+  <link href="https://aandersonl.github.io/" rel="alternate" type="text/html" />
+  <updated>2020-05-02T00:35:37+00:00</updated>
+  <id>https://aandersonl.github.io//</id>
 
   
     <title type="html">[+] Anderson’s notes [+]</title>
@@ -25,12 +25,12 @@
       <title type="html">Using bipartite Graphs to detect Malware campaigns</title>
       
       
-      <link href="/2020/04/30/bipartite-graph-for-threats/" rel="alternate" type="text/html" title="Using bipartite Graphs to detect Malware campaigns" />
+      <link href="https://aandersonl.github.io/2020/04/30/bipartite-graph-for-threats/" rel="alternate" type="text/html" title="Using bipartite Graphs to detect Malware campaigns" />
       
-      <published>2020-04-30T20:31:36-03:00</published>
-      <updated>2020-04-30T20:31:36-03:00</updated>
-      <id>/2020/04/30/bipartite-graph-for-threats</id>
-      <content type="html" xml:base="/2020/04/30/bipartite-graph-for-threats/">&lt;p&gt;One of the greatest problems in mapping threats today, is detect from where it’s coming all kinds of threats, if is from the same group, same person or even the same governament.&lt;/p&gt;
+      <published>2020-04-30T23:31:36+00:00</published>
+      <updated>2020-04-30T23:31:36+00:00</updated>
+      <id>https://aandersonl.github.io/2020/04/30/bipartite-graph-for-threats</id>
+      <content type="html" xml:base="https://aandersonl.github.io/2020/04/30/bipartite-graph-for-threats/">&lt;p&gt;One of the greatest problems in mapping threats today, is detect from where it’s coming all kinds of threats, if is from the same group, same person or even the same governament.&lt;/p&gt;
 
 &lt;p&gt;In order to group everything up and make things more clear, we can use a lot of data structures for that, a good one, and very famous is a Graph, a Biptartite Graph more exactly.&lt;/p&gt;
 
@@ -40,13 +40,13 @@
 
 &lt;h2 id=&quot;bipartite-graph&quot;&gt;Bipartite Graph&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/bipartite_graph/bipartite.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/bipartite_graph/bipartite.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Bipartite graph is a graph where the vertices(nodes) can be splited in two groups and be connected to each other, that way, each vertice can have multiple connections to an specific set and can be used to determine how many nodes in a give group has an relation in another group.&lt;/p&gt;
 
 &lt;p&gt;In this code, i extracted all samples strings of a given path, and applied a regex rule to extract possible domain names + loaded a valid &lt;a href=&quot;domain_suffixes.txt&quot;&gt;domain suffixes&lt;/a&gt; to create an valid dictionary to extract only correct domains from the samples.&lt;/p&gt;
 
-&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Yep, i'm using strings here.
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Yep, i'm using strings here
 &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;subprocess&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;check_output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;strings&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;abs_dir&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;hosts&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;extract_hostnames&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;compiled_rule&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;valid_domains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
@@ -62,7 +62,7 @@
 
 &lt;h2 id=&quot;domain-graph-of-apt1&quot;&gt;Domain graph of &lt;a href=&quot;https://www.fireeye.com/content/dam/fireeye-www/services/pdfs/mandiant-apt1-report.pdf&quot;&gt;APT1&lt;/a&gt;&lt;/h2&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/bipartite_graph/malware_domains_apt1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/bipartite_graph/malware_domains_apt1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;running&quot;&gt;Running&lt;/h2&gt;
 
@@ -107,12 +107,12 @@ $ python mal_vis.py --target_path &amp;lt;path_to_samples&amp;gt;
       <title type="html">Fireshell CTF 2020 Write-ups</title>
       
       
-      <link href="/2020/04/29/Fireshell-CTF-2020/" rel="alternate" type="text/html" title="Fireshell CTF 2020 Write-ups" />
+      <link href="https://aandersonl.github.io/2020/04/29/Fireshell-CTF-2020/" rel="alternate" type="text/html" title="Fireshell CTF 2020 Write-ups" />
       
-      <published>2020-04-29T02:13:30-03:00</published>
-      <updated>2020-04-29T02:13:30-03:00</updated>
-      <id>/2020/04/29/Fireshell-CTF-2020</id>
-      <content type="html" xml:base="/2020/04/29/Fireshell-CTF-2020/">&lt;p&gt;Write-ups from &lt;a href=&quot;https://fireshellsecurity.team/&quot;&gt;Fireshell CTF&lt;/a&gt;&lt;/p&gt;
+      <published>2020-04-29T05:13:30+00:00</published>
+      <updated>2020-04-29T05:13:30+00:00</updated>
+      <id>https://aandersonl.github.io/2020/04/29/Fireshell-CTF-2020</id>
+      <content type="html" xml:base="https://aandersonl.github.io/2020/04/29/Fireshell-CTF-2020/">&lt;p&gt;Write-ups from &lt;a href=&quot;https://fireshellsecurity.team/&quot;&gt;Fireshell CTF&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;rev-500-points&quot;&gt;Rev (500 Points)&lt;/h1&gt;
 &lt;p&gt;Rev is a simple reverse enginner task, we need to undestand the cryptographic function and reverse it.&lt;/p&gt;
@@ -338,12 +338,12 @@ Producer:       cairo 1.16.0 (https://cairographics.org)
       <title type="html">Beating Console web challenge from Hackthebox</title>
       
       
-      <link href="/2020/04/28/Hacking-PHP-Console-Hackthebox/" rel="alternate" type="text/html" title="Beating Console web challenge from Hackthebox" />
+      <link href="https://aandersonl.github.io/2020/04/29/Hacking-PHP-Console-Hackthebox/" rel="alternate" type="text/html" title="Beating Console web challenge from Hackthebox" />
       
-      <published>2020-04-28T21:31:36-03:00</published>
-      <updated>2020-04-28T21:31:36-03:00</updated>
-      <id>/2020/04/28/Hacking-PHP-Console-Hackthebox</id>
-      <content type="html" xml:base="/2020/04/28/Hacking-PHP-Console-Hackthebox/">&lt;p&gt;&lt;strong&gt;&lt;em&gt;Console&lt;/em&gt;&lt;/strong&gt; is a web challenge from &lt;a href=&quot;https://www.hackthebox.eu/&quot;&gt;hackthebox&lt;/a&gt;, it’s explore development tools from PHP that is exposed.&lt;/p&gt;
+      <published>2020-04-29T00:31:36+00:00</published>
+      <updated>2020-04-29T00:31:36+00:00</updated>
+      <id>https://aandersonl.github.io/2020/04/29/Hacking-PHP-Console-Hackthebox</id>
+      <content type="html" xml:base="https://aandersonl.github.io/2020/04/29/Hacking-PHP-Console-Hackthebox/">&lt;p&gt;&lt;strong&gt;&lt;em&gt;Console&lt;/em&gt;&lt;/strong&gt; is a web challenge from &lt;a href=&quot;https://www.hackthebox.eu/&quot;&gt;hackthebox&lt;/a&gt;, it’s explore development tools from PHP that is exposed.&lt;/p&gt;
 
 &lt;p&gt;When you open the web page, you will notice a phpinfo() page with:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Your IP is 10.255.0.2
@@ -365,7 +365,7 @@ Make sure to load php-console in order to be prompted for a password
 
 &lt;p&gt;When you access the website now, you will see a key icon, that means that this PHP-Console is “protected”&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/images/console_hackthebox/chrome_password.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/console_hackthebox/chrome_password.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;If you type anything inside this box, the page will be reloaded and nothing will happen. Now let’s analyze all the communication workflow with/without this extension.&lt;/p&gt;
 

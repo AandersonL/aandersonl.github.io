@@ -14,17 +14,17 @@
   
 
   <link rel="stylesheet" href="/assets/main.css">
-  <link rel="canonical" href="/2020/04/30/bipartite-graph-for-threats/">
+  <link rel="canonical" href="https://aandersonl.github.io/2020/04/30/bipartite-graph-for-threats/">
   
   
-  <link rel="alternate" type="application/rss+xml" title="[+] Anderson&#39;s notes [+]" href="/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="[+] Anderson&#39;s notes [+]" href="https://aandersonl.github.io/feed.xml">
 
   
 
   
   <meta property="og:title" content="Using bipartite Graphs to detect Malware campaigns">
   <meta property="og:site_name" content="[+] Anderson&#39;s notes [+]">
-  <meta property="og:url" content="/2020/04/30/bipartite-graph-for-threats/">
+  <meta property="og:url" content="https://aandersonl.github.io/2020/04/30/bipartite-graph-for-threats/">
   <meta property="og:description" content="One of the greatest problems in mapping threats today, is detect from where it’s coming all kinds of threats, if is from the same group, same person or even the same governament.">
   
   
@@ -78,7 +78,7 @@
     
       <h1 class="post-title" itemprop="name headline">Using bipartite Graphs to detect Malware campaigns</h1>
     
-    <p class="post-meta"><time datetime="2020-04-30T20:31:36-03:00" itemprop="datePublished">Apr 30, 2020</time> •
+    <p class="post-meta"><time datetime="2020-04-30T23:31:36+00:00" itemprop="datePublished">Apr 30, 2020</time> •
   
     
     
@@ -160,13 +160,13 @@
 
 <h2 id="bipartite-graph">Bipartite Graph</h2>
 
-<p><img src="/assets/images/bipartite_graph/bipartite.jpg" alt="" /></p>
+<p><img src="https://aandersonl.github.io/assets/images/bipartite_graph/bipartite.jpg" alt="" /></p>
 
 <p>Bipartite graph is a graph where the vertices(nodes) can be splited in two groups and be connected to each other, that way, each vertice can have multiple connections to an specific set and can be used to determine how many nodes in a give group has an relation in another group.</p>
 
 <p>In this code, i extracted all samples strings of a given path, and applied a regex rule to extract possible domain names + loaded a valid <a href="domain_suffixes.txt">domain suffixes</a> to create an valid dictionary to extract only correct domains from the samples.</p>
 
-<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Yep, i'm using strings here.
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Yep, i'm using strings here
 </span><span class="n">strs</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">check_output</span><span class="p">([</span><span class="s">"strings"</span><span class="p">,</span> <span class="n">abs_dir</span><span class="p">]).</span><span class="n">decode</span><span class="p">()</span>
 <span class="n">hosts</span> <span class="o">=</span> <span class="n">extract_hostnames</span><span class="p">(</span><span class="n">strs</span><span class="p">,</span> <span class="n">compiled_rule</span><span class="p">,</span> <span class="n">valid_domains</span><span class="p">)</span>
 
@@ -182,7 +182,7 @@
 
 <h2 id="domain-graph-of-apt1">Domain graph of <a href="https://www.fireeye.com/content/dam/fireeye-www/services/pdfs/mandiant-apt1-report.pdf">APT1</a></h2>
 
-<p><img src="/assets/images/bipartite_graph/malware_domains_apt1.png" alt="" /></p>
+<p><img src="https://aandersonl.github.io/assets/images/bipartite_graph/malware_domains_apt1.png" alt="" /></p>
 
 <h2 id="running">Running</h2>
 
@@ -211,7 +211,7 @@ $ python mal_vis.py --target_path &lt;path_to_samples&gt;
     <p>
       
 
-&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="/feed.xml">RSS</a>
+&copy;  - Powered by <a href="https://jekyllrb.com">Jekyll</a> &amp; <a href="https://github.com/yous/whiteglass">whiteglass</a> - Subscribe via <a href="https://aandersonl.github.io/feed.xml">RSS</a>
 
     </p>
 
