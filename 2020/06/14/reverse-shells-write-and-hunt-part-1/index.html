@@ -223,7 +223,7 @@
 
 <h3 id="the-idea-behind-remote-shells-with-netcat">The idea behind remote shells with netcat</h3>
 
-<p>Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional purpose, because there is a few real world use for this as a shell.</p>
+<p>Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educational purpose, because there is a few real world use for this as a shell.</p>
 
 <h4 id="example">Example:</h4>
 <pre><code class="language-cmd">PS C:\Users\User\Documents&gt; nc google.com 80
@@ -231,7 +231,7 @@ GET / HTTP/1.0
 Host: www.google.com
 </code></pre>
 
-<p>Netcat is also called as nc, it comes by default in some Linux distributions and Windows versions, most recently Windows <strong><em>do not</em></strong> have Netcat, but for educacional purpose you can install <a href="https://sourceforge.net/projects/nc110/">easily</a>.</p>
+<p>Netcat is also called as nc, it comes by default in some Linux distributions and Windows versions, most recently Windows <strong><em>do not</em></strong> have Netcat, but for educational purpose you can install <a href="https://sourceforge.net/projects/nc110/">easily</a>.</p>
 
 <p>The command above, opens a connection into google.com at port 80 but with any data, we need pass to netcat any data we may want to, in this case I wrote a simple GET request to google itself, if you run that you will get a raw html response from google, the same way you would receive if you run curl or something like that.</p>
 
