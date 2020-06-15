@@ -51,7 +51,7 @@ A bind shell, it's when your system invoke your shell when some event comes, if 
 
 ### The idea behind remote shells with netcat
 
-Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional purpose, because there is a few real world use for this as a shell.
+Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educational purpose, because there is a few real world use for this as a shell.
 
 #### Example:
 ```cmd
@@ -60,7 +60,7 @@ GET / HTTP/1.0
 Host: www.google.com
 ```
 
-Netcat is also called as nc, it comes by default in some Linux distributions and Windows versions, most recently Windows ***do not*** have Netcat, but for educacional purpose you can install [easily](https://sourceforge.net/projects/nc110/).
+Netcat is also called as nc, it comes by default in some Linux distributions and Windows versions, most recently Windows ***do not*** have Netcat, but for educational purpose you can install [easily](https://sourceforge.net/projects/nc110/).
 
 The command above, opens a connection into google.com at port 80 but with any data, we need pass to netcat any data we may want to, in this case I wrote a simple GET request to google itself, if you run that you will get a raw html response from google, the same way you would receive if you run curl or something like that.
 
