@@ -51,7 +51,7 @@ A bind shell, it's when your system invoke your shell when some event comes, if 
 
 ### The idea behind remote shells with netcat
 
-Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educational purpose, because there is a few real world use for this as a shell.
+Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this only for educational purpose, because there is a few real world use for this as a shell.
 
 #### Example:
 ```cmd
@@ -282,7 +282,7 @@ It's the same idea here, our invoke-expression will interpret and execute our st
 $response = Invoke-Expression $helloCode;
 Write-Host $response;
 ```
-This above, will not work because the Invoke-Expression response is a [PSObject Class](https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.psobject?view=powershellsdk-7.0.0), that is a generic object type, you can look futher for their inside attributes, but there is a faster way to get this with ***Out-String*** cmdlet, this will be called using pipes and will the get string value (just like toString()) and return to us, that way we can get the string value itself.
+This above, will not work because the Invoke-Expression response is a [PSObject Class](https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.psobject?view=powershellsdk-7.0.0), that is a generic object type, you can look futher for their inside attributes, but there is a faster way to get this with ***Out-String*** cmdlet, this will be called using pipes and will get string value (just like toString()) and return to us, that way we can get the string value itself.
 
 ```powershell
 $response = Invoke-Expression $helloCode | Out-String;
@@ -354,7 +354,7 @@ Using a normal raw TCP shell is not a good idea because all of our traffic will 
 
 Before dig in implementing an encrypted channel in our Powershell script and our C2, we need to understand what's happening behind a TLS/SSL channel.
 
-TLS extends for Transport Layer Security, its designed to replace SSL(Secure Socket Layer), but as we still see both used in the wild, it's sometimes called TLS/SSL for every secure channel that use one of them.
+TLS extends for Transport Layer Security, it's designed to replace SSL(Secure Socket Layer), but as we still see both used in the wild, it's sometimes called TLS/SSL for every secure channel that use one of them.
 
 The idea behind secure channels is find a way to encrypt all data in the traffic in a known cipher algorithm, such as [Aes256](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), [Camellia](https://en.wikipedia.org/wiki/Camellia_(cipher)), [3DES](https://en.wikipedia.org/wiki/Triple_DES), [RC2](https://en.wikipedia.org/wiki/RC2) or some stream cipher, by default you will find in 90% cases the usage of AES256 + [GCM](https://en.wikipedia.org/wiki/Galois/Counter_Mode).
 
@@ -430,7 +430,7 @@ $stream.AuthenticateAsClient($target);
 
 Note that we pass our current stream, false to leaveInnerStreamOpen(second argument), and a anonymous function that always return ***true*** in the certificate verification process and null to userCertificateSelectionCallback parameter.
 
-With this we have a fully encrypted channel between our target and the attacker, we will enter in the Network connection details in the ***Threat Analysis and Detection*** section!
+With this we have a fully encrypted channel between our target and the attacker, I will enter in the Network connection details in the ***Threat Analysis and Detection*** section!
 
 
 Reverse SSL Powershell code:
