@@ -5,7 +5,7 @@
   
   <link href="https://aandersonl.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://aandersonl.github.io/" rel="alternate" type="text/html" />
-  <updated>2020-06-15T13:04:26+00:00</updated>
+  <updated>2020-06-15T20:43:57+00:00</updated>
   <id>https://aandersonl.github.io//</id>
 
   
@@ -91,7 +91,7 @@
 
 &lt;h3 id=&quot;the-idea-behind-remote-shells-with-netcat&quot;&gt;The idea behind remote shells with netcat&lt;/h3&gt;
 
-&lt;p&gt;Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educational purpose, because there is a few real world use for this as a shell.&lt;/p&gt;
+&lt;p&gt;Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this only for educational purpose, because there is a few real world use for this as a shell.&lt;/p&gt;
 
 &lt;h4 id=&quot;example&quot;&gt;Example:&lt;/h4&gt;
 &lt;pre&gt;&lt;code class=&quot;language-cmd&quot;&gt;PS C:\Users\User\Documents&amp;gt; nc google.com 80
@@ -305,7 +305,7 @@ now our &lt;strong&gt;&lt;em&gt;$command&lt;/em&gt;&lt;/strong&gt; variable hold
 &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Invoke-Expression&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$helloCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write-Host&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;This above, will not work because the Invoke-Expression response is a &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.psobject?view=powershellsdk-7.0.0&quot;&gt;PSObject Class&lt;/a&gt;, that is a generic object type, you can look futher for their inside attributes, but there is a faster way to get this with &lt;strong&gt;&lt;em&gt;Out-String&lt;/em&gt;&lt;/strong&gt; cmdlet, this will be called using pipes and will the get string value (just like toString()) and return to us, that way we can get the string value itself.&lt;/p&gt;
+&lt;p&gt;This above, will not work because the Invoke-Expression response is a &lt;a href=&quot;https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.psobject?view=powershellsdk-7.0.0&quot;&gt;PSObject Class&lt;/a&gt;, that is a generic object type, you can look futher for their inside attributes, but there is a faster way to get this with &lt;strong&gt;&lt;em&gt;Out-String&lt;/em&gt;&lt;/strong&gt; cmdlet, this will be called using pipes and will get string value (just like toString()) and return to us, that way we can get the string value itself.&lt;/p&gt;
 
 &lt;div class=&quot;language-powershell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Invoke-Expression&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$helloCode&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Out-String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Write-Host&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
@@ -372,7 +372,7 @@ now our &lt;strong&gt;&lt;em&gt;$command&lt;/em&gt;&lt;/strong&gt; variable hold
 
 &lt;p&gt;Before dig in implementing an encrypted channel in our Powershell script and our C2, we need to understand what’s happening behind a TLS/SSL channel.&lt;/p&gt;
 
-&lt;p&gt;TLS extends for Transport Layer Security, its designed to replace SSL(Secure Socket Layer), but as we still see both used in the wild, it’s sometimes called TLS/SSL for every secure channel that use one of them.&lt;/p&gt;
+&lt;p&gt;TLS extends for Transport Layer Security, it’s designed to replace SSL(Secure Socket Layer), but as we still see both used in the wild, it’s sometimes called TLS/SSL for every secure channel that use one of them.&lt;/p&gt;
 
 &lt;p&gt;The idea behind secure channels is find a way to encrypt all data in the traffic in a known cipher algorithm, such as &lt;a href=&quot;https://en.wikipedia.org/wiki/Advanced_Encryption_Standard&quot;&gt;Aes256&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Camellia_(cipher)&quot;&gt;Camellia&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/Triple_DES&quot;&gt;3DES&lt;/a&gt;, &lt;a href=&quot;https://en.wikipedia.org/wiki/RC2&quot;&gt;RC2&lt;/a&gt; or some stream cipher, by default you will find in 90% cases the usage of AES256 + &lt;a href=&quot;https://en.wikipedia.org/wiki/Galois/Counter_Mode&quot;&gt;GCM&lt;/a&gt;.&lt;/p&gt;
 
@@ -440,7 +440,7 @@ now our &lt;strong&gt;&lt;em&gt;$command&lt;/em&gt;&lt;/strong&gt; variable hold
 
 &lt;p&gt;Note that we pass our current stream, false to leaveInnerStreamOpen(second argument), and a anonymous function that always return &lt;strong&gt;&lt;em&gt;true&lt;/em&gt;&lt;/strong&gt; in the certificate verification process and null to userCertificateSelectionCallback parameter.&lt;/p&gt;
 
-&lt;p&gt;With this we have a fully encrypted channel between our target and the attacker, we will enter in the Network connection details in the &lt;strong&gt;&lt;em&gt;Threat Analysis and Detection&lt;/em&gt;&lt;/strong&gt; section!&lt;/p&gt;
+&lt;p&gt;With this we have a fully encrypted channel between our target and the attacker, I will enter in the Network connection details in the &lt;strong&gt;&lt;em&gt;Threat Analysis and Detection&lt;/em&gt;&lt;/strong&gt; section!&lt;/p&gt;
 
 &lt;p&gt;Reverse SSL Powershell code:&lt;/p&gt;
 
