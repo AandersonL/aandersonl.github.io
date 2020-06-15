@@ -5,7 +5,7 @@
   
   <link href="https://aandersonl.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://aandersonl.github.io/" rel="alternate" type="text/html" />
-  <updated>2020-06-15T02:27:03+00:00</updated>
+  <updated>2020-06-15T03:13:04+00:00</updated>
   <id>https://aandersonl.github.io//</id>
 
   
@@ -13,7 +13,7 @@
   
 
   
-    <subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle>
+    <subtitle>My personal notes about Security, Programming, Linux and more!</subtitle>
   
 
   
@@ -91,7 +91,7 @@
 
 &lt;h3 id=&quot;the-idea-behind-remote-shells-with-netcat&quot;&gt;The idea behind remote shells with netcat&lt;/h3&gt;
 
-&lt;p&gt;Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional porpuse, because there is a few real world use for this as a shell.&lt;/p&gt;
+&lt;p&gt;Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional purpose, because there is a few real world use for this as a shell.&lt;/p&gt;
 
 &lt;h4 id=&quot;example&quot;&gt;Example:&lt;/h4&gt;
 &lt;pre&gt;&lt;code class=&quot;language-cmd&quot;&gt;PS C:\Users\User\Documents&amp;gt; nc google.com 80
@@ -424,8 +424,9 @@ now our &lt;strong&gt;&lt;em&gt;$command&lt;/em&gt;&lt;/strong&gt; variable hold
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ openssl s_client -connect 127.0.0.1:443
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/reverse_shell/ssl_channel.png&quot; alt=&quot;&quot; /&gt;
-Note that a bunch of information in the TLS/SSL handshake appears in the screen, but after the two hosts successfully exchange their sessions keys (PSK), a secure channel is established, and now we can work just like we are working with our netcat!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/reverse_shell/ssl_channel.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Note that a bunch of information in the TLS/SSL handshake appears in the screen, but after the two hosts successfully exchange their sessions keys (PSK), a secure channel is established, and now we can work just like we are working with our netcat!&lt;/p&gt;
 
 &lt;h3 id=&quot;ssl-stream-in-powershell&quot;&gt;SSL stream in Powershell&lt;/h3&gt;
 

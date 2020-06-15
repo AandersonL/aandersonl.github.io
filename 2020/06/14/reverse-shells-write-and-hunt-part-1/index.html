@@ -223,7 +223,7 @@
 
 <h3 id="the-idea-behind-remote-shells-with-netcat">The idea behind remote shells with netcat</h3>
 
-<p>Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional porpuse, because there is a few real world use for this as a shell.</p>
+<p>Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional purpose, because there is a few real world use for this as a shell.</p>
 
 <h4 id="example">Example:</h4>
 <pre><code class="language-cmd">PS C:\Users\User\Documents&gt; nc google.com 80
@@ -556,8 +556,9 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl s_client -connect 127.0.0.1:443
 </code></pre></div></div>
 
-<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/ssl_channel.png" alt="" />
-Note that a bunch of information in the TLS/SSL handshake appears in the screen, but after the two hosts successfully exchange their sessions keys (PSK), a secure channel is established, and now we can work just like we are working with our netcat!</p>
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/ssl_channel.png" alt="" /></p>
+
+<p>Note that a bunch of information in the TLS/SSL handshake appears in the screen, but after the two hosts successfully exchange their sessions keys (PSK), a secure channel is established, and now we can work just like we are working with our netcat!</p>
 
 <h3 id="ssl-stream-in-powershell">SSL stream in Powershell</h3>
 
