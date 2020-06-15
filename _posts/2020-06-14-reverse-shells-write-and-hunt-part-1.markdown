@@ -4,6 +4,7 @@ title: "Reverse shells: Write and Hunt (Part 1)"
 date: 2020-06-14 18:31:36 -0300
 categories: [programming, pentest, powershell]
 images_prefix: /assets/images/reverse_shell/
+image: /assets/images/reverse_shell/powershell.png
 ---
 A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution). 
 
@@ -50,7 +51,7 @@ A bind shell, it's when your system invoke your shell when some event comes, if 
 
 ### The idea behind remote shells with netcat
 
-Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional porpuse, because there is a few real world use for this as a shell.
+Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this for only educacional purpose, because there is a few real world use for this as a shell.
 
 #### Example:
 ```cmd
@@ -411,6 +412,7 @@ $ openssl s_client -connect 127.0.0.1:443
 ```
 
 ![]({{site.url}}{{page.images_prefix}}ssl_channel.png)
+
 Note that a bunch of information in the TLS/SSL handshake appears in the screen, but after the two hosts successfully exchange their sessions keys (PSK), a secure channel is established, and now we can work just like we are working with our netcat!
 
 
