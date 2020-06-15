@@ -13,6 +13,10 @@
 <lastmod>2020-04-30T23:31:36+00:00</lastmod>
 </url>
 <url>
+<loc>https://aandersonl.github.io/2020/06/14/reverse-shells-write-and-hunt-part-1/</loc>
+<lastmod>2020-06-14T21:31:36+00:00</lastmod>
+</url>
+<url>
 <loc>https://aandersonl.github.io/about/</loc>
 </url>
 <url>
@@ -44,5 +48,11 @@
 </url>
 <url>
 <loc>https://aandersonl.github.io/categories/threat-intel/</loc>
+</url>
+<url>
+<loc>https://aandersonl.github.io/categories/pentest/</loc>
+</url>
+<url>
+<loc>https://aandersonl.github.io/categories/powershell/</loc>
 </url>
 </urlset>
