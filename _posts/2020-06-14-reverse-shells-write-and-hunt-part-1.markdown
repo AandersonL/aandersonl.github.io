@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Reverse shells: Write and Hunt (Part 1)"
+title: "Reverse shells: Write and Hunt (Part 1/2)"
 date: 2020-06-14 18:31:36 -0300
 categories: [programming, pentest, powershell]
 images_prefix: /assets/images/reverse_shell/
@@ -9,8 +9,6 @@ image: /assets/images/reverse_shell/powershell.png
 A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution). 
 
 Before copy and paste, we need to have a solid knowledge of what we are trying to reach, my goal here is to show ways that we can achieve a bind or a reverse shell and how do you detect this kind of threat.
-
-<img src="{{site.url}}{{page.images_prefix}}shell.png" style="display: none"/>
 
 Topics I want to cover in this series:
 * [Bind shells](#bind-shell)
