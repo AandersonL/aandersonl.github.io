@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Reverse shells: Write and Hunt (Part 1/2)"
+title: "Reverse shells: Write and Hunt (Part 1)"
 date: 2020-06-14 18:31:36 -0300
 categories: [programming, pentest, powershell]
 images_prefix: /assets/images/reverse_shell/
