@@ -10,6 +10,8 @@ A shell, its probably the goal of every security researcher, almost every critic
 
 Before copy and paste, we need to have a solid knowledge of what we are trying to reach, my goal here is to show ways that we can achieve a bind or a reverse shell and how do you detect this kind of threat.
 
+<img src="{{site.url}}{{page.images_prefix}}shell.png" style="display: none"/>
+
 Topics I want to cover in this series:
 * [Bind shells](#bind-shell)
     - Understand the idea behind remote shells
