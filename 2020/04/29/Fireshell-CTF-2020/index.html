@@ -221,7 +221,7 @@
 
 <p>The binary provided to us was stripped, so we did’t have any debug symbols, to find our main funcion quicly as possible i used Radare2 framework to it, so let’s find all symbols possible.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ r2 -A chall
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ r2 -A chall
 $ fs symbols;f 
 $ s main
 $ pdf
@@ -229,7 +229,7 @@ $ pdf
 
 <p>You can jump until the offset 0x00401d2f, its when our loop (aka crypt loop) starts, take a look:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ,=&lt; 0x00401d2f      eb3b           jmp 0x401d6c
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ,=&lt; 0x00401d2f      eb3b           jmp 0x401d6c
 |       |      ; JMP XREF from 0x00401d8b (main)
 |      .--&gt; 0x00401d31      0fb645e6       movzx eax, byte [local_1ah]
 |      :|   0x00401d35      c0e807         shr al, 7 
@@ -260,7 +260,7 @@ $ pdf
 |      `==&lt; 0x00401d8b      75a4           jne 0x401d31
 </code></pre></div></div>
 
-<p>Of course i run this binary with breakpoints in that offset with gdb + <a href="https://gef.readthedocs.io/en/master/">gef</a> to see what was really happening, the important process was, at address <code class="highlighter-rouge">0x00401d3b</code> we get the index of some thing (guess what ? our input) the next address we sum with itself <code class="highlighter-rouge">(s[i] * 2)</code> and at address <code class="highlighter-rouge">0x00401d52</code> we make a not operation <code class="highlighter-rouge">( ~(s[i]*2) )</code>.</p>
+<p>Of course i run this binary with breakpoints in that offset with gdb + <a href="https://gef.readthedocs.io/en/master/">gef</a> to see what was really happening, the important process was, at address <code class="language-plaintext highlighter-rouge">0x00401d3b</code> we get the index of some thing (guess what ? our input) the next address we sum with itself <code class="language-plaintext highlighter-rouge">(s[i] * 2)</code> and at address <code class="language-plaintext highlighter-rouge">0x00401d52</code> we make a not operation <code class="language-plaintext highlighter-rouge">( ~(s[i]*2) )</code>.</p>
 
 <h3 id="rewriting">Rewriting</h3>
 
@@ -339,19 +339,19 @@ The flag you are looking <span class="k">for </span>is F#<span class="o">{</span
 
 <h2 id="main-porpuse">Main porpuse</h2>
 
-<p>Caas was a simple text editor with the button <code class="highlighter-rouge">compile</code>, then the code is going to be sent to a server that will create a file and run <code class="highlighter-rouge">gcc</code> in it.</p>
+<p>Caas was a simple text editor with the button <code class="language-plaintext highlighter-rouge">compile</code>, then the code is going to be sent to a server that will create a file and run <code class="language-plaintext highlighter-rouge">gcc</code> in it.</p>
 
 <h2 id="solution">Solution</h2>
 
-<p>It was no so difficult at all, i lose a lot of time trying to do some kind of RCE inside of it, but then i realized that i can try DoS the server with the <code class="highlighter-rouge">#include</code> (Sorry fireshell, i literally crash your server for a few minutes :D)</p>
+<p>It was no so difficult at all, i lose a lot of time trying to do some kind of RCE inside of it, but then i realized that i can try DoS the server with the <code class="language-plaintext highlighter-rouge">#include</code> (Sorry fireshell, i literally crash your server for a few minutes :D)</p>
 
 <h3 id="possible-payloads">Possible payloads</h3>
 
-<p><code class="highlighter-rouge">#include &lt;../../../../../../dev/zero&gt;</code></p>
+<p><code class="language-plaintext highlighter-rouge">#include &lt;../../../../../../dev/zero&gt;</code></p>
 
 <p>This will make our compiler look for that file, but that file never ends :) the server crashed trying to read it all (Yep, this is a DoS kind attack) then, i tried to load our flag an force our compiler to show the errors</p>
 
-<p><code class="highlighter-rouge">#include &lt;../../../../flag&gt;</code></p>
+<p><code class="language-plaintext highlighter-rouge">#include &lt;../../../../flag&gt;</code></p>
 
 <p>Then in the error output, the flag will be there :)</p>
 
@@ -372,9 +372,9 @@ The flag you are looking <span class="k">for </span>is F#<span class="o">{</span
 
 <p>Here a list of HTML tags i tried:</p>
 <ul>
-  <li><code class="highlighter-rouge">&lt;iframe src="file:///flag"/&gt;</code></li>
-  <li><code class="highlighter-rouge">&lt;embed src="file:///flag"/&gt;</code></li>
-  <li><code class="highlighter-rouge">&lt;object width="400" height="400" data="file:///flag"/&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;iframe src="file:///flag"/&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;embed src="file:///flag"/&gt;</code></li>
+  <li><code class="language-plaintext highlighter-rouge">&lt;object width="400" height="400" data="file:///flag"/&gt;</code></li>
 </ul>
 
 <p><strong><em>I uploaded my HTML in an simple free file hosting and put the url in the input</em></strong></p>
@@ -383,7 +383,7 @@ The flag you are looking <span class="k">for </span>is F#<span class="o">{</span
 
 <p>I looked at the PDF headers looking for the software that created that (For 1 minute i trought to look for exploits and load inside an HTML page, but i remembered that this was a Web challenge and not a PWN :p)</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pdfinfo c7b920f57e553df2bb68272f61570210.pdf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pdfinfo c7b920f57e553df2bb68272f61570210.pdf
 Title:          Google
 Subject:        Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.
 Keywords:       
@@ -395,9 +395,9 @@ Producer:       cairo 1.16.0 (https://cairographics.org)
 
 <p>Here is the HTML tag that worked for me:</p>
 
-<p><code class="highlighter-rouge">&lt;link rel="attachment" href="file:///flag"&gt;</code></p>
+<p><code class="language-plaintext highlighter-rouge">&lt;link rel="attachment" href="file:///flag"&gt;</code></p>
 
-<p>After that, i downloaded the PDF and used <code class="highlighter-rouge">binwalk -e &lt;pdf&gt;</code> to extract any “files” that he may found inside, then i found the flag inside the _<pdf> folder created.</pdf></p>
+<p>After that, i downloaded the PDF and used <code class="language-plaintext highlighter-rouge">binwalk -e &lt;pdf&gt;</code> to extract any “files” that he may found inside, then i found the flag inside the _<pdf> folder created.</pdf></p>
 
 <p>I don’t remember the flag itself(i lose the files, sorry), but it’s was there :)</p>
 

