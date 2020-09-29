@@ -418,7 +418,7 @@ $stream.AuthenticateAsClient($target);
 
 Note that we pass our current stream, false to leaveInnerStreamOpen(second argument), and a anonymous function that always return ***true*** in the certificate verification process and null to userCertificateSelectionCallback parameter.
 
-With this we have a fully encrypted channel between our target and the attacker, I will enter in the Network connection details in the ***Threat Analysis and Detection*** section!
+With this we have a fully encrypted channel between our target and the attacker.
 
 
 Reverse SSL Powershell code:
