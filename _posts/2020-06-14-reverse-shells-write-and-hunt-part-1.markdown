@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Reverse shells: Write and Hunt (Part 1)"
+title: "Reverse shells: Learn by writing"
 date: 2020-06-14 18:31:36 -0300
 categories: [programming, pentest, powershell]
 images_prefix: /assets/images/reverse_shell/
@@ -10,7 +10,7 @@ A shell, its probably the goal of every security researcher, almost every critic
 
 Before copy and paste, we need to have a solid knowledge of what we are trying to reach, my goal here is to show ways that we can achieve a bind or a reverse shell and how do you detect this kind of threat.
 
-Topics I want to cover in this series:
+Topics I want to cover in this post:
 * [Bind shells](#bind-shell)
     - Understand the idea behind remote shells
     - Using Netcat for network porpuse
@@ -29,18 +29,6 @@ Topics I want to cover in this series:
     - Basic information gathering with openssl
     - Generating our certificates
     - Boost our reverse tcp shell into a reverse ssl shell
-
-* Threat Analysis (part 2)
-    - Threat overview
-    - Modeling with STIX
-    - Weaponization
-    - Exploitation
-    - Installing & C2
-* Detection (part 2)
-    - Network analysis with Wireshark
-    - Network analysis with Zeek
-    - Writing Zeek rules to detect this kind of behavior
-    - Hunting in Windows for malicious powershell processes
 
 
 # Bind shell
@@ -460,7 +448,4 @@ $client.Close();
 ```
 
 
-
-
-
-To be continued at Threat Analysis and Detection (Part 2)...
+That's all folks.
