@@ -5,7 +5,7 @@
   
   <link href="https://aandersonl.github.io/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://aandersonl.github.io/" rel="alternate" type="text/html" />
-  <updated>2020-06-15T20:43:57+00:00</updated>
+  <updated>2020-09-29T03:36:28+00:00</updated>
   <id>https://aandersonl.github.io//</id>
 
   
@@ -22,10 +22,10 @@
   
     <entry>
       
-      <title type="html">Reverse shells: Write and Hunt (Part 1)</title>
+      <title type="html">Reverse shells: Learn by writing</title>
       
       
-      <link href="https://aandersonl.github.io/2020/06/14/reverse-shells-write-and-hunt-part-1/" rel="alternate" type="text/html" title="Reverse shells: Write and Hunt (Part 1)" />
+      <link href="https://aandersonl.github.io/2020/06/14/reverse-shells-write-and-hunt-part-1/" rel="alternate" type="text/html" title="Reverse shells: Learn by writing" />
       
       <published>2020-06-14T21:31:36+00:00</published>
       <updated>2020-06-14T21:31:36+00:00</updated>
@@ -34,7 +34,7 @@
 
 &lt;p&gt;Before copy and paste, we need to have a solid knowledge of what we are trying to reach, my goal here is to show ways that we can achieve a bind or a reverse shell and how do you detect this kind of threat.&lt;/p&gt;
 
-&lt;p&gt;Topics I want to cover in this series:&lt;/p&gt;
+&lt;p&gt;Topics I want to cover in this post:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;#bind-shell&quot;&gt;Bind shells&lt;/a&gt;
     &lt;ul&gt;
@@ -62,23 +62,6 @@
       &lt;li&gt;Basic information gathering with openssl&lt;/li&gt;
       &lt;li&gt;Generating our certificates&lt;/li&gt;
       &lt;li&gt;Boost our reverse tcp shell into a reverse ssl shell&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Threat Analysis (part 2)
-    &lt;ul&gt;
-      &lt;li&gt;Threat overview&lt;/li&gt;
-      &lt;li&gt;Modeling with STIX&lt;/li&gt;
-      &lt;li&gt;Weaponization&lt;/li&gt;
-      &lt;li&gt;Exploitation&lt;/li&gt;
-      &lt;li&gt;Installing &amp;amp; C2&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Detection (part 2)
-    &lt;ul&gt;
-      &lt;li&gt;Network analysis with Wireshark&lt;/li&gt;
-      &lt;li&gt;Network analysis with Zeek&lt;/li&gt;
-      &lt;li&gt;Writing Zeek rules to detect this kind of behavior&lt;/li&gt;
-      &lt;li&gt;Hunting in Windows for malicious powershell processes&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
@@ -467,7 +450,7 @@ now our &lt;strong&gt;&lt;em&gt;$command&lt;/em&gt;&lt;/strong&gt; variable hold
 &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;Close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;To be continued at Threat Analysis and Detection (Part 2)…&lt;/p&gt;</content>
+&lt;p&gt;That’s all folks.&lt;/p&gt;</content>
 
       
       
