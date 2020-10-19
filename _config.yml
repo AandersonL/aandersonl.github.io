@@ -33,7 +33,6 @@ github_username:  aandersonl
 # Build settings
 theme: minimal-mistakes-jekyll
 minimal_mistakes_skin: "dark" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum" "sunrise"
-breadcrumbs: true
 search: true
 
 plugins:
@@ -54,6 +53,7 @@ defaults:
       toc_sticky: true
       permalink: /:categories/:title/
 
+      
 category_archive:
   type: jekyll-archives
   path: /categories/

@@ -1,9 +1,6 @@
 main:
   - title: "Programming"
-    url: /tags/
+    url: /categories/programming/
   
   - title: "Cybersec"
-    url: /year-archive/
-
-  - title: "General"
-    url: /categories/general/
+    url: /categories/cybersec/

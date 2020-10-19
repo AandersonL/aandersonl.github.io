@@ -1,14 +1,12 @@
 ---
-layout: posts
+layout: single
+
 title: "Beating Console challenge from Hackthebox"
 date: 2020-04-28 21:31:36 -0300
 permalink: /:categories/:title/
-categories: write-ups
-layout: splash
+categories: [cybersec]
+
 images_prefix: /assets/images/console_hackthebox/
-excerpt: "Console it's a web challenge that explores brute vulnerability in a open source library"
-header:
-  overlay_color: "#252a34"
 ---
 
 
