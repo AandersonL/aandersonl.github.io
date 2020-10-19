@@ -1,19 +1,18 @@
 ---
-layout: post
-title: "Beating Console web challenge from Hackthebox"
+layout: single
+
+title: "Beating Console challenge from Hackthebox"
 date: 2020-04-28 21:31:36 -0300
-categories: [programming, ctf, web, hackthebox,write-up]
+permalink: /:categories/:title/
+categories: [cybersec]
+
 images_prefix: /assets/images/console_hackthebox/
 ---
 
-***Console*** is a web challenge from [hackthebox](https://www.hackthebox.eu/), it's explore development tools from PHP that is exposed.
 
-When you open the web page, you will notice a phpinfo() page with:
-```
-Your IP is 10.255.0.2
+This challenge from [hackthebox](https://www.hackthebox.eu/), give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with:
 
-Make sure to load php-console in order to be prompted for a password
-```
+***Your IP is 10.255.0.2 Make sure to load php-console in order to be prompted for a password***
 
 The first thing that came in my mind, was to look for this ```php-console```, probably in ```/php-console?some_rce_args=cat flag```, but nop, it's far to be so easy. So i searched for ```php-console``` keyword, and i came up in this very crazy library [PHP-Console](https://github.com/barbushin/php-console).
 
@@ -276,4 +275,3 @@ Now enter the password, and the flag will be in the alert!
 
 I don't know if i can post the flag here, but the flag will be in the alert!
 
-Thanks! i need to sleep now...

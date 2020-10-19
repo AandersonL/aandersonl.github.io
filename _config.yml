@@ -18,36 +18,73 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: "$ Bit escape"
+title: $ Bit escape
+subtitle: "It's good to see you here :)"
+
+email: 
+
 description: >- # this means to ignore newlines until "baseurl:"
-  My personal notes about Security, Programming, Linux and more!
+  My personal writings about Security, Programming, Linux and much more.
   
 baseurl: "/" # the subpath of your site, e.g. /blog
 url: "https://aandersonl.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  aandersonl
 
 # Build settings
-theme: jekyll-whiteglass
-plugins:
-  - jekyll-archives
-  - jekyll-paginate
-  - jekyll-sitemap
+theme: minimal-mistakes-jekyll
+minimal_mistakes_skin: "dark" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum" "sunrise"
+search: true
 
-permalink: /:year/:month/:day/:title/
-paginate_path: /posts/:num/
-paginate: 5
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-archives
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+
+    values:
+      read_time: true
+      show_date: true
+      share: false
+      toc: true
+      toc_sticky: true
+      permalink: /:categories/:title/
+
+      
+category_archive:
+  type: jekyll-archives
+  path: /categories/
+
+tag_archive:
+  type: jekyll-archives
+  path: /tags/
 
 jekyll-archives:
   enabled:
     - categories
     - tags
-  layout: category_archives
+  layouts:
+    category: archive-taxonomy
+    tag: archive-taxonomy
   permalinks:
     category: /categories/:name/
     tag: /tags/:name/
 
-defaults:
-  - scope:
-      path: "assets/images"
-    values:
-      image: true
+
+
+footer:
+  links:
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/aandersonl"
+
+    - label: "Linkedin"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://br.linkedin.com/in/anderson-leite-6886b117a"
+
+
+sass:
+  style: compact
