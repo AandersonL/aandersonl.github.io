@@ -1,8 +1,8 @@
 var store = [{
         "title": "Beating Console challenge from Hackthebox",
-        "excerpt":"This challenge from hackthebox, give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with: Your IP is 10.255.0.2 Make sure to load php-console in order to be prompted for a password The first thing that came in my...","categories": ["cybersec"],
+        "excerpt":"This challenge from hackthebox, give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with: Your IP is 10.255.0.2 Make sure to load php-console in order to be prompted for a password The first thing that came in my...","categories": ["cybersec","write-up"],
         "tags": [],
-        "url": "https://aandersonl.github.io/cybersec/Hacking-PHP-Console-Hackthebox/",
+        "url": "https://aandersonl.github.io/cybersec/write-up/Hacking-PHP-Console-Hackthebox/",
         "teaser": null
       },{
         "title": "Fireshell CTF 2020 Write-ups",
@@ -15,7 +15,7 @@ var store = [{
         "excerpt":"One of the greatest problems in mapping threats today, is detect from where it’s coming all kinds of threats, if is from the same group, same person or even the same governament. In order to group everything up and make things more clear, we can use a lot of data...","categories": ["cybersec","programming"],
         "tags": [],
         "url": "https://aandersonl.github.io/cybersec/programming/bipartite-graph-for-threats/",
-        "teaser": "https://aandersonl.github.io/assets/images/bipartite_graph/bipartite.jpg"
+        "teaser": null
       },{
         "title": "Reverse shells: Learn by writing",
         "excerpt":"A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution). Before copy and paste, we need to have a solid knowledge of what we are trying...","categories": ["programming","cybersec","powershell"],
