@@ -5,5 +5,5 @@ main:
   - title: "Cybersec"
     url: /categories/cybersec/
 
-  - title: "Capture the flag"
+  - title: "CTF's"
     url: /categories/write-up
