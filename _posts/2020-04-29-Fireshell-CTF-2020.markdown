@@ -2,9 +2,13 @@
 layout: post
 title: "Fireshell CTF 2020 Write-ups"
 date: 2020-04-29 02:13:30 -0300
-categories: [programming,ctf, write-up,reversing, web]
+permalink: /:categories/:title/
+categories: write-ups
+layout: splash
+images_prefix: /assets/images/console_hackthebox/
 ---
-Write-ups from [Fireshell CTF](https://fireshellsecurity.team/)
+
+# Write-ups from [Fireshell CTF](https://fireshellsecurity.team/)
 
 # Rev (500 Points)
 Rev is a simple reverse enginner task, we need to undestand the cryptographic function and reverse it. 
@@ -61,7 +65,7 @@ Of course i run this binary with breakpoints in that offset with gdb + [gef](htt
 
 ### Rewriting
 
-After strugle to understand and write a equivalent C code, i came up with this:
+This encryption routine can be rewriten in a equivalent C code:
 
 ```c
 #include <stdio.h>

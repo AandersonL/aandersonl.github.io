@@ -2,7 +2,10 @@
 layout: post
 title: "Using bipartite Graphs to detect Malware campaigns"
 date: 2020-04-30 20:31:36 -0300
-categories: [malware,programming,threat intel]
+permalink: /:categories/:title/
+categories: [cybersec, programming]
+layout: splash
+
 images_prefix: /assets/images/bipartite_graph/
 
 ---
@@ -10,7 +13,7 @@ One of the greatest problems in mapping threats today, is detect from where it's
 
 In order to group everything up and make things more clear, we can use a lot of data structures for that, a good one, and very famous is a Graph, a Biptartite Graph more exactly.
 
-In order to acomplish that, i wrote a simple [Python code](https://github.com/AandersonL/malware-research/blob/master/bipartite_graph/mal_vis.py) to map all domains that is possible to find in a large dataset of PE's files.
+In order to acomplish that, I wrote a simple [Python code](https://github.com/AandersonL/malware-research/blob/master/bipartite_graph/mal_vis.py) to map all domains that is possible to find in a large dataset of PE files.
 
 This code was inspired in the [Malware Data Science](https://nostarch.com/malwaredatascience) book, and uses an [Bipartite Graph](https://en.wikipedia.org/wiki/Bipartite_graph) to build two sets, Domains and Samples, and the connect each one.
 

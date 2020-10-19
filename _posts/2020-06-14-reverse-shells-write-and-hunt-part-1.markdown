@@ -1,10 +1,10 @@
 ---
-layout: post
 title: "Reverse shells: Learn by writing"
 date: 2020-06-14 18:31:36 -0300
-categories: [programming, pentest, powershell]
+permalink: /:categories/:title/
+categories: [Programming, Cybersec, powershell]
+layout: splash
 images_prefix: /assets/images/reverse_shell/
-image: /assets/images/reverse_shell/powershell.png
 ---
 A shell, its probably the goal of every security researcher, almost every critical flaws or 0-Day exploits give us a way to run a remote command inside a system (RCE - Remote Code Execution). 
 
@@ -68,7 +68,7 @@ This options allows netcat to run a program in the response, this is used if you
 
 int main() {
     int something;
-	puts("Hello");
+    puts("Hello");
     scanf("%d", &something);
     printf("%d\n", something);
 }
