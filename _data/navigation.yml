@@ -4,3 +4,6 @@ main:
   
   - title: "Cybersec"
     url: /categories/cybersec/
+
+  - title: "Capture the flag"
+    url: /categories/write-up
