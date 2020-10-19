@@ -1,14 +1,13 @@
 ---
-layout: post
+layout: single
 title: "Using bipartite Graphs to detect Malware campaigns"
 date: 2020-04-30 20:31:36 -0300
 permalink: /:categories/:title/
 categories: [cybersec, programming]
-layout: splash
 
 images_prefix: /assets/images/bipartite_graph/
-
 ---
+
 One of the greatest problems in mapping threats today, is detect from where it's coming all kinds of threats, if is from the same group, same person or even the same governament. 
 
 In order to group everything up and make things more clear, we can use a lot of data structures for that, a good one, and very famous is a Graph, a Biptartite Graph more exactly.
@@ -50,7 +49,7 @@ With that is possible to create an ***set of domains*** and a ***set of samples*
 
 
 
-## Running
+## Executing
 
 ```
 $ pip install -r requirements.txt

@@ -1,10 +1,9 @@
 ---
-layout: post
+layout: single
 title: "Fireshell CTF 2020 Write-ups"
 date: 2020-04-29 02:13:30 -0300
 permalink: /:categories/:title/
 categories: write-ups
-layout: splash
 images_prefix: /assets/images/console_hackthebox/
 ---
 

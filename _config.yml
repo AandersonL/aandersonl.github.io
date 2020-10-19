@@ -44,14 +44,15 @@ plugins:
 defaults:
   - scope:
       path: ""
-      type: splash
+      type: posts
 
     values:
       read_time: true
       show_date: true
       share: false
+      toc: true
+      toc_sticky: true
       permalink: /:categories/:title/
-
 
 category_archive:
   type: jekyll-archives
@@ -83,3 +84,7 @@ footer:
     - label: "Linkedin"
       icon: "fab fa-fw fa-linkedin"
       url: "https://br.linkedin.com/in/anderson-leite-6886b117a"
+
+
+sass:
+  style: compact

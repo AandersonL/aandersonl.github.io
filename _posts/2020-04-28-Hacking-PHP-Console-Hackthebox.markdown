@@ -1,16 +1,18 @@
 ---
 layout: posts
-title: "Beating Console web challenge from Hackthebox"
+title: "Beating Console challenge from Hackthebox"
 date: 2020-04-28 21:31:36 -0300
 permalink: /:categories/:title/
 categories: write-ups
 layout: splash
 images_prefix: /assets/images/console_hackthebox/
+excerpt: "Console it's a web challenge that explores brute vulnerability in a open source library"
+header:
+  overlay_color: "#252a34"
 ---
 
-***Console*** is a web challenge from [hackthebox](https://www.hackthebox.eu/), it's explore development tools from PHP that is exposed.
 
-When you open the web page, you will notice a phpinfo() page with:
+This challenge from [hackthebox](https://www.hackthebox.eu/), give you an address with a running PHP application, when you open the web page, you will notice a phpinfo() page with:
 
 ***Your IP is 10.255.0.2 Make sure to load php-console in order to be prompted for a password***
 
