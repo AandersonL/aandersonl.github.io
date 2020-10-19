@@ -6,7 +6,7 @@ var store = [{
         "teaser": null
       },{
         "title": "Fireshell CTF 2020 Write-ups",
-        "excerpt":"Write-ups from Fireshell CTF Rev (500 Points) Rev is a simple reverse enginner task, we need to undestand the cryptographic function and reverse it. Reversing The binary provided to us was stripped, so we did’t have any debug symbols, to find our main funcion quicly as possible i used Radare2...","categories": ["cybersec","write-up"],
+        "excerpt":"Rev (500 Points) Rev is a simple reverse enginner task, we need to undestand the cryptographic function and reverse it. Reversing The binary provided to us was stripped, so we did’t have any debug symbols, to find our main funcion quicly as possible i used Radare2 framework to it, so...","categories": ["cybersec","write-up"],
         "tags": [],
         "url": "https://aandersonl.github.io/cybersec/write-up/Fireshell-CTF-2020/",
         "teaser": null
