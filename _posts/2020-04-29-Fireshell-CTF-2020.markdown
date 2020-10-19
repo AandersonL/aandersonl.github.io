@@ -7,8 +7,6 @@ categories: [cybersec, write-up]
 images_prefix: /assets/images/console_hackthebox/
 ---
 
-# Write-ups from [Fireshell CTF](https://fireshellsecurity.team/)
-
 # Rev (500 Points)
 Rev is a simple reverse enginner task, we need to undestand the cryptographic function and reverse it. 
 
