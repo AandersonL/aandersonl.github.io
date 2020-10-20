@@ -88,3 +88,5 @@ footer:
 
 sass:
   style: compact
+
+paginate: 4
