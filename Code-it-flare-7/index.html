@@ -1,0 +1,876 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>The Flare 7th AutoIT challenge - $ Bit escape</title>
+<meta name="description" content="The 7th challenge of Flare-On CTF, give to us a QR code generator software that are fully obfuscated, the fun part of this challenge was interpret, analyse and deobfuscate core components of the software and then, make it give us the flag.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="The Flare 7th AutoIT challenge">
+<meta property="og:url" content="https://aandersonl.github.io/Code-it-flare-7/">
+
+
+  <meta property="og:description" content="The 7th challenge of Flare-On CTF, give to us a QR code generator software that are fully obfuscated, the fun part of this challenge was interpret, analyse and deobfuscate core components of the software and then, make it give us the flag.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-10-23T23:23:36+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/Code-it-flare-7/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/write-up">CTF's</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="The Flare 7th AutoIT challenge">
+    <meta itemprop="description" content="The 7th challenge of Flare-On CTF, give to us a QR code generator software that are fully obfuscated, the fun part of this challenge was interpret, analyse and deobfuscate core components of the software and then, make it give us the flag.">
+    <meta itemprop="datePublished" content="2020-10-23T23:23:36+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">The Flare 7th AutoIT challenge
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-10-23T23:23:36+00:00">October 23, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          12 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#why-this-is-useful-">Why this is useful ?</a>
+    <ul>
+      <li><a href="#obfuscated-script">Obfuscated script</a></li>
+      <li><a href="#encryption-functions-and-win32-calls">Encryption functions and Win32 calls</a></li>
+      <li><a href="#some-kind-of-steganography">Some kind of steganography</a></li>
+      <li><a href="#ctf">CTF</a></li>
+    </ul>
+  </li>
+  <li><a href="#recon">Recon</a>
+    <ul>
+      <li><a href="#running">Running</a></li>
+    </ul>
+  </li>
+  <li><a href="#autoit-extraction">AutoIT extraction</a></li>
+  <li><a href="#the-pain-and-the-cure-of-obfuscation">The pain and the cure of obfuscation</a>
+    <ul>
+      <li><a href="#the-decode-table">The decode table</a></li>
+      <li><a href="#the-obfuscator-algorithm">The obfuscator algorithm</a></li>
+      <li><a href="#the-deobfuscator-algorithm">The deobfuscator algorithm</a>
+        <ul>
+          <li><a href="#deobfuscator-code">Deobfuscator code</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#windows-crypto-functions">Windows crypto functions</a>
+    <ul>
+      <li><a href="#the-unused-brute-force-function">The unused brute force function</a></li>
+    </ul>
+  </li>
+  <li><a href="#the-computer-name-function">The computer name function</a>
+    <ul>
+      <li><a href="#preparecomputername-function">PrepareComputerName function</a></li>
+    </ul>
+  </li>
+  <li><a href="#finally-the-flag">Finally, the flag</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>The 7th challenge of Flare-On CTF, give to us a QR code generator software that are fully obfuscated, the fun part of this challenge was interpret, analyse and deobfuscate core components of the software and then, make it give us the flag.</p>
+
+<h1 id="why-this-is-useful-">Why this is useful ?</h1>
+
+<h2 id="obfuscated-script">Obfuscated script</h2>
+
+<p>In a real world scenario, malware using scripting language often came obfuscated and using a known languange, this challenge has a AutoIT software that are compressed and obfuscated, what makes the normal script analysis even harder.</p>
+
+<h2 id="encryption-functions-and-win32-calls">Encryption functions and Win32 calls</h2>
+
+<p>This challenge also explores how software often use Win32 functions by creating structs from the scripting interface, this can increase the power of the script engine even more. In this one, almost all Win32 api calls are from the WinCrypto, this shows to us how can some obfuscated malware can use the encryption functions from Windows for bad porpuse.</p>
+
+<h2 id="some-kind-of-steganography">Some kind of steganography</h2>
+
+<p>This challenge also explores how can we hide messages in images like Bitmap using the <a href="http://www.eiron.net/thesis">LSB</a> technique, with that the malware can literally have passwords or hidden commands in plain sight that are decoded in runtime.</p>
+
+<h2 id="ctf">CTF</h2>
+
+<p>Check out, how this all behave:</p>
+
+<p>Message:</p>
+
+<p><strong><em>Reverse engineer this little compiled script to figure out what you need to do to make it give you the flag (as a QR code).</em></strong></p>
+
+<p>So, in this challenge we must understand how this QR code generator works and be able to make it replace the content with the flag.</p>
+
+<h1 id="recon">Recon</h1>
+
+<p>Before I even started this challenge, by the name Code<strong><em>it</em></strong> I imagined that has something to do with <a href="https://www.autoitscript.com/site/">AutoIT</a>, and guess so ? It has everything to do with AutoIT.</p>
+
+<p>The file itself is compressed with UPX</p>
+
+<blockquote>
+  <p>file codeit.exe                                   <br />
+codeit.exe: PE32 executable (GUI) Intel 80386, for MS Windows, UPX compressed</p>
+</blockquote>
+
+<p>But, even this compressed file contain some data that indicate that we are dealing with an AutoIT compiled script,</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt;&gt; strings codeit.exe | grep AU3                    
+$pAU3
+H}AU3!EA06M
+AU3!EA06T
+</code></pre></div></div>
+<p><strong><em>AU3!…</em></strong> it’s like the magic number of compiled Autoit scripts, that has <strong><em>.au3</em></strong> extension.</p>
+
+<h2 id="running">Running</h2>
+
+<p>So, the program works by receiving a text and creating a valid/authentic QR Code</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/program.png" alt="" /></p>
+
+<p>The first software has the initial screen and the second I put a word and generate a QR Code, the software I was using to read this images (that I printed) is <a href="https://github.com/pshpsh/qtqr">qtqr</a>.</p>
+
+<p>So, at first look the software only do that.</p>
+
+<h1 id="autoit-extraction">AutoIT extraction</h1>
+
+<p>The au3 script inside the autoit executable are compressed in the resource section, together with all the project files itself, I will use <a href="https://gitlab.com/x0r19x91/autoit-extractor">AutoITExtractor</a> to retrieve all files associated with this project.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/autoitextracted.png" alt="" /></p>
+
+<p>I extracted every piece of this project, <strong><em>sprite.bmp</em></strong> (The initial image), <strong><em>qr_encoder.dll</em></strong> a library that create qr codes, created by <a href="https://www.nayuki.io/page/qr-code-generator-library0">Nayuki</a> and the script itself.</p>
+
+<h1 id="the-pain-and-the-cure-of-obfuscation">The pain and the cure of obfuscation</h1>
+
+<p>The entire script is obfuscated, so it’s almost impossible to read without a little strugle, but let’s dig down into this obfuscation technique.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/obfuscation.png" alt="" /></p>
+
+<h2 id="the-decode-table">The decode table</h2>
+
+<p>Before the program logic even starts, there is a global decode table that are created, denoted by the variable <strong><em>$os</em></strong>, and the string values are encoded like:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/os_table.png" alt="" /></p>
+
+<p>In order to pick all the program strings we just need to copy all this data and split by the word <strong><em>4FD5$</em></strong>, I created a python decoder for that:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/decode_dlit.png" alt="" /></p>
+
+<p>The idea here it’s very simple, I just split the string and transformed this string in hex representation in his really value, that way I created the same table used by the script, and now I can see the real strings.</p>
+
+<p>Some of the strings are below:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+decoded_table[24] = b'kernel32.dll'
+decoded_table[25] = b'int'
+decoded_table[26] = b'GetComputerNameA'
+decoded_table[27] = b'ptr'
+decoded_table[28] = b'CodeIt Plus!'
+decoded_table[29] = b'struct;byte['
+decoded_table[30] = b'];endstruct'
+decoded_table[31] = b'struct;byte[54];byte['
+decoded_table[32] = b'struct;ptr;ptr;dword;byte[32];endstruct'
+decoded_table[33] = b'advapi32.dll'
+decoded_table[34] = b'CryptAcquireContextA'
+decoded_table[35] = b'dword'
+decoded_table[36] = b'CryptCreateHash'
+decoded_table[37] = b'CryptHashData'
+decoded_table[38] = b'struct*'
+decoded_table[39] = b'CryptGetHashParam'
+decoded_table[40] = b'0x'
+decoded_table[41] = b'08020'
+decoded_table[42] = b'00010'
+decoded_table[43] = b'66000
+...
+</code></pre></div></div>
+
+<p>But I don’t stopped there, I need to at least make the code readable.</p>
+
+<h2 id="the-obfuscator-algorithm">The obfuscator algorithm</h2>
+
+<p>So the way that obfuscator is:</p>
+
+<ul>
+  <li>It create a global decode table</li>
+  <li>Its created a bunch of variable to represente numbers</li>
+  <li>When some variable wants the string it will call the decode table with the index of the string</li>
+  <li>The value will be send to a function that will do the job of <strong><em>unhexlify</em></strong> function</li>
+</ul>
+
+<p>Example:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/obfuscator_logic.png" alt="" /></p>
+
+<p>The function <strong><em>arehdidxrgk</em></strong> is the function that will decode the string, in this case, it’s looking at the position <strong><em>4</em></strong> in the decode table, <strong><em>obs: In autoit/vbs the index starts at 1</em></strong>, so in this case, it’s looking the value <strong><em>‘biSize’</em></strong>.</p>
+
+<h2 id="the-deobfuscator-algorithm">The deobfuscator algorithm</h2>
+
+<p>So, how I managed to defeat this obfuscation ? Doing all this at once!</p>
+
+<ul>
+  <li>Create a regex rule to found all the <strong><em>Number(“ \d+ “)</em></strong> ocurrences</li>
+  <li>If it’s the number is lower than the size of my decode table I save the variable name with the value</li>
+  <li>Else I just hold the number value and the variable, because sometimes it wants just the number</li>
+  <li>I now replace all ***$os[<variable>]*** by the value itself.</variable></li>
+</ul>
+
+<h3 id="deobfuscator-code">Deobfuscator code</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">deobfuscate_content</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">decode_table</span><span class="p">):</span>
+    <span class="n">index_rule</span> <span class="o">=</span> <span class="s">r'Number\(\" \d+ \"\)'</span>
+
+    <span class="n">number_table</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="n">finditer</span><span class="p">(</span><span class="n">index_rule</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+    <span class="n">decode_table_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">decode_table</span><span class="p">)</span>
+    <span class="n">tokens</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Find and classify tokens
+</span>    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">number_table</span><span class="p">:</span>
+        <span class="n">real_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">.</span><span class="n">group</span><span class="p">().</span><span class="n">split</span><span class="p">(</span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="n">real_number</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">real_number</span> <span class="o">-=</span> <span class="mi">1</span>
+        
+        <span class="n">variable_name</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">number</span><span class="p">.</span><span class="n">start</span><span class="p">()</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span><span class="n">number</span><span class="p">.</span><span class="n">start</span><span class="p">()</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">real_number</span> <span class="o">&gt;=</span> <span class="n">decode_table_len</span><span class="p">:</span>
+            <span class="n">tokens</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">'real_value'</span><span class="p">:</span> <span class="s">''</span><span class="p">,</span>
+                <span class="s">'number'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">real_number</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+                <span class="s">'is_encoded'</span><span class="p">:</span> <span class="bp">False</span>
+            <span class="p">}</span>
+            <span class="k">continue</span>
+
+        <span class="n">real_value</span> <span class="o">=</span> <span class="n">decode_table</span><span class="p">[</span><span class="n">real_number</span><span class="p">]</span>
+        <span class="n">tokens</span><span class="p">[</span><span class="n">variable_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'real_value'</span><span class="p">:</span> <span class="n">real_value</span><span class="p">.</span><span class="n">decode</span><span class="p">(),</span>
+            <span class="s">'number'</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">real_number</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span>
+            <span class="s">'is_encoded'</span><span class="p">:</span> <span class="bp">True</span>
+        <span class="p">}</span>
+
+    <span class="c1"># Replace the values
+</span>    <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">value</span><span class="p">[</span><span class="s">'is_encoded'</span><span class="p">]:</span> <span class="c1"># If has a value in decode_table
+</span>            <span class="n">replace_var</span> <span class="o">=</span> <span class="s">"$os[{}]"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">replace_var</span><span class="p">,</span> <span class="s">'</span><span class="se">\"</span><span class="s">{}</span><span class="se">\"</span><span class="s">'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s">'real_value'</span><span class="p">]))</span>
+        
+        <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="s">'number'</span><span class="p">])</span>
+
+
+
+
+    <span class="k">return</span> <span class="n">content</span>        
+    
+</code></pre></div></div>
+
+<p>The final code looks like:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/deobfuscated.png" alt="" /></p>
+
+<p>Now, let’s start the real challenge, this is far from finish.</p>
+
+<h1 id="windows-crypto-functions">Windows crypto functions</h1>
+
+<p>You already have noticed that has come calls to <strong><em>CryptAcquireContextA</em></strong> and <strong><em>CryptDecrypt</em></strong>, in order to AutoIT call this native functions it will use a special call called <strong><em>DllCall</em></strong> and the values must be created as an struct in memory with <strong><em>DllStructCreate</em></strong>, this structures holds the same memory representation as this function will received if was called by the native code.</p>
+
+<p>I recreated all this encryption part in C++, and it will be very easy to show what is happening here, because I already did all the dirty work to read each value in the struct passed and rebuild exactly the same call, if you don’t have windows SDK, you can follow all this using the <a href="https://github.com/wine-mirror/wine/blob/master/include/wincrypt.h">wincrypt.h</a> from wine,so let’s in parts:</p>
+
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecontexta">CryptAcquireContextA</a> starts a new “encryption session” in Windows, using the handler we can access the crypto features, and this function must be called with the correct params that we want in our encryption.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BOOL</span> <span class="nf">CryptAcquireContextA</span><span class="p">(</span>
+  <span class="n">HCRYPTPROV</span> <span class="o">*</span><span class="n">phProv</span><span class="p">,</span>
+  <span class="n">LPCSTR</span>     <span class="n">szContainer</span><span class="p">,</span>
+  <span class="n">LPCSTR</span>     <span class="n">szProvider</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="n">dwProvType</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="n">dwFlags</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HCRYPTPROV</span> <span class="n">cryptContext</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">CryptAcquireContext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cryptContext</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">PROV_RSA_AES</span><span class="p">,</span> <span class="mi">4026531840</span><span class="p">))</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>So this will start a session that will use AES for RSA keys.</p>
+
+<p><a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptcreatehash">CryptCreateHash</a> will start a new hash algorithm using the previous context, in this case:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL CryptCreateHash(
+  HCRYPTPROV hProv,
+  ALG_ID     Algid,
+  HCRYPTKEY  hKey,
+  DWORD      dwFlags,
+  HCRYPTHASH *phHash
+);
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HCRYPTHASH</span> <span class="n">hash</span><span class="p">;</span>
+<span class="n">CryptCreateHash</span><span class="p">(</span>
+    <span class="n">cryptContext</span><span class="p">,</span>
+    <span class="n">CALG_SHA_256</span><span class="p">,</span> <span class="c1">// 32780</span>
+    <span class="nb">NULL</span><span class="p">,</span>
+    <span class="nb">NULL</span><span class="p">,</span>
+    <span class="o">&amp;</span><span class="n">hash</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Now it will use <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-crypthashdata">CryptHashData</a> to hash the data from <strong><em>flisilaylnraw</em></strong> variable (I will back in this names too) and will retrieve the results with <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptgethashparam">CryptGetHashParam</a>.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BOOL</span> <span class="nf">CryptHashData</span><span class="p">(</span>
+  <span class="n">HCRYPTHASH</span> <span class="n">hHash</span><span class="p">,</span>
+  <span class="k">const</span> <span class="n">BYTE</span> <span class="o">*</span><span class="n">pbData</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="n">dwDataLen</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="n">dwFlags</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BOOL</span> <span class="nf">CryptGetHashParam</span><span class="p">(</span>
+  <span class="n">HCRYPTHASH</span> <span class="n">hHash</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="n">dwParam</span><span class="p">,</span>
+  <span class="n">BYTE</span>       <span class="o">*</span><span class="n">pbData</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="o">*</span><span class="n">pdwDataLen</span><span class="p">,</span>
+  <span class="n">DWORD</span>      <span class="n">dwFlags</span>
+<span class="p">);</span>
+</code></pre></div></div>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="n">CryptHashData</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">input</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CryptGetHashParam</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">HP_HASHVAL</span><span class="p">,</span> <span class="n">hashedData</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hashSize</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)){</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now, it will concat this value with another hex value:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x66</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span> <span class="o">+</span> <span class="o">&lt;</span><span class="n">hashed_data</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>This value, is actually a <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/ns-wincrypt-publickeystruc">PUBLICKEYSTRUC</a> that come when you export you created key by using <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptexportkey">CryptExportKey</a> function.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/pubkeystruct.png" alt="" /></p>
+
+<p>So, there is a bunch of encrypted data in this part, and the created key will be imported with <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptimportkey">CryptImportKey</a> function and later this encrypted data will be decrypted by <a href="https://docs.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecrypt">CryptDecrypt</a>, if the decryption is sucessfully, our flag will be placed in our QRCode.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL CryptImportKey(
+  HCRYPTPROV hProv,
+  const BYTE *pbData,
+  DWORD      dwDataLen,
+  HCRYPTKEY  hPubKey,
+  DWORD      dwFlags,
+  HCRYPTKEY  *phKey
+);
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL CryptDecrypt(
+  HCRYPTKEY  hKey,
+  HCRYPTHASH hHash,
+  BOOL       Final,
+  DWORD      dwFlags,
+  BYTE       *pbData,
+  DWORD      *pdwDataLen
+);
+</code></pre></div></div>
+
+<p>So, I created an entire decrypt system based in this algorithm, but guess so ? It’s not the way to beat this challenge, but is fundamental to understand that part.</p>
+
+<h2 id="the-unused-brute-force-function">The unused brute force function</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">bool</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">BYTE</span><span class="o">*</span> <span class="n">candidate_password</span><span class="p">,</span> <span class="kt">int</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+
+
+	<span class="kt">bool</span> <span class="n">ok</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">HCRYPTPROV</span> <span class="n">cryptContext</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CryptAcquireContext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cryptContext</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">PROV_RSA_AES</span><span class="p">,</span> <span class="mi">4026531840</span><span class="p">))</span> <span class="p">{</span>
+		<span class="c1">/// Context ok</span>
+		<span class="c1">// 32 bytes sha256 + public key header with 12 bytes</span>
+		<span class="n">BYTE</span> <span class="n">key</span><span class="p">[</span><span class="n">KEY_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mh">0x08</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x10</span><span class="p">,</span> <span class="mh">0x66</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="p">};</span> <span class="c1">// Partial key</span>
+		<span class="n">BYTE</span> <span class="n">encData</span><span class="p">[</span><span class="n">ENC_DATA_SIZE</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mh">0xcd</span><span class="p">,</span> <span class="mh">0x4b</span><span class="p">,</span> <span class="mh">0x32</span><span class="p">,</span> <span class="mh">0xc6</span><span class="p">,</span> <span class="mh">0x50</span><span class="p">,</span> <span class="mh">0xcf</span><span class="p">,</span> <span class="mh">0x21</span><span class="p">,</span> <span class="mh">0xbd</span><span class="p">,</span> <span class="mh">0xa1</span><span class="p">,</span> <span class="mh">0x84</span><span class="p">,</span> <span class="mh">0xd8</span><span class="p">,</span> <span class="mh">0x91</span><span class="p">,</span> <span class="mh">0x3e</span><span class="p">,</span> <span class="mh">0x6f</span><span class="p">,</span> <span class="mh">0x92</span><span class="p">,</span> <span class="mh">0xa</span><span class="p">,</span> <span class="mh">0x37</span><span class="p">,</span> <span class="mh">0xa4</span><span class="p">,</span> <span class="mh">0xf3</span><span class="p">,</span> <span class="mh">0x96</span><span class="p">,</span> <span class="mh">0x37</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0xc0</span><span class="p">,</span> <span class="mh">0x42</span><span class="p">,</span> <span class="mh">0xc4</span><span class="p">,</span> <span class="mh">0x59</span><span class="p">,</span> <span class="mh">0xea</span><span class="p">,</span> <span class="mh">0x7</span><span class="p">,</span> <span class="mh">0xb7</span><span class="p">,</span> <span class="mh">0x9e</span><span class="p">,</span> <span class="mh">0xa4</span><span class="p">,</span> <span class="mh">0x43</span><span class="p">,</span> <span class="mh">0xff</span><span class="p">,</span> <span class="mh">0xd1</span><span class="p">,</span> <span class="mh">0x89</span><span class="p">,</span> <span class="mh">0x8b</span><span class="p">,</span> <span class="mh">0xae</span><span class="p">,</span> <span class="mh">0x49</span><span class="p">,</span> <span class="mh">0xb1</span><span class="p">,</span> <span class="mh">0x15</span><span class="p">,</span> <span class="mh">0xf6</span><span class="p">,</span> <span class="mh">0xcb</span><span class="p">,</span> <span class="mh">0x1e</span><span class="p">,</span> <span class="mh">0x2a</span><span class="p">,</span> <span class="mh">0x7c</span><span class="p">,</span> <span class="mh">0x1a</span><span class="p">,</span> <span class="mh">0xb3</span><span class="p">,</span> <span class="mh">0xc4</span><span class="p">,</span> <span class="mh">0xc2</span><span class="p">,</span> <span class="mh">0x56</span><span class="p">,</span> <span class="mh">0x12</span><span class="p">,</span> <span class="mh">0xa5</span><span class="p">,</span> <span class="mh">0x19</span><span class="p">,</span> <span class="mh">0x3</span><span class="p">,</span> <span class="mh">0x5f</span><span class="p">,</span> <span class="mh">0x18</span><span class="p">,</span> <span class="mh">0xfb</span><span class="p">,</span> <span class="mh">0x3b</span><span class="p">,</span> <span class="mh">0x17</span><span class="p">,</span> <span class="mh">0x52</span><span class="p">,</span> <span class="mh">0x8b</span><span class="p">,</span> <span class="mh">0x3a</span><span class="p">,</span> <span class="mh">0xec</span><span class="p">,</span> <span class="mh">0xaf</span><span class="p">,</span> <span class="mh">0x3d</span><span class="p">,</span> <span class="mh">0x48</span><span class="p">,</span> <span class="mh">0xe</span><span class="p">,</span> <span class="mh">0x98</span><span class="p">,</span> <span class="mh">0xbf</span><span class="p">,</span> <span class="mh">0x8a</span><span class="p">,</span> <span class="mh">0x63</span><span class="p">,</span> <span class="mh">0x5d</span><span class="p">,</span> <span class="mh">0xaf</span><span class="p">,</span> <span class="mh">0x97</span><span class="p">,</span> <span class="mh">0x4e</span><span class="p">,</span> <span class="mh">0x0</span><span class="p">,</span> <span class="mh">0x13</span><span class="p">,</span> <span class="mh">0x53</span><span class="p">,</span> <span class="mh">0x5d</span><span class="p">,</span> <span class="mh">0x23</span><span class="p">,</span> <span class="mh">0x1e</span><span class="p">,</span> <span class="mh">0x4b</span><span class="p">,</span> <span class="mh">0x75</span><span class="p">,</span> <span class="mh">0xb2</span><span class="p">,</span> <span class="mh">0xc3</span><span class="p">,</span> <span class="mh">0x8b</span><span class="p">,</span> <span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x4c</span><span class="p">,</span> <span class="mh">0x7a</span><span class="p">,</span> <span class="mh">0xe4</span><span class="p">,</span> <span class="mh">0xd2</span><span class="p">,</span> <span class="mh">0x66</span><span class="p">,</span> <span class="mh">0xa3</span><span class="p">,</span> <span class="mh">0x7b</span><span class="p">,</span> <span class="mh">0x36</span><span class="p">,</span> <span class="mh">0xf2</span><span class="p">,</span> <span class="mh">0xc5</span><span class="p">,</span> <span class="mh">0x55</span><span class="p">,</span> <span class="mh">0xbf</span><span class="p">,</span> <span class="mh">0x3a</span><span class="p">,</span> <span class="mh">0x9e</span><span class="p">,</span> <span class="mh">0xa6</span><span class="p">,</span> <span class="mh">0xa5</span><span class="p">,</span> <span class="mh">0x8b</span><span class="p">,</span> <span class="mh">0xc8</span><span class="p">,</span> <span class="mh">0xf9</span><span class="p">,</span> <span class="mh">0x6</span><span class="p">,</span> <span class="mh">0xcc</span><span class="p">,</span> <span class="mh">0x66</span><span class="p">,</span> <span class="mh">0x5e</span><span class="p">,</span> <span class="mh">0xae</span><span class="p">,</span> <span class="mh">0x2c</span><span class="p">,</span> <span class="mh">0xe6</span><span class="p">,</span> <span class="mh">0xf</span><span class="p">,</span> <span class="mh">0x2c</span><span class="p">,</span> <span class="mh">0xde</span><span class="p">,</span> <span class="mh">0x38</span><span class="p">,</span> <span class="mh">0xfd</span><span class="p">,</span> <span class="mh">0x30</span><span class="p">,</span> <span class="mh">0x26</span><span class="p">,</span> <span class="mh">0x9c</span><span class="p">,</span> <span class="mh">0xc4</span><span class="p">,</span> <span class="mh">0xce</span><span class="p">,</span> <span class="mh">0x5b</span><span class="p">,</span> <span class="mh">0xb0</span><span class="p">,</span> <span class="mh">0x90</span><span class="p">,</span> <span class="mh">0x47</span><span class="p">,</span> <span class="mh">0x2f</span><span class="p">,</span> <span class="mh">0xf9</span><span class="p">,</span> <span class="mh">0xbd</span><span class="p">,</span> <span class="mh">0x26</span><span class="p">,</span> <span class="mh">0xf9</span><span class="p">,</span> <span class="mh">0x11</span><span class="p">,</span> <span class="mh">0x9b</span><span class="p">,</span> <span class="mh">0x8c</span><span class="p">,</span> <span class="mh">0x48</span><span class="p">,</span> <span class="mh">0x4f</span><span class="p">,</span> <span class="mh">0xe6</span><span class="p">,</span> <span class="mh">0x9e</span><span class="p">,</span> <span class="mh">0xb9</span><span class="p">,</span> <span class="mh">0x34</span><span class="p">,</span> <span class="mh">0xf4</span><span class="p">,</span> <span class="mh">0x3f</span><span class="p">,</span> <span class="mh">0xee</span><span class="p">,</span> <span class="mh">0xde</span><span class="p">,</span> <span class="mh">0xdc</span><span class="p">,</span> <span class="mh">0xeb</span><span class="p">,</span> <span class="mh">0xa7</span><span class="p">,</span> <span class="mh">0x91</span><span class="p">,</span> <span class="mh">0x46</span><span class="p">,</span> <span class="mh">0x8</span><span class="p">,</span> <span class="mh">0x19</span><span class="p">,</span> <span class="mh">0xfb</span><span class="p">,</span> <span class="mh">0x21</span><span class="p">,</span> <span class="mh">0xf1</span><span class="p">,</span> <span class="mh">0xf</span><span class="p">,</span> <span class="mh">0x83</span><span class="p">,</span> <span class="mh">0x2b</span><span class="p">,</span> <span class="mh">0x2a</span><span class="p">,</span> <span class="mh">0x5d</span><span class="p">,</span> <span class="mh">0x4d</span><span class="p">,</span> <span class="mh">0x77</span><span class="p">,</span> <span class="mh">0x2d</span><span class="p">,</span> <span class="mh">0xb1</span><span class="p">,</span> <span class="mh">0x2c</span><span class="p">,</span> <span class="mh">0x3b</span><span class="p">,</span> <span class="mh">0xed</span><span class="p">,</span> <span class="mh">0x94</span><span class="p">,</span> <span class="mh">0x7f</span><span class="p">,</span> <span class="mh">0x6f</span><span class="p">,</span> <span class="mh">0x70</span><span class="p">,</span> <span class="mh">0x6a</span><span class="p">,</span> <span class="mh">0xe4</span><span class="p">,</span> <span class="mh">0x41</span><span class="p">,</span> <span class="mh">0x1a</span><span class="p">,</span> <span class="mh">0x52</span><span class="p">,</span> <span class="p">};</span>
+
+
+		<span class="n">PUBLICKEYSTRUC</span><span class="o">*</span> <span class="n">pubstruct</span> <span class="o">=</span> <span class="p">(</span><span class="n">PUBLICKEYSTRUC</span><span class="o">*</span><span class="p">)</span> <span class="n">key</span><span class="p">;</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"Key type: 0x%x</span><span class="se">\n</span><span class="s">Alg id: 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">pubstruct</span><span class="o">-&gt;</span><span class="n">bType</span><span class="p">,</span> <span class="n">pubstruct</span><span class="o">-&gt;</span><span class="n">aiKeyAlg</span><span class="p">);</span>
+
+
+		<span class="n">HCRYPTHASH</span> <span class="n">hash</span><span class="p">;</span>
+		<span class="n">CryptCreateHash</span><span class="p">(</span>
+			<span class="n">cryptContext</span><span class="p">,</span>
+			<span class="n">CALG_SHA_256</span><span class="p">,</span> <span class="c1">// 32780</span>
+			<span class="nb">NULL</span><span class="p">,</span>
+			<span class="nb">NULL</span><span class="p">,</span>
+			<span class="o">&amp;</span><span class="n">hash</span><span class="p">);</span>
+
+		<span class="c1">// Hash created</span>
+		<span class="k">const</span> <span class="n">BYTE</span><span class="o">*</span> <span class="n">userinput</span> <span class="o">=</span> <span class="p">(</span><span class="k">const</span> <span class="n">BYTE</span><span class="o">*</span><span class="p">)</span><span class="n">candidate_password</span><span class="p">;</span>
+		<span class="n">BYTE</span> <span class="n">hashedData</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+		<span class="n">DWORD</span> <span class="n">hashSize</span><span class="p">;</span>
+
+<span class="c1">//		puts("Hashing value...");</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">CryptHashData</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">userinput</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CryptGetHashParam</span><span class="p">(</span><span class="n">hash</span><span class="p">,</span> <span class="n">HP_HASHVAL</span><span class="p">,</span> <span class="n">hashedData</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hashSize</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)){</span>
+			<span class="c1">// sha256 hash</span>
+<span class="c1">//			puts("Building the candidate private key...");</span>
+			<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">hashSize</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">key</span><span class="p">[</span><span class="n">INITIAL_SIZE</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">hashedData</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+			<span class="p">}</span>
+
+			<span class="c1">// Create </span>
+
+			<span class="n">HCRYPTPROV</span> <span class="n">decryptContext</span><span class="p">;</span>
+			<span class="n">HCRYPTKEY</span> <span class="n">privKey</span><span class="p">;</span>
+			<span class="c1">//puts("Importing key...");</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">CryptAcquireContext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">decryptContext</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CryptImportKey</span><span class="p">(</span><span class="n">decryptContext</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">KEY_SIZE</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">privKey</span><span class="p">))</span> <span class="p">{</span>
+				<span class="n">puts</span><span class="p">(</span><span class="s">"[+] Key imported! [+]</span><span class="se">\n</span><span class="s">Starting decryption..."</span><span class="p">);</span>
+				<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KEY_SIZE</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+					<span class="n">printf</span><span class="p">(</span><span class="s">"%x"</span><span class="p">,</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+				<span class="p">}</span>
+				<span class="n">DWORD</span> <span class="n">data_len</span><span class="p">;</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">CryptDecrypt</span><span class="p">(</span><span class="n">privKey</span><span class="p">,</span> <span class="n">hash</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">encData</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">data_len</span><span class="p">))</span> <span class="p">{</span>
+					<span class="n">puts</span><span class="p">(</span><span class="s">"[+] Decrypted!! [+]"</span><span class="p">);</span>
+
+					<span class="n">printf</span><span class="p">(</span><span class="s">"Hex value: "</span><span class="p">);</span>
+					<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ENC_DATA_SIZE</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+						<span class="n">printf</span><span class="p">(</span><span class="s">"%x"</span><span class="p">,</span> <span class="n">encData</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+					<span class="p">}</span>
+
+					<span class="n">printf</span><span class="p">(</span><span class="s">"Char value: "</span><span class="p">);</span>
+					<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ENC_DATA_SIZE</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+						<span class="n">printf</span><span class="p">(</span><span class="s">"%c"</span><span class="p">,</span> <span class="n">encData</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+					<span class="p">}</span>
+					
+					<span class="n">printf</span><span class="p">(</span><span class="s">"Key used: "</span><span class="p">);</span>
+					<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">KEY_SIZE</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+						<span class="n">printf</span><span class="p">(</span><span class="s">"%x"</span><span class="p">,</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+					<span class="p">}</span>
+					<span class="n">ok</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+				<span class="p">}</span>
+				<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">GetLastError</span><span class="p">());</span>
+				<span class="n">CryptDestroyKey</span><span class="p">(</span><span class="n">privKey</span><span class="p">);</span>
+				<span class="n">CryptDestroyHash</span><span class="p">(</span><span class="n">hash</span><span class="p">);</span>
+
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">ok</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h1 id="the-computer-name-function">The computer name function</h1>
+
+<p>Later on I realized that my input was never sent to the encryption part, but was another value, this value was my computer name that the script gets my calling <a href="https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamea">GetComputerNameA</a> function, then the name of my computer is passed to a function that will do a lot of operation up my computer name bytes and just after that, this decryption routine is called.</p>
+
+<p><strong><em>obs: At this point I already renamed a lot of functions name, so it’s very clean righ now</em></strong></p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/inject_flag.png" alt="" /></p>
+
+<p>So, here my computer name is saved and then passed to a function that a called <strong><em>PrepareComputerName</em></strong></p>
+
+<h2 id="preparecomputername-function">PrepareComputerName function</h2>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/prepare_computername.png" alt="" /></p>
+
+<p>The key to beat this challenge is here, the script will load the <strong><em>sprite.bmp</em></strong> image and will see if it has some content after 54 bytes (After the bitmap header), and will start to loop in each of our computer name value and do the following steps:</p>
+
+<p>Inside bitmap loop</p>
+
+<ul>
+  <li>Read 6 bytes from the bitmap file</li>
+  <li>For each byte it will check if has a <a href="https://en.wikipedia.org/wiki/Bit_numbering#Least_significant_bit">Least significant bit</a></li>
+  <li>If has, it will be shift left this bit by the loop number it are righ now</li>
+  <li>It will sum that to the current variable name</li>
+</ul>
+
+<p>Out bitmap loop:</p>
+<ul>
+  <li>It will remove the LSB</li>
+  <li>Then will sum this value by 128 (1«7)</li>
+</ul>
+
+<p>What the **ck is this ? I don’t picke-up 100% of this encoding technique, but the important part is, the key is actually encoded here, if we just ignore the fact that we are increasing the computer name byte and just get the encoded value in the bitmap, we will be able to recover the key. Because this function guarante that if the computername is wrong it will be changed by the encode schema.</p>
+
+<p>I rewritten this routine to give us the key, and for better understanding:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<span class="n">sprite_content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"sprite.bmp"</span><span class="p">,</span> <span class="s">"rb"</span><span class="p">).</span><span class="n">read</span><span class="p">()</span>
+<span class="n">hostname</span> <span class="o">=</span> <span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">lower</span><span class="p">()]</span>
+
+<span class="n">sprite_content</span> <span class="o">=</span> <span class="n">sprite_content</span><span class="p">[</span><span class="mi">54</span><span class="p">:]</span> <span class="c1"># Remove header
+</span>
+<span class="n">out</span> <span class="o">=</span> <span class="s">""</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">extracted</span> <span class="o">=</span> <span class="s">""</span>
+
+
+<span class="n">flag</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hostname</span><span class="p">)):</span>
+	<span class="n">number_at</span> <span class="o">=</span> <span class="n">hostname</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+	<span class="n">real_value</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">"Picking {} "</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">number_at</span><span class="p">))</span>
+	<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">f</span> <span class="o">=</span> <span class="p">(</span><span class="n">sprite_content</span><span class="p">[</span><span class="n">count</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">j</span>
+		<span class="k">print</span><span class="p">(</span><span class="s">"({} &amp; 1) &lt;&lt; {} = {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">sprite_content</span><span class="p">[</span><span class="n">count</span><span class="p">],</span> <span class="n">j</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+		<span class="n">number_at</span> <span class="o">+=</span> <span class="n">f</span>
+		<span class="n">real_value</span> <span class="o">+=</span> <span class="n">f</span>
+		<span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+	
+	<span class="n">flag</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="nb">chr</span><span class="p">(</span><span class="n">real_value</span><span class="p">))</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">"Result {}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">number_at</span><span class="p">))</span>
+
+		
+	<span class="n">sum_lsb</span> <span class="o">=</span> <span class="p">(</span><span class="n">number_at</span> <span class="o">&gt;&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">number_at</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="s">"Appling ({0} &gt;&gt; 1) + (({0} &amp; 1)) &lt;&lt; 7) = {1}"</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">number_at</span><span class="p">,</span> <span class="n">sum_lsb</span><span class="p">))</span>
+	<span class="n">out</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">sum_lsb</span><span class="p">)</span>
+
+
+
+<span class="k">print</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">flag</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">' '</span><span class="p">.</span><span class="n">join</span><span class="p">([</span> <span class="nb">hex</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">o</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">out</span> <span class="p">]))</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>If will run with any input and the bitmap, we will get the encoded value + the operation result value:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 decode.py THISISAVERYGO                                                                                                                                      
+Picking 116 
+(255 &amp; 1) &lt;&lt; 6 = 64
+(255 &amp; 1) &lt;&lt; 5 = 32
+(254 &amp; 1) &lt;&lt; 4 = 0
+(254 &amp; 1) &lt;&lt; 3 = 0
+(254 &amp; 1) &lt;&lt; 2 = 0
+(254 &amp; 1) &lt;&lt; 1 = 0
+(255 &amp; 1) &lt;&lt; 0 = 1
+Result 213
+Appling (213 &gt;&gt; 1) + ((213 &amp; 1)) &lt;&lt; 7) = 234
+Picking 104 
+(255 &amp; 1) &lt;&lt; 6 = 64
+(255 &amp; 1) &lt;&lt; 5 = 32
+(255 &amp; 1) &lt;&lt; 4 = 16
+(254 &amp; 1) &lt;&lt; 3 = 0
+(255 &amp; 1) &lt;&lt; 2 = 4
+(254 &amp; 1) &lt;&lt; 1 = 0
+(255 &amp; 1) &lt;&lt; 0 = 1
+Result 221
+....
+aut01tfan1999
+êîîÑMóãëéÑYPT
+0xea 0xee 0xee 0xd1 0x4d 0xf3 0xe3 0xeb 0xe9 0xd1 0x59 0x50 0x54
+13
+</code></pre></div></div>
+
+<p>The encoded value is <strong><em>aut01tfan1999</em></strong> if we pass this value as the input of this function, it will get the same as output:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>...
+Result 114
+Appling (114 &gt;&gt; 1) + ((114 &amp; 1)) &lt;&lt; 7) = 57
+aut01tfan1999
+aut01tfan1999
+0x61 0x75 0x74 0x30 0x31 0x74 0x66 0x61 0x6e 0x31 0x39 0x39 0x39
+</code></pre></div></div>
+
+<h1 id="finally-the-flag">Finally, the flag</h1>
+
+<p>Nice, we can now open the project in AutoIT editor and change the computer name or change our computer name and reboot.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/codeit/flag.png" alt="" /></p>
+
+<p>That one, was very hard to pick-up and I did a LOT of research in many topics, the resolution was far from what I was looking at the beginning, but still a very nice and amazing challenge!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/flare7" class="page__taxonomy-item" rel="tag">flare7</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/malware" class="page__taxonomy-item" rel="tag">malware</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/write-up" class="page__taxonomy-item" rel="tag">write-up</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-10-23T23:23:36+00:00">October 23, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/reverse-shells-write-and-hunt-part-1/" class="pagination--pager" title="Reverse shells: Learn by writing
+">Previous</a>
+    
+    
+      <a href="/VBA-Stomping-flare/" class="pagination--pager" title="VBA Stomping: The macro hidden in plain sight
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>
