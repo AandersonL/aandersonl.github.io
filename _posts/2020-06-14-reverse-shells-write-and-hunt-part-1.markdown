@@ -3,7 +3,7 @@ layout: single
 
 title: "Reverse shells: Learn by writing"
 date: 2020-06-14 18:31:36 -0300
-permalink: /:categories/:title/
+permalink: /:title/
 categories: [programming, cybersec, powershell]
 
 images_prefix: /assets/images/reverse_shell/

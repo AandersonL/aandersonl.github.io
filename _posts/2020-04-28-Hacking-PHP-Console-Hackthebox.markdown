@@ -3,7 +3,7 @@ layout: single
 
 title: "Beating Console challenge from Hackthebox"
 date: 2020-04-28 21:31:36 -0300
-permalink: /:categories/:title/
+permalink: /:title/
 categories: [cybersec, write-up]
 
 images_prefix: /assets/images/console_hackthebox/

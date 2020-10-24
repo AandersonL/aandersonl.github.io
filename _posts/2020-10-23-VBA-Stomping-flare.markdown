@@ -2,14 +2,28 @@
 layout: single
 
 title: "VBA Stomping: The macro hidden in plain sight"
-date: 2020-10-19 14:23:36 -0300
-permalink: /:categories/:title/
-categories: [cybersec, write-up]
+date: 2020-10-23 20:23:36 -0300
+permalink: /:title/
+categories: [cybersec, write-up, flare7]
 
 images_prefix: /assets/images/vbastomping_flare/
 ---
 
 At [Flare-on 7th](https://www.fireeye.com/blog/threat-research/2020/08/announcing-the-seventh-annual-flare-on-challenge.html) there was a very interesting malware analysis challenge that envolved a very unique hide technique for malicious Macros. This technique is called [VBA Stomp](https://vbastomp.com/), this works by hiding the real source code compiled in [P-Code](https://en.wikipedia.org/wiki/P-code_machine), the "bytecode" used in macros, and then making the visible source code as a fake one, if the malicious crafted document run in the same version that was previously compiled, the p-code will be executed.
+
+
+
+# Why is this useful ?
+
+## Document analysis
+
+Even more, malwares are embedded in documents, this challenge explores how can a malware can inject a malicious code and abuse from VBA macros to exploit machines.
+
+## Advanced evasion technique
+
+VBA Stomp is the key of this challenge, and in my humble opinion, a amazing injection technique. The source code literally does not exists in plain text, we must go deeper in order to acomplish the real malware intentions.
+
+
 
 I was fooled in that challenge, and I want to share my write-up to solve this one, check it out.
 

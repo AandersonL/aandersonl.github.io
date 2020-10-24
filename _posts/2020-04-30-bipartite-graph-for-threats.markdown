@@ -3,7 +3,7 @@ layout: single
 
 title: "Using bipartite Graphs to detect Malware campaigns"
 date: 2020-04-30 20:31:36 -0300
-permalink: /:categories/:title/
+permalink: /:title/
 categories: [cybersec, programming]
 
 images_prefix: /assets/images/bipartite_graph/
