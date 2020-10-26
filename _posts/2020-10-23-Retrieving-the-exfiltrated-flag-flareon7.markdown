@@ -306,7 +306,7 @@ Notice that ESP holds my file data and Yes, I just fill with a bunch of ***A***,
 
 You can see that the key is loaded and my data is in the stack with a bunch of ***0x41***, the A's before, It was a really bad idea fill with a unique byte... But, it really doesn't matter, I already found the encryption loop, so I just need to analyze that, try to understand and write a decoder for th... no, please, just no. 
 
-## The simple idead that reveal the flag
+## The simple idea that reveal the flag
 
 So I don't know if this was an act of miracle, or from where come this insight, but my idea was, what if I replace my ***C:\accounts.txt*** with the encoded/exfiltrated data ? 
 
