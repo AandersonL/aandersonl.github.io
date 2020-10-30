@@ -172,7 +172,7 @@ So, how I managed to defeat this obfuscation ? Doing all this at once!
 * Create a regex rule to found all the ***Number(" \d+ ")*** ocurrences
 * If it's the number is lower than the size of my decode table I save the variable name with the value
 * Else I just hold the number value and the variable, because sometimes it wants just the number
-* I now replace all ***$os[<variable>]*** by the value itself.
+* Then replace all ***$os[]*** by the value itself.
 
 ### Deobfuscator code
 
