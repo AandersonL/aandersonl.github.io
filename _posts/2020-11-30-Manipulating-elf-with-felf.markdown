@@ -246,13 +246,13 @@ elf->e_indent:
 
 ### Finding the section string table
 
-Ok, now let's start the real job to get the section string table and change the ***.text*** section name, In order to accomplish that we need the the first entry in the section array structure and get the total bytes used by this array, all this informations can be found in the elf header in the following fields:
+Ok, now let's start the real job to get the section ***.text*** his name, In order to accomplish that we need the the first entry in the section array structure and get the total bytes used by this array, all this informations can be found in the elf header in the following fields:
 
 * e_shnum - Holds the number of sections that our ELF file has
 * e_shentsize - Holds the total raw size of each section
 * e_shoff - Holds the offset of the first entry in the array
 
-Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the ***e_shoff*** and then create a ***for*** loop where each "jump" is the index * e_shentsize, that way we can jump in each element of the array.
+Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the ***e_shoff*** and then create a ***for*** loop where each "jump" is the index * e_shentsize, that way we can jump in each element of the array, after reach the .text section we can get where in the string table his name is defined.
 
 ```c
 Elf64_Ehdr* elf_header = (Elf64_Ehdr*) addr;
@@ -266,4 +266,83 @@ printf("%d Sections, with %d bytes each and starting at address 0x%x\n", num_sec
 >25 Sections, with 64 bytes each and starting at address 0x82702f68
 
 Your numbers might differ based in the file that are you using and the mapped address that is used to calculate the entry of the array.
+
+Now, we need to find the string table that will be used as an array, for our lucky index string table in the section array iseasily found in the ELF header in the field ***e_shstrndx***, to find the address using this index we just need to get the address of the first entry in the array and multiple the index with the size of each section.
+
+pseudo-code:
+```
+string_table_address = (index * section_size) + first_entry_address
+or
+string_table_address = section_size) + section
+```
+Or even better, we can just get the first section address and just add the ***section_size***, if you are familiar in how array really works in memory, this will be easy to understand.
+
+C code:
+```c
+Elf64_Shdr* string_table_section = (Elf64_Shdr*) ( (uint64_t) section + ((uint64_t) section_size * elf_header->e_shstrndx));
+```
+
+### Finding the .text string index
+Now with the section header loaded, we can find the offset where the section data is stored, as this is only the header and the real content is in another place in the file, this data location is found in the field ***sh_offset*** in the section header, so in order to find the array we just need to get the ***mapped file address + section->sh_offset***.
+
+After find the raw data in the file we just need to work how it's is specified in the ELF specs, this is a normal C-String array with the ***\00*** as delimiter.
+
+C code to find the first entry in string table:
+
+```c
+section_name = (char*) (( (uint64_t) string_table_section->sh_offset + addr) + 1);
+```
+
+This will access the string array and get the first element, in order to pick the sections name we need access the field ***sh_name*** in the section header that holds the name index of this section in the string array, using that we can iterate in each section of the file and get each name easily, check the code:
+
+```c
+Elf64_Shdr* section = (Elf64_Shdr*) ((uint64_t) addr + section_entry_offset);	
+Elf64_Shdr* string_table_section = (Elf64_Shdr*) ( (uint64_t) section + ((uint64_t) section_size * elf_header->e_shstrndx));
+
+char* section_name;
+
+for (int i = 0; i < num_sections; ++i) {
+    section = (Elf64_Shdr*) ((uint64_t) section + section_size);
+    section_name = (char*) (( (uint64_t) string_table_section->sh_offset + addr) + section->sh_name);
+}
+```
+
+### Changing the .text name
+
+Now, it's pretty simple, we can modify the name directly and as this file is mapped in memory in read-write mode our changes will be flushed direct in the diskfile, take a look:
+
+```c	
+for (int i = 0; i < num_sections; ++i) {
+    section = (Elf64_Shdr*) ((uint64_t) section + section_size);
+    section_name = (char*) (( (uint64_t) string_table_section->sh_offset + addr) + section->sh_name);
+    if (!strcmp(section_name, ".text")) {
+        strcpy(section_name, ".txet");
+    }
+
+}
+```
+
+Now take a look using ***readelf*** command to get all sections name:
+
+
+![]({{site.url}}{{page.images_prefix}}text_patch.png)
+
+
+
+The program still works because the new name is following all the elf specs, and it's a valid one.
+
+# Enter felf
+
+## Why felf
+
+## Installing
+
+## Using felf to simple operations
+
+## Cool usages
+
+### elf disassembly
+
+### Section hashing
+
 
