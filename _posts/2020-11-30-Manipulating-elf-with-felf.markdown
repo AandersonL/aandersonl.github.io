@@ -158,3 +158,112 @@ typedef struct {
 
 
 With this struct in our hands, we just need to get the index of the section name (sh_name) and change by something else, notice that if we want to make the name greater or less then the real one, we will have to reshape this array and change all the sections and address information to maintain the file integrity, in order to make this simple as possible I will just change the ***.text*** name to ***.etxt***.
+
+### Loading the entire file in memory
+
+Before we continue, let's make a real code for this task and for that we need to load the file data in our memory, just like a loader will do.
+
+For map files in memory in Linux, we will use the function [mmap](https://www.man7.org/linux/man-pages/man2/mmap.2.html) that will create a in ***memory mapping*** to a given [file descriptor](https://en.wikipedia.org/wiki/File_descriptor).
+
+Function definition:
+
+```c
+ #include <sys/mman.h>
+
+void *mmap(void *addr, size_t len, int prot, int flags, 
+            int fildes, off_t off);
+```
+
+Using this idea, take a look in the following code to load our ELF file and dump the header, we will use this piece of code for the example part:
+
+```c
+#include <elf.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+
+
+int main(int argc, char** argv)
+{
+	
+	if (argc != 2) {
+		fprintf(stderr, "Usage: %s <elf_path>\n", argv[0]);
+		return 1;
+	}
+
+	const char* elf_path = argv[1];
+	int file_fd = open(elf_path, O_RDWR); // Open in read and write
+
+	if (!file_fd) return 1;
+	
+	struct stat st; // Get file size using stat function
+	stat(elf_path, &st);
+	unsigned file_size = st.st_size;
+
+	// Map the current file descritor in any address in ours memory maps with size <file_size>
+	void* addr = mmap(NULL, file_size, O_RDWR, MAP_SHARED, file_fd, 0);
+	
+	if (!addr) return 1;
+		
+	
+	// Now we can work the new memory space using the raw address
+
+	Elf64_Ehdr* elf_header = (Elf64_Ehdr*) addr;
+
+	puts("elf->e_indent: ");
+
+	for (int i = 0; i < EI_NIDENT; ++i) {
+		printf("\t0x%x(%c)\n", elf_header->e_ident[i], elf_header->e_ident[i]);
+	}
+
+	// Unmap the values	
+	munmap(addr,file_size);
+
+	// Close the file descriptor
+	close(file_fd);
+
+
+	return 0;
+}
+```
+
+
+If you compile the code above, you will get something like:
+
+```
+elf->e_indent: 
+	0x7f()
+	0x45(E)
+	0x4c(L)
+	0x46(F)
+	0x2()
+    ...
+```
+
+### Finding the section string table
+
+Ok, now let's start the real job to get the section string table and change the ***.text*** section name, In order to accomplish that we need the the first entry in the section array structure and get the total bytes used by this array, all this informations can be found in the elf header in the following fields:
+
+* e_shnum - Holds the number of sections that our ELF file has
+* e_shentsize - Holds the total raw size of each section
+* e_shoff - Holds the offset of the first entry in the array
+
+Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the ***e_shoff*** and then create a ***for*** loop where each "jump" is the index * e_shentsize, that way we can jump in each element of the array.
+
+```c
+Elf64_Ehdr* elf_header = (Elf64_Ehdr*) addr;
+uint16_t num_sections = elf_header->e_shnum;
+uint16_t section_size = elf_header->e_shentsize;
+Elf64_Off section_entry_offset = elf_header->e_shoff;
+
+printf("%d Sections, with %d bytes each and starting at address 0x%x\n", num_sections, section_size, (uint64_t) addr + section_entry_offset);
+```
+
+>25 Sections, with 64 bytes each and starting at address 0x82702f68
+
+Your numbers might differ based in the file that are you using and the mapped address that is used to calculate the entry of the array.
+
