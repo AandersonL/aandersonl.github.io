@@ -1,0 +1,898 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.20.2 by Michael Rose
+  Copyright 2013-2020 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>Manipulating elf files in C++ using felf - $ Bit escape</title>
+<meta name="description" content="A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was have a C++ way to work in ELF files using STL structures like vector, unordered maps and so on.">
+
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="$ Bit escape">
+<meta property="og:title" content="Manipulating elf files in C++ using felf">
+<meta property="og:url" content="https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf/">
+
+
+  <meta property="og:description" content="A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was have a C++ way to work in ELF files using STL structures like vector, unordered maps and so on.">
+
+
+
+
+
+
+
+  <meta property="article:published_time" content="2020-11-30T18:00:36+00:00">
+
+
+
+
+
+
+<link rel="canonical" href="https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": null,
+      "url": "https://aandersonl.github.io/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="$ Bit escape Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+        <a class="site-title" href="/">
+          $ Bit escape
+          <span class="site-subtitle">It's good to see you here :)</span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/categories/programming/">Programming</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/cybersec/">Cybersec</a>
+            </li><li class="masthead__menu-item">
+              <a href="/categories/write-up">CTF's</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Manipulating elf files in C++ using felf">
+    <meta itemprop="description" content="A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was have a C++ way to work in ELF files using STL structures like vector, unordered maps and so on.">
+    <meta itemprop="datePublished" content="2020-11-30T18:00:36+00:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">Manipulating elf files in C++ using felf
+</h1>
+          
+
+  <p class="page__meta">
+    
+      
+      <span class="page__meta-date">
+        <i class="far fa-calendar-alt" aria-hidden="true"></i>
+        <time datetime="2020-11-30T18:00:36+00:00">November 30, 2020</time>
+      </span>
+    
+
+    <span class="page__meta-sep"></span>
+
+    
+      
+      
+
+      <span class="page__meta-readtime">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        
+          15 minute read
+        
+      </span>
+    
+  </p>
+
+
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-file-alt"></i> On this page</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#executable-files">Executable files</a>
+    <ul>
+      <li><a href="#whats-this-">What’s this ?</a></li>
+      <li><a href="#from-disk-to-memory">From disk to memory</a></li>
+    </ul>
+  </li>
+  <li><a href="#elf-internal-structures">ELF Internal structures</a>
+    <ul>
+      <li><a href="#parsing-the-header-from-scratch">Parsing the header from scratch</a></li>
+      <li><a href="#example-patching-sections-names">Example: Patching sections names</a>
+        <ul>
+          <li><a href="#loading-the-entire-file-in-memory">Loading the entire file in memory</a></li>
+          <li><a href="#finding-the-section-string-table">Finding the section string table</a></li>
+          <li><a href="#finding-the-text-string-index">Finding the .text string index</a></li>
+          <li><a href="#changing-the-text-name">Changing the .text name</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#enter-felf">Enter felf</a>
+    <ul>
+      <li><a href="#why-felf">Why felf</a></li>
+      <li><a href="#installing">Installing</a>
+        <ul>
+          <li><a href="#automatic-installation">Automatic installation</a></li>
+        </ul>
+      </li>
+      <li><a href="#first-time-using">First time using</a></li>
+      <li><a href="#cool-usages">Cool usages</a>
+        <ul>
+          <li><a href="#symbol-and-section-dump">Symbol and Section dump</a></li>
+          <li><a href="#symbol-dumping">Symbol dumping</a></li>
+          <li><a href="#elf-disassembly">Elf disassembly</a>
+            <ul>
+              <li><a href="#the-section-data">The section data</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>A couple months ago I created <a href="https://github.com/AandersonL/felf">felf</a>, a library to parse <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a> files into C++ structures, the reason for this was have a C++ way to work in ELF files using <a href="https://www.geeksforgeeks.org/the-c-standard-template-library-stl/">STL</a> structures like vector, unordered maps and so on.</p>
+
+<p>For this reason I wanna explore what was built and why, and show to you all the possibilities of this tiny yet nice library.</p>
+
+<h1 id="executable-files">Executable files</h1>
+
+<h2 id="whats-this-">What’s this ?</h2>
+
+<p>This files is in your life more than ever, you can find that in your SmartTV, Videogames, IoT devices and Unix systems.</p>
+
+<p>The idea of this kind files knowns as <strong><em>executable files</em></strong> its to design a way to pack every information of a software into a single file that your OS will read, and do all the dirty work to map into memory every piece of code and resources that your CPU will use to execute.</p>
+
+<p>ELF it’s not the only one, <a href="https://en.wikipedia.org/wiki/Portable_Executable">PE</a> is mainly used in Windows, <a href="https://en.wikipedia.org/wiki/Mach-O">Mach-o</a> is used in MacOS systems, and for that article and library I will <strong><em>focus in Linux machines</em></strong>, although all the knowledge is the same that you need to work with PE and Mach-O files.</p>
+
+<h2 id="from-disk-to-memory">From disk to memory</h2>
+
+<p>Imagine ELF files as a pre-fabricated home, the way the file is in disk contains almost the same structure that will be mapped in memory, inside the file contains all the information that your OS has to follow to do map the entire file in the correct way.</p>
+
+<p>The structure is the follow:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/felflib/elf.svg" alt="" height="50%" width="50%" /></p>
+
+<p>Everything is pretty straight forward:</p>
+
+<ul>
+  <li>A ELF header that holds the basic information of the file</li>
+  <li>A program header table that describe each segment of code that will be mapped</li>
+  <li>Sections that hold some data like, executable code, string table, symbol table and so on</li>
+  <li>Section header which is a array like structure that hold all sections information</li>
+</ul>
+
+<h1 id="elf-internal-structures">ELF Internal structures</h1>
+
+<p>Each of this structure are defined in <strong><em>elf.h</em></strong> and if you run <strong><em>man elf</em></strong> you will get the full documentation to work with that. Let’s start by parsing in ELF header from disk (without loading anything in memory yet).</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define EI_NIDENT 16
+</span>
+<span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">e_ident</span><span class="p">[</span><span class="n">EI_NIDENT</span><span class="p">];</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_type</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_machine</span><span class="p">;</span>
+    <span class="kt">uint32_t</span>      <span class="n">e_version</span><span class="p">;</span>
+    <span class="n">ElfN_Addr</span>     <span class="n">e_entry</span><span class="p">;</span>
+    <span class="n">ElfN_Off</span>      <span class="n">e_phoff</span><span class="p">;</span>
+    <span class="n">ElfN_Off</span>      <span class="n">e_shoff</span><span class="p">;</span>
+    <span class="kt">uint32_t</span>      <span class="n">e_flags</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_ehsize</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_phentsize</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_phnum</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_shentsize</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_shnum</span><span class="p">;</span>
+    <span class="kt">uint16_t</span>      <span class="n">e_shstrndx</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">ElfN_Ehdr</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>This struct specifies a struct that in the file it’s equivalent to the first bytes, notice that we have a <strong><em>N</em></strong> in the variable name that can be used with <strong><em>32</em></strong> or <strong><em>64</em></strong> bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;elf.h&gt;
+</span><span class="p">...</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">"%d bytes</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Elf32_Ehdr</span><span class="p">));</span> <span class="c1">// 52 bytes</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">"%d bytes</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">Elf64_Ehdr</span><span class="p">));</span> <span class="c1">// 64 bytes</span>
+</code></pre></div></div>
+
+<h2 id="parsing-the-header-from-scratch">Parsing the header from scratch</h2>
+<p>As my system currently are in 64 bits, I will first dump out the first 64 bytes of data from my disk and use <a href="https://github.com/AandersonL/BlobToChar">BlobToChar</a> to built a C array code with the header, with this dump I can load in my code and parse that quickly.</p>
+
+<p>First 64 bytes (Header):</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ hexdump -C -n64 /usr/bin/ls                                                                                                   
+00000000  7f 45 4c 46 02 01 01 00  00 00 00 00 00 00 00 00  |.ELF............|
+00000010  03 00 3e 00 01 00 00 00  20 5b 00 00 00 00 00 00  |..&gt;..... [......|
+00000020  40 00 00 00 00 00 00 00  b0 23 02 00 00 00 00 00  |@........#......|
+00000030  00 00 00 00 40 00 38 00  0b 00 40 00 1b 00 1a 00  |....@.8...@.....|
+00000040
+</code></pre></div></div>
+<p>Dumping on disk:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ dd if=/usr/bin/ls of=lselfheader bs=1 count=64                                                                           [130]
+64+0 records in
+64+0 records out
+64 bytes copied, 0.000510657 s, 125 kB/s
+</code></pre></div></div>
+
+<p>Load in code in C arrays:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ BlobToChar --blobname lselfheader                                                                                             
+unsigned char buff[] = {0x7f,0x45,0x4c,0x46,0x2,0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x0,0x3e,0x0,0x1,0x0,0x0,0x0,0x20,0x5b,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xb0,0x23,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x38,0x0,0xb,0x0,0x40,0x0,0x1b,0x0,0x1a,0x0,};
+unsigned int buff_size = 64;
+</code></pre></div></div>
+
+<p>The parse code can ben written as:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;elf.h&gt;
+#include &lt;stdio.h&gt;
+</span>
+<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">buff</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mh">0x7f</span><span class="p">,</span><span class="mh">0x45</span><span class="p">,</span><span class="mh">0x4c</span><span class="p">,</span><span class="mh">0x46</span><span class="p">,</span><span class="mh">0x2</span><span class="p">,</span><span class="mh">0x1</span><span class="p">,</span><span class="mh">0x1</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x3</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x3e</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x1</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x20</span><span class="p">,</span><span class="mh">0x5b</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x40</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0xb0</span><span class="p">,</span><span class="mh">0x23</span><span class="p">,</span><span class="mh">0x2</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x40</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x38</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0xb</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x40</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x1b</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,</span><span class="mh">0x1a</span><span class="p">,</span><span class="mh">0x0</span><span class="p">,};</span>
+<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">buff_size</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Elf64_Ehdr</span><span class="o">*</span> <span class="n">elfHeader</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Ehdr</span><span class="o">*</span><span class="p">)</span> <span class="n">buff</span><span class="p">;</span>
+	<span class="n">printf</span><span class="p">(</span><span class="s">"e_ident: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">elfHeader</span><span class="o">-&gt;</span><span class="n">e_ident</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>As structs are just aligned bytes in memory, we can use the struct <strong><em>Elf64_Ehdr</em></strong> to parse this raw bytes, with this we can access the elf header internal struct, in the above example I printed the <strong><em>e_indent</em></strong>, which is an array with some basic information with the file itself, this are the first 16 bytes of this <strong><em>buf</em></strong> variable, and the very first 4 bytes: <strong><em>0x7f,0x45,0x4c,0x46</em></strong> contains the ‘ELF’ string starting from the second position.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">~</span> <span class="o">&gt;&gt;&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">parseheader</span>                                                                              
+<span class="n">Magic</span><span class="o">:</span> <span class="err"></span><span class="n">ELF</span>
+</code></pre></div></div>
+<p>Knowing that, we can now parse the whole file by reading the file itself and use the ELF structs to extract the executable data itself.</p>
+
+<h2 id="example-patching-sections-names">Example: Patching sections names</h2>
+
+<p>Let’s make a cool example, let’s use a change the <strong><em>.text</em></strong> section name to another thing, this section holds all the executable code in the file.</p>
+
+<p>In order to make that possible, we need to have access to the string table struct, which hold a array of strings with the <strong><em>0x00</em></strong> byte as delimiter.</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/felflib/string_table.png" alt="" /></p>
+
+<p>As the string table is just one portion of data in the file, it’s defined as a normal section and the struct in x64 elf is:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">typedef</span> <span class="k">struct</span> <span class="p">{</span>
+    <span class="kt">uint32_t</span>   <span class="n">sh_name</span><span class="p">;</span>
+    <span class="kt">uint32_t</span>   <span class="n">sh_type</span><span class="p">;</span>
+    <span class="kt">uint64_t</span>   <span class="n">sh_flags</span><span class="p">;</span>
+    <span class="n">Elf64_Addr</span> <span class="n">sh_addr</span><span class="p">;</span>
+    <span class="n">Elf64_Off</span>  <span class="n">sh_offset</span><span class="p">;</span>
+    <span class="kt">uint64_t</span>   <span class="n">sh_size</span><span class="p">;</span>
+    <span class="kt">uint32_t</span>   <span class="n">sh_link</span><span class="p">;</span>
+    <span class="kt">uint32_t</span>   <span class="n">sh_info</span><span class="p">;</span>
+    <span class="kt">uint64_t</span>   <span class="n">sh_addralign</span><span class="p">;</span>
+    <span class="kt">uint64_t</span>   <span class="n">sh_entsize</span><span class="p">;</span>
+<span class="p">}</span> <span class="n">Elf64_Shdr</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>With this struct in our hands, we just need to get the index of the section name (sh_name) and change by something else, notice that if we want to make the name greater or less then the real one, we will have to reshape this array and change all the sections and address information to maintain the file integrity, in order to make this simple as possible I will just change the <strong><em>.text</em></strong> name to <strong><em>.etxt</em></strong>.</p>
+
+<h3 id="loading-the-entire-file-in-memory">Loading the entire file in memory</h3>
+
+<p>Before we continue, let’s make a real code for this task and for that we need to load the file data in our memory, just like a loader will do.</p>
+
+<p>For map files in memory in Linux, we will use the function <a href="https://www.man7.org/linux/man-pages/man2/mmap.2.html">mmap</a> that will create a in <strong><em>memory mapping</em></strong> to a given <a href="https://en.wikipedia.org/wiki/File_descriptor">file descriptor</a>.</p>
+
+<p>Function definition:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="cp">#include &lt;sys/mman.h&gt;
+</span>
+<span class="kt">void</span> <span class="o">*</span><span class="nf">mmap</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span> <span class="kt">int</span> <span class="n">prot</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">,</span> 
+            <span class="kt">int</span> <span class="n">fildes</span><span class="p">,</span> <span class="kt">off_t</span> <span class="n">off</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Using this idea, take a look in the following code to load our ELF file and dump the header, we will use this piece of code for the example part:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;elf.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/mman.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdio.h&gt;
+</span>
+
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span>
+<span class="p">{</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Usage: %s &lt;elf_path&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">elf_path</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+	<span class="kt">int</span> <span class="n">file_fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">elf_path</span><span class="p">,</span> <span class="n">O_RDWR</span><span class="p">);</span> <span class="c1">// Open in read and write</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file_fd</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+	
+	<span class="k">struct</span> <span class="n">stat</span> <span class="n">st</span><span class="p">;</span> <span class="c1">// Get file size using stat function</span>
+	<span class="n">stat</span><span class="p">(</span><span class="n">elf_path</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">st</span><span class="p">);</span>
+	<span class="kt">unsigned</span> <span class="n">file_size</span> <span class="o">=</span> <span class="n">st</span><span class="p">.</span><span class="n">st_size</span><span class="p">;</span>
+
+	<span class="c1">// Map the current file descritor in any address in ours memory maps with size &lt;file_size&gt;</span>
+	<span class="kt">void</span><span class="o">*</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">mmap</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">file_size</span><span class="p">,</span> <span class="n">O_RDWR</span><span class="p">,</span> <span class="n">MAP_SHARED</span><span class="p">,</span> <span class="n">file_fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">addr</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+		
+	
+	<span class="c1">// Now we can work the new memory space using the raw address</span>
+
+	<span class="n">Elf64_Ehdr</span><span class="o">*</span> <span class="n">elf_header</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Ehdr</span><span class="o">*</span><span class="p">)</span> <span class="n">addr</span><span class="p">;</span>
+
+	<span class="n">puts</span><span class="p">(</span><span class="s">"elf-&gt;e_indent: "</span><span class="p">);</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">EI_NIDENT</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">0x%x(%c)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_ident</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_ident</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Unmap the values	</span>
+	<span class="n">munmap</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="n">file_size</span><span class="p">);</span>
+
+	<span class="c1">// Close the file descriptor</span>
+	<span class="n">close</span><span class="p">(</span><span class="n">file_fd</span><span class="p">);</span>
+
+
+	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If you compile the code above, you will get something like:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>elf-&gt;e_indent: 
+	0x7f()
+	0x45(E)
+	0x4c(L)
+	0x46(F)
+	0x2()
+    ...
+</code></pre></div></div>
+
+<h3 id="finding-the-section-string-table">Finding the section string table</h3>
+
+<p>Ok, now let’s start the real job to get the section <strong><em>.text</em></strong> his name, In order to accomplish that we need the the first entry in the section array structure and get the total bytes used by this array, all this informations can be found in the elf header in the following fields:</p>
+
+<ul>
+  <li>e_shnum - Holds the number of sections that our ELF file has</li>
+  <li>e_shentsize - Holds the total raw size of each section</li>
+  <li>e_shoff - Holds the offset of the first entry in the array</li>
+</ul>
+
+<p>Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the <strong><em>e_shoff</em></strong> and then create a <strong><em>for</em></strong> loop where each “jump” is the index * e_shentsize, that way we can jump in each element of the array, after reach the .text section we can get where in the string table his name is defined.</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Elf64_Ehdr</span><span class="o">*</span> <span class="n">elf_header</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Ehdr</span><span class="o">*</span><span class="p">)</span> <span class="n">addr</span><span class="p">;</span>
+<span class="kt">uint16_t</span> <span class="n">num_sections</span> <span class="o">=</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_shnum</span><span class="p">;</span>
+<span class="kt">uint16_t</span> <span class="n">section_size</span> <span class="o">=</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_shentsize</span><span class="p">;</span>
+<span class="n">Elf64_Off</span> <span class="n">section_entry_offset</span> <span class="o">=</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_shoff</span><span class="p">;</span>
+
+<span class="n">printf</span><span class="p">(</span><span class="s">"%d Sections, with %d bytes each and starting at address 0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">num_sections</span><span class="p">,</span> <span class="n">section_size</span><span class="p">,</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">addr</span> <span class="o">+</span> <span class="n">section_entry_offset</span><span class="p">);</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>25 Sections, with 64 bytes each and starting at address 0x82702f68</p>
+</blockquote>
+
+<p>Your numbers might differ based in the file that are you using and the mapped address that is used to calculate the entry of the array.</p>
+
+<p>Now, we need to find the string table that will be used as an array, for our lucky index string table in the section array iseasily found in the ELF header in the field <strong><em>e_shstrndx</em></strong>, to find the address using this index we just need to get the address of the first entry in the array and multiple the index with the size of each section.</p>
+
+<p>pseudo-code:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>string_table_address = (index * section_size) + first_entry_address
+or
+string_table_address = section_size) + section
+</code></pre></div></div>
+<p>Or even better, we can just get the first section address and just add the <strong><em>section_size</em></strong>, if you are familiar in how array really works in memory, this will be easy to understand.</p>
+
+<p>C code:</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Elf64_Shdr</span><span class="o">*</span> <span class="n">string_table_section</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Shdr</span><span class="o">*</span><span class="p">)</span> <span class="p">(</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">section</span> <span class="o">+</span> <span class="p">((</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">section_size</span> <span class="o">*</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_shstrndx</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h3 id="finding-the-text-string-index">Finding the .text string index</h3>
+<p>Now with the section header loaded, we can find the offset where the section data is stored, as this is only the header and the real content is in another place in the file, this data location is found in the field <strong><em>sh_offset</em></strong> in the section header, so in order to find the array we just need to get the <strong><em>mapped file address + section-&gt;sh_offset</em></strong>.</p>
+
+<p>After find the raw data in the file we just need to work how it’s is specified in the ELF specs, this is a normal C-String array with the <strong><em>\00</em></strong> as delimiter.</p>
+
+<p>C code to find the first entry in string table:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">section_name</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="p">((</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">string_table_section</span><span class="o">-&gt;</span><span class="n">sh_offset</span> <span class="o">+</span> <span class="n">addr</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>This will access the string array and get the first element, in order to pick the sections name we need access the field <strong><em>sh_name</em></strong> in the section header that holds the name index of this section in the string array, using that we can iterate in each section of the file and get each name easily, check the code:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Elf64_Shdr</span><span class="o">*</span> <span class="n">section</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Shdr</span><span class="o">*</span><span class="p">)</span> <span class="p">((</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">addr</span> <span class="o">+</span> <span class="n">section_entry_offset</span><span class="p">);</span>	
+<span class="n">Elf64_Shdr</span><span class="o">*</span> <span class="n">string_table_section</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Shdr</span><span class="o">*</span><span class="p">)</span> <span class="p">(</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">section</span> <span class="o">+</span> <span class="p">((</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">section_size</span> <span class="o">*</span> <span class="n">elf_header</span><span class="o">-&gt;</span><span class="n">e_shstrndx</span><span class="p">));</span>
+
+<span class="kt">char</span><span class="o">*</span> <span class="n">section_name</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_sections</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Shdr</span><span class="o">*</span><span class="p">)</span> <span class="p">((</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">section</span> <span class="o">+</span> <span class="n">section_size</span><span class="p">);</span>
+    <span class="n">section_name</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="p">((</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">string_table_section</span><span class="o">-&gt;</span><span class="n">sh_offset</span> <span class="o">+</span> <span class="n">addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">section</span><span class="o">-&gt;</span><span class="n">sh_name</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="changing-the-text-name">Changing the .text name</h3>
+
+<p>Now, it’s pretty simple, we can modify the name directly and as this file is mapped in memory in read-write mode our changes will be flushed direct in the diskfile, take a look:</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_sections</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">section</span> <span class="o">=</span> <span class="p">(</span><span class="n">Elf64_Shdr</span><span class="o">*</span><span class="p">)</span> <span class="p">((</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">section</span> <span class="o">+</span> <span class="n">section_size</span><span class="p">);</span>
+    <span class="n">section_name</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="p">((</span> <span class="p">(</span><span class="kt">uint64_t</span><span class="p">)</span> <span class="n">string_table_section</span><span class="o">-&gt;</span><span class="n">sh_offset</span> <span class="o">+</span> <span class="n">addr</span><span class="p">)</span> <span class="o">+</span> <span class="n">section</span><span class="o">-&gt;</span><span class="n">sh_name</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s">".text"</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">strcpy</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s">".txet"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Now take a look using <strong><em>readelf</em></strong> command to get all sections name:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/felflib/text_patch.png" alt="" /></p>
+
+<p>The program still works because the new name is following all the elf specs, and it’s a valid one.</p>
+
+<h1 id="enter-felf">Enter felf</h1>
+
+<p>Now let’s start the real reason of this article, let’s talk about <a href="https://github.com/AandersonL/felf">felf</a>.</p>
+
+<h2 id="why-felf">Why felf</h2>
+
+<p>A couple months, I wanted to build a simple program that extract section hashs of a bunch of elf files, I also wanted to write that in C++ because it’s a languange that I enjoy, and I want to write everything from <strong><em>scratch</em></strong> without any helper library.</p>
+
+<p>My project don’t worked the way I wanted and I just abandoned that, but I saw me with a new a and cool library in C++ to work with elf files, that’s the story.</p>
+
+<p>The name <strong><em>Felf</em></strong> came from the <a href="https://nasm.us/">nasm</a> command parameters, if you will want to build a elf file from a nasm file, you pass the paremeter <strong><em>-f</em></strong> with value <strong><em>elf</em></strong>, almost everyone use that two together so the whole command become <strong><em>nasm -felf…</em></strong></p>
+
+<h2 id="installing">Installing</h2>
+
+<p><a href="https://github.com/AandersonL/felf">Felf</a> is written in C++ using cmake, so in order to install you will need any modern cpp compiler (g++, llvm…) and of course, <strong><em>cmake</em></strong></p>
+
+<h3 id="automatic-installation">Automatic installation</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/AandersonL/felf.git
+cd felf &amp;&amp; ./install.sh
+</code></pre></div></div>
+<p>The installation script will build for release and install/strip the shared libraries</p>
+
+<h2 id="first-time-using">First time using</h2>
+
+<p>Let’s start by the simpliest operation possible, load and print the elf magic number, just like we did before from scratch, in felf this is very simple to perform.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;felf/ELF.h&gt;
+#include &lt;iostream&gt;
+</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ELF</span> <span class="n">elf</span><span class="p">(</span><span class="s">"/usr/bin/ip"</span><span class="p">,</span> <span class="n">MAP_RO</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">valid</span><span class="p">())</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Elf loaded, parsing e_indent value</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+	
+		<span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">e_indent</span> <span class="o">=</span> <span class="n">elf</span><span class="p">.</span><span class="n">elfHeader</span><span class="o">-&gt;</span><span class="n">e_ident</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">EI_NIDENT</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"e_indent[%d] = 0x%x(%c)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">e_indent</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">e_indent</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Compile:</p>
+
+<blockquote>
+  <p>g++ -o header_dump header_dump.cpp -lfelf++</p>
+</blockquote>
+
+<p>Let’s breakdown this call:</p>
+
+<ul>
+  <li>ELF constructor needs the path for the file and the <strong><em>open mode</em></strong></li>
+  <li>You also should check if the file is a valid elf file, this is done by a <a href="https://github.com/AandersonL/felf/blob/master/app/ELF.cpp#L19">magic number test</a></li>
+  <li>Almost all internal structures are now mapped inside the ELF object</li>
+</ul>
+
+<p>When opening a file, you must tells felf how to map this file in memory, as this is using <a href="https://www.man7.org/linux/man-pages/man2/mmap.2.html">mmap</a> from behind the scenes:</p>
+
+<ul>
+  <li>
+    <p>MAP_RO: Map the file in Read only mode in memory</p>
+  </li>
+  <li>
+    <p>MAP_RW: Map the file in Read-Write mode in memory, if you want to patch the file 
+somehow, this will reflect directly in the file.</p>
+  </li>
+  <li>
+    <p>MAP_EX: Map the file in Read-Execute mode in memory</p>
+  </li>
+</ul>
+
+<p>Please refer to the <a href="https://github.com/AandersonL/felf/#the-structures">structures</a> section in the README file, this will show all the structures that are currently supported/mapped.</p>
+
+<h2 id="cool-usages">Cool usages</h2>
+
+<h3 id="symbol-and-section-dump">Symbol and Section dump</h3>
+
+<p>With this library in mind, we can now do a lot of useful operations quickly using the internal structures, the first one I want to show it’s a simple symbol and section dump using the <a href="https://github.com/AandersonL/felf/#symbol-table">Symbol table</a> and the <a href="https://github.com/AandersonL/felf/#example-sections">Section table</a> structure.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;felf/ELF.h&gt;
+</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"Usage: %s &lt;path_to_elf&gt;</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+		<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">ELF</span> <span class="n">elf</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">MAP_RO</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">elf</span><span class="p">.</span><span class="n">valid</span><span class="p">())</span> <span class="p">{</span>
+		
+		<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"Dumping symbol table with %d symbols</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">elf</span><span class="p">.</span><span class="n">symbolTable</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+		
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">elf</span><span class="p">.</span><span class="n">symbolTable</span><span class="p">.</span><span class="n">symbolDataMapped</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">elf</span><span class="p">.</span><span class="n">symbolTable</span><span class="p">.</span><span class="n">symbolDataMapped</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"Symbol name: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+		<span class="p">}</span>
+
+
+		<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\n</span><span class="s">Dumping section table with %d symbols</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">elf</span><span class="p">.</span><span class="n">elfSection</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+		
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">elf</span><span class="p">.</span><span class="n">elfSection</span><span class="p">.</span><span class="n">sectionsMapped</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">elf</span><span class="p">.</span><span class="n">elfSection</span><span class="p">.</span><span class="n">sectionsMapped</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"Section name: %s at "</span><span class="p">,</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">first</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+			<span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"0x%x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">sh_offset</span><span class="p">);</span>
+		<span class="p">}</span>
+	
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The above code takes a input elf file, map into memory in read-only mode and parse all the elf structures, the internal variable <a href="https://github.com/AandersonL/felf#symbol-table">symbolTable</a> it’s a good example of why I created this library, you can access the <a href="https://www.cplusplus.com/reference/unordered_map/unordered_map/">unordered_map</a>, that is a C++ implementation of a hashtable without order, and that holds all the symbols names as key and the <strong><em>SymbolData</em></strong> structure as value, this means that if you can quick lookup any of symbol in the file you can just use the <strong><em>find</em></strong>.</p>
+
+<p>Output:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/felflib/sections_names.png" alt="" /></p>
+
+<h3 id="symbol-dumping">Symbol dumping</h3>
+
+<p>Using the same idea above, in the next example I will dump the raw data of the <strong><em>main</em></strong>, if the binary isn’t stripped, and pipe that out to radare2.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">auto</span> <span class="n">symbolIter</span> <span class="o">=</span> <span class="n">elf</span><span class="p">.</span><span class="n">symbolTable</span><span class="p">.</span><span class="n">symbolDataMapped</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"main"</span><span class="p">);</span>
+
+
+<span class="k">if</span> <span class="p">(</span><span class="n">symbolIter</span> <span class="o">!=</span> <span class="n">elf</span><span class="p">.</span><span class="n">symbolTable</span><span class="p">.</span><span class="n">symbolDataMapped</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="c1">// Found</span>
+    
+    <span class="c1">// Loop in SymbolData structure raw data</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">symbolIter</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">printf</span><span class="p">(</span><span class="s">"%c"</span><span class="p">,</span> <span class="n">symbolIter</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Ignoring all the code that load and check the file, the code above it’s pretty straight forward, make a quick lookup at the symbolData map, and extract the raw data of this section to the stdout, with that I will pipe that out to <a href="https://github.com/radareorg/radare2">radare2</a> framework and dissasembly all (print disassembly all aka pdf).</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/felflib/dump_main_to_r2.png" alt="" /></p>
+
+<p>Very cool, right?</p>
+
+<h3 id="elf-disassembly">Elf disassembly</h3>
+
+<p>Now that we fully understand the power of this simple library, let’s build something cool from scratch, a ELF disassembler, for this we will need to write our asm parser or use a already created library for that, I will use the <a href="https://github.com/aquynh/capstone">Capstone engine</a> to perform that for us, so go grab that before continue (if you are trying the examples above), and take a look at a simple <a href="https://www.capstone-engine.org/lang_c.html">example</a> using this engine.</p>
+
+<p>In order to disassembly something, we must get the valid instructions that contains the <strong><em>opcodes</em></strong>, opcode are just a byte that has a meaning in the CPU, and the readable value of this opcode is called <strong><em>mnemonic</em></strong>, so the opcode <strong><em>0x55</em></strong>  has the mnemonic <strong><em>push</em></strong> and the operators <strong><em>xbp</em></strong> where <strong><em>x</em></strong> differ based in the arch of the CPU, in x64 it’s <strong><em>rbp</em></strong> and x86 <strong><em>ebp</em></strong>, in order words, if one executable section of our memory contains any raw byte and the Instruction pointer are pointing to that area, our CPU will read this instructions and execute that.</p>
+
+<p>For the sake of simplicity, I will disassembly the <strong><em>.text</em></strong> section of a elf file, I will use the sectionTable map to extract the raw data of this section and use the capstone engine to disassembly that.</p>
+
+<h4 id="the-section-data">The section data</h4>
+
+<p>To get the section data you just need to use the internal variable elfSection and extract the length and their raw data:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Loading .text data...</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="k">auto</span> <span class="n">sectionIter</span> <span class="o">=</span> <span class="n">elf</span><span class="p">.</span><span class="n">elfSection</span><span class="p">.</span><span class="n">sectionData</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">".text"</span><span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">sectionIter</span> <span class="o">!=</span> <span class="n">elf</span><span class="p">.</span><span class="n">elfSection</span><span class="p">.</span><span class="n">sectionData</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="p">{</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">sectionData</span> <span class="o">=</span> <span class="n">sectionIter</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>	
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Starting Capstone engine...</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n\n</span><span class="s">Section .text:</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+    <span class="n">capstone_disas</span><span class="p">(</span><span class="n">sectionData</span><span class="p">,</span> <span class="n">sectionIter</span><span class="o">-&gt;</span><span class="n">second</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">);</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+<p>And the capstone_disas function is written as:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">capstone_disas</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">csh</span> <span class="n">handle</span><span class="p">;</span>
+	<span class="n">cs_insn</span><span class="o">*</span> <span class="n">insn</span><span class="p">;</span>
+	<span class="kt">size_t</span> <span class="n">codeCount</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">cs_open</span><span class="p">(</span><span class="n">CS_ARCH_X86</span><span class="p">,</span> <span class="n">CS_MODE_64</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">handle</span><span class="p">)</span> <span class="o">!=</span> <span class="n">CS_ERR_OK</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Error when starting capstone!</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">codeCount</span> <span class="o">=</span> <span class="n">cs_disasm</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mh">0x1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">insn</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">codeCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">unsigned</span> <span class="n">j</span><span class="p">;</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">codeCount</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">std</span><span class="o">::</span>	<span class="n">printf</span><span class="p">(</span><span class="s">"0x%"</span><span class="n">PRIx64</span><span class="s">":</span><span class="se">\t</span><span class="s">%s</span><span class="se">\t\t</span><span class="s">%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">insn</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">address</span><span class="p">,</span> <span class="n">insn</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">mnemonic</span><span class="p">,</span> <span class="n">insn</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">op_str</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">cs_free</span><span class="p">(</span><span class="n">insn</span><span class="p">,</span> <span class="n">codeCount</span><span class="p">);</span>
+		
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>This function, start the capstone engine in x86 architecture and in x64 mode, then we just send the whole data that we want to disassembly and the <strong><em>cs_insn</em></strong> struct pointer, that hold informations like the mnemonic value and operators values.</p>
+
+<p>Compile:</p>
+
+<blockquote>
+  <p>g++ -o text_disas text_disas.cpp -lfelf++ -lcapstone</p>
+</blockquote>
+
+<p>Run:</p>
+
+<p><img src="https://aandersonl.github.io/assets/images/felflib/elf_disas.png" alt="" /></p>
+
+<p>Ready to build your own reverse engineers tools ?</p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>You see that this tiny and little x64 elf parser can do, and it’s have a very simple code to parse everything in C++ structures, I hope that this article helped you to understand more about the ELF format and executable formats in general.</p>
+
+<p>This project has a lot potential to grow up, and I have a lot ideas like: Python  and Golang bindings, Code refactore and more support for differents architectures.</p>
+
+<p>Thanks for reading all this, and if this article has any mistake, fell free to open a issue in the felf project and I will fix.</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/categories/c" class="page__taxonomy-item" rel="tag">c++</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/cybersec" class="page__taxonomy-item" rel="tag">cybersec</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/linux" class="page__taxonomy-item" rel="tag">linux</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/categories/programming" class="page__taxonomy-item" rel="tag">programming</a>
+    
+    </span>
+  </p>
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-11-30T18:00:36+00:00">November 30, 2020</time></p>
+
+
+      </footer>
+
+      
+
+      
+  <nav class="pagination">
+    
+      <a href="/Retrieving-the-exfiltrated-flag-flareon7/" class="pagination--pager" title="Data exfiltration: From shellcode to flag
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+
+    
+      
+        
+          <li><a href="https://github.com/aandersonl" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+        
+      
+        
+          <li><a href="https://br.linkedin.com/in/anderson-leite-6886b117a" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> Linkedin</a></li>
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2021 $ Bit escape. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+
+
+
+  </body>
+</html>

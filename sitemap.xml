@@ -29,6 +29,10 @@
 <lastmod>2020-10-23T23:25:36+00:00</lastmod>
 </url>
 <url>
+<loc>https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf/</loc>
+<lastmod>2020-11-30T18:00:36+00:00</lastmod>
+</url>
+<url>
 <loc>https://aandersonl.github.io/about/</loc>
 </url>
 <url>
@@ -54,5 +58,11 @@
 </url>
 <url>
 <loc>https://aandersonl.github.io/categories/shellcode/</loc>
+</url>
+<url>
+<loc>https://aandersonl.github.io/categories/linux/</loc>
+</url>
+<url>
+<loc>https://aandersonl.github.io/categories/c/</loc>
 </url>
 </urlset>
