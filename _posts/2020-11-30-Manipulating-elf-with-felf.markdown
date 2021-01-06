@@ -17,15 +17,15 @@ For this reason I wanna explore what was built and why, and show to you all the 
 
 ## What's this ?
 
-This files is in your life more than never, you can find that in your SmartTV, Videogames, IoT devices and Unix systems.
+This files is in your life more than ever, you can find that in your SmartTV, Videogames, IoT devices and Unix systems.
 
-The idea of this kind files knowns as ***executable files*** its to design a way to pack every information of a software into a single file that your OS will read, and do all the dirty work to map into memory every piece of code and resource that your CPU will use to execute.
+The idea of this kind files knowns as ***executable files*** its to design a way to pack every information of a software into a single file that your OS will read, and do all the dirty work to map into memory every piece of code and resources that your CPU will use to execute.
 
-ELF it's not the only one, [PE](https://en.wikipedia.org/wiki/Portable_Executable) is mainly used in Windows, [Mach-o](https://en.wikipedia.org/wiki/Mach-O) is used in MacOS systems, and for that article and library I will ***focus in Linux machines***, althouhg all the knowledge is the same that you need to work with PE and Mach-O files.
+ELF it's not the only one, [PE](https://en.wikipedia.org/wiki/Portable_Executable) is mainly used in Windows, [Mach-o](https://en.wikipedia.org/wiki/Mach-O) is used in MacOS systems, and for that article and library I will ***focus in Linux machines***, although all the knowledge is the same that you need to work with PE and Mach-O files.
 
 ## From disk to memory
 
-Imagine ELF files as a pre-fabricated home, the way the file is in disk contains almost the same structure that will be mapped in memory and in the same file contain all the information that OS has to follow to do everything in the corret way.
+Imagine ELF files as a pre-fabricated home, the way the file is in disk contains almost the same structure that will be mapped in memory, inside the file contains all the information that your OS has to follow to do map the entire file in the correct way.
 
 
 The structure is the follow:
@@ -65,7 +65,7 @@ typedef struct {
 } ElfN_Ehdr;
 ```
 
-This struct specifies a block with of memory in the first bytes of the file, notice that we have a ***N*** in the variable name that can be used with ***32*** or ***64*** bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:
+This struct specifies a struct that in the file it's equivalent to the first bytes, notice that we have a ***N*** in the variable name that can be used with ***32*** or ***64*** bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:
 
 ```c
 #include <elf.h>
@@ -130,14 +130,14 @@ Knowing that, we can now parse the whole file by reading the file itself and use
 
 ## Example: Patching sections names 
 
-Let's make a cool example, let's use a change the ***.text*** section name to another thing.
+Let's make a cool example, let's use a change the ***.text*** section name to another thing, this section holds all the executable code in the file.
 
 In order to make that possible, we need to have access to the string table struct, which hold a array of strings with the ***0x00*** byte as delimiter.
 
 
 ![]({{site.url}}{{page.images_prefix}}string_table.png)
 
-As the string table is just one portion of data in the file, it's defined as a normal section and the struct in x64 elf is defined as:
+As the string table is just one portion of data in the file, it's defined as a normal section and the struct in x64 elf is:
 
 
 ```c
@@ -333,16 +333,216 @@ The program still works because the new name is following all the elf specs, and
 
 # Enter felf
 
+Now let's start the real reason of this article, let's talk about [felf](https://github.com/AandersonL/felf).
+
 ## Why felf
+
+A couple months, I wanted to build a simple program that extract section hashs of a bunch of elf files, I also wanted to write that in C++ because it's a languange that I enjoy, and I want to write everything from ***scratch*** without any helper library.
+
+My project don't worked the way I wanted and I just abandoned that, but I saw me with a new a and cool library in C++ to work with elf files, that's the story.
+
+The name ***Felf*** came from the [nasm](https://nasm.us/) command parameters, if you will want to build a elf file from a nasm file, you pass the paremeter ***-f*** with value ***elf***, almost everyone use that two together so the whole command become ***nasm -felf...***
 
 ## Installing
 
-## Using felf to simple operations
+[Felf](https://github.com/AandersonL/felf) is written in C++ using cmake, so in order to install you will need any modern cpp compiler (g++, llvm...) and of course, ***cmake***
+
+### Automatic installation
+```
+git clone https://github.com/AandersonL/felf.git
+cd felf && ./install.sh
+```
+The installation script will build for release and install/strip the shared libraries
+
+## First time using
+
+Let's start by the simpliest operation possible, load and print the elf magic number, just like we did before from scratch, in felf this is very simple to perform.
+
+```cpp
+#include <felf/ELF.h>
+#include <iostream>
+
+
+int main() {
+    ELF elf("/usr/bin/ip", MAP_RO);
+    if (elf.valid()) {
+		std::cout << "Elf loaded, parsing e_indent value\n";
+	
+		unsigned char* e_indent = elf.elfHeader->e_ident;
+		for (int i = 0; i < EI_NIDENT; ++i) {
+			std::printf("e_indent[%d] = 0x%x(%c)\n", i, e_indent[i], e_indent[i]);
+		}
+	}
+}
+```
+Compile:
+
+>g++ -o header_dump header_dump.cpp -lfelf++
+
+Let's breakdown this call:
+
+* ELF constructor needs the path for the file and the ***open mode***
+* You also should check if the file is a valid elf file, this is done by a [magic number test](https://github.com/AandersonL/felf/blob/master/app/ELF.cpp#L19)
+* Almost all internal structures are now mapped inside the ELF object
+
+When opening a file, you must tells felf how to map this file in memory, as this is using [mmap](https://www.man7.org/linux/man-pages/man2/mmap.2.html) from behind the scenes:
+
+* MAP_RO: Map the file in Read only mode in memory 
+    
+* MAP_RW: Map the file in Read-Write mode in memory, if you want to patch the file 
+somehow, this will reflect directly in the file.
+
+* MAP_EX: Map the file in Read-Execute mode in memory
+    
+
+Please refer to the [structures](https://github.com/AandersonL/felf/#the-structures) section in the README file, this will show all the structures that are currently supported/mapped.
+
 
 ## Cool usages
 
-### elf disassembly
+### Symbol and Section dump
 
-### Section hashing
+With this library in mind, we can now do a lot of useful operations quickly using the internal structures, the first one I want to show it's a simple symbol and section dump using the [Symbol table](https://github.com/AandersonL/felf/#symbol-table) and the [Section table](https://github.com/AandersonL/felf/#example-sections) structure.
+
+
+
+```cpp
+#include <felf/ELF.h>
+
+
+int main(int argc, char** argv) {
+	
+	if (argc != 2) {
+		std::fprintf(stderr, "Usage: %s <path_to_elf>\n", argv[0]);
+		return 1;
+	}
+
+	ELF elf(argv[1], MAP_RO);
+
+	if (elf.valid()) {
+		
+		std::printf("Dumping symbol table with %d symbols\n", elf.symbolTable.length);
+		
+		for (auto it = elf.symbolTable.symbolDataMapped.begin(); it != elf.symbolTable.symbolDataMapped.end(); ++it) {
+			std::printf("Symbol name: %s\n", it->first.c_str());
+		}
+
+
+		std::printf("\n\nDumping section table with %d symbols\n", elf.elfSection.length);
+		
+		for (auto it = elf.elfSection.sectionsMapped.begin(); it != elf.elfSection.sectionsMapped.end(); ++it) {
+			std::printf("Section name: %s at ", it->first.c_str());
+			std::printf("0x%x\n", it->second->sh_offset);
+		}
+	
+	}
+}
+```
+
+The above code takes a input elf file, map into memory in read-only mode and parse all the elf structures, the internal variable [symbolTable](https://github.com/AandersonL/felf#symbol-table) it's a good example of why I created this library, you can access the [unordered_map](https://www.cplusplus.com/reference/unordered_map/unordered_map/), that is a C++ implementation of a hashtable without order, and that holds all the symbols names as key and the ***SymbolData*** structure as value, this means that if you can quick lookup any of symbol in the file you can just use the ***find***.
+
+Output:
+
+![]({{site.url}}{{page.images_prefix}}sections_names.png)
+
+
+### Symbol dumping
+
+Using the same idea above, in the next example I will dump the raw data of the ***main***, if the binary isn't stripped, and pipe that out to radare2.
+
+```cpp		
+auto symbolIter = elf.symbolTable.symbolDataMapped.find("main");
+
+
+if (symbolIter != elf.symbolTable.symbolDataMapped.end()) {
+    // Found
+    
+    // Loop in SymbolData structure raw data
+    for (unsigned i = 0; i < symbolIter->second->size; ++i) {
+        std::printf("%c", symbolIter->second->data[i]);
+    }
+}
+
+```
+
+Ignoring all the code that load and check the file, the code above it's pretty straight forward, make a quick lookup at the symbolData map, and extract the raw data of this section to the stdout, with that I will pipe that out to [radare2](https://github.com/radareorg/radare2) framework and dissasembly all (print disassembly all aka pdf).
+
+![]({{site.url}}{{page.images_prefix}}dump_main_to_r2.png)
+
+Very cool, right?
+
+### Elf disassembly
+
+Now that we fully understand the power of this simple library, let's build something cool from scratch, a ELF disassembler, for this we will need to write our asm parser or use a already created library for that, I will use the [Capstone engine](https://github.com/aquynh/capstone) to perform that for us, so go grab that before continue (if you are trying the examples above), and take a look at a simple [example](https://www.capstone-engine.org/lang_c.html) using this engine.
+
+In order to disassembly something, we must get the valid instructions that contains the ***opcodes***, opcode are just a byte that has a meaning in the CPU, and the readable value of this opcode is called ***mnemonic***, so the opcode ***0x55***  has the mnemonic ***push*** and the operators ***xbp*** where ***x*** differ based in the arch of the CPU, in x64 it's ***rbp*** and x86 ***ebp***, in order words, if one executable section of our memory contains any raw byte and the Instruction pointer are pointing to that area, our CPU will read this instructions and execute that.
+
+For the sake of simplicity, I will disassembly the ***.text*** section of a elf file, I will use the sectionTable map to extract the raw data of this section and use the capstone engine to disassembly that.
+
+
+#### The section data
+
+To get the section data you just need to use the internal variable elfSection and extract the length and their raw data:
+
+```cpp
+std::cout << "Loading .text data...\n";
+auto sectionIter = elf.elfSection.sectionData.find(".text");
+
+if (sectionIter != elf.elfSection.sectionData.end()) {
+    unsigned char* sectionData = sectionIter->second->data;	
+    std::cout << "Starting Capstone engine...\n";
+    std::cout << "\n\nSection .text:\n\n";
+    capstone_disas(sectionData, sectionIter->second->size);
+
+}
+```
+And the capstone_disas function is written as:
+
+```cpp
+void capstone_disas(unsigned char* data, unsigned size)
+{
+	csh handle;
+	cs_insn* insn;
+	size_t codeCount;
+
+	if (cs_open(CS_ARCH_X86, CS_MODE_64, &handle) != CS_ERR_OK) {
+		std::cerr << "Error when starting capstone!\n";
+		return;
+	}
+
+	codeCount = cs_disasm(handle, data, size, 0x1000, 0, &insn);
+
+	if (codeCount > 0) {
+		unsigned j;
+
+		for (j = 0; j < codeCount; ++j) {
+			std::	printf("0x%"PRIx64":\t%s\t\t%s\n", insn[j].address, insn[j].mnemonic, insn[j].op_str);
+		}
+		cs_free(insn, codeCount);
+		
+	}
+}
+```
+
+This function, start the capstone engine in x86 architecture and in x64 mode, then we just send the whole data that we want to disassembly and the ***cs_insn*** struct pointer, that hold informations like the mnemonic value and operators values.
+
+Compile:
+
+>g++ -o text_disas text_disas.cpp -lfelf++ -lcapstone
+
+Run:
+
+![]({{site.url}}{{page.images_prefix}}elf_disas.png)
+
+
+Ready to build your own reverse engineers tools ?
+
+# Conclusion
+
+You see that this tiny and little x64 elf parser can do, and it's have a very simple code to parse everything in C++ structures, I hope that this article helped you to understand more about the ELF format and executable formats in general. 
+
+This project has a lot potential to grow up, and I have a lot ideas like: Python  and Golang bindings, Code refactore and more support for differents architectures.
+
+Thanks for reading all this, and if this article has any mistake, fell free to open a issue in the felf project and I will fix.
 
 
