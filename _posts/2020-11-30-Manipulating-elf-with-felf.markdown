@@ -3,13 +3,12 @@ layout: single
 
 title: "Manipulating elf files in C++ using felf"
 date: 2020-11-30 15:00:36 -0300
-permalink: /:categories/:title/
 categories: [programming, cybersec, linux, c++]
 
 images_prefix: /assets/images/felflib/
 ---
 
-A couple months ago I created [felf](https://github.com/AandersonL/felf), a library to parse [ELF](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) files into C++ structures, the reason for this was have a C++ way to work in ELF files using [STL](https://www.geeksforgeeks.org/the-c-standard-template-library-stl/) structures like vector, unordered maps and so on.
+A couple months ago I created [felf](https://github.com/AandersonL/felf), a library to parse [ELF](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format) files into C++ structures, the reason for this was to have a way in C++ to work on ELF files using [STL](https://www.geeksforgeeks.org/the-c-standard-template-library-stl/) structures like vector, unordered maps and so on.
 
 For this reason I wanna explore what was built and why, and show to you all the possibilities of this tiny yet nice library.
 
@@ -17,15 +16,15 @@ For this reason I wanna explore what was built and why, and show to you all the 
 
 ## What's this ?
 
-This files is in your life more than ever, you can find that in your SmartTV, Videogames, IoT devices and Unix systems.
+An ***executable file*** is designed to pack all information of a software into a single file that your OS will read, and do all the dirty work of mapping it's code into memory and allocating resources that your CPU will use to execute.
 
-The idea of this kind files knowns as ***executable files*** its to design a way to pack every information of a software into a single file that your OS will read, and do all the dirty work to map into memory every piece of code and resources that your CPU will use to execute.
+These files are part of your life, now more than ever. You can find them in your SmartTV, Videogames, IoT devices and Unix systems
 
-ELF it's not the only one, [PE](https://en.wikipedia.org/wiki/Portable_Executable) is mainly used in Windows, [Mach-o](https://en.wikipedia.org/wiki/Mach-O) is used in MacOS systems, and for that article and library I will ***focus in Linux machines***, although all the knowledge is the same that you need to work with PE and Mach-O files.
+The ELF format is mainly ***used on Linux machines***  but it it's not the only one that exists [PE](https://en.wikipedia.org/wiki/Portable_Executable) is mainly used in Windows, [Mach-o](https://en.wikipedia.org/wiki/Mach-O) is used in MacOS systems. Although this article and library will be ***focused on ELF and Linux machines***, all the knowledge is the same that you need to work with PE and Mach-O files.
 
 ## From disk to memory
 
-Imagine ELF files as a pre-fabricated home, the way the file is in disk contains almost the same structure that will be mapped in memory, inside the file contains all the information that your OS has to follow to do map the entire file in the correct way.
+Imagine ELF files as a pre-fabricated home, the way the file is on disk contains almost the same structures that will be mapped in memory and the steps the OS has to follow to do so in a correct way.
 
 
 The structure is the follow:
@@ -36,13 +35,13 @@ The structure is the follow:
 Everything is pretty straight forward:
 
 * A ELF header that holds the basic information of the file
-* A program header table that describe each segment of code that will be mapped
-* Sections that hold some data like, executable code, string table, symbol table and so on
-* Section header which is a array like structure that hold all sections information
+* A program header table that describes each segment of code that will be mapped
+* Sections that hold some data, like executable code, string table, symbol table and so on
+* Section header which is a array like structure that holds information about a given section
 
 # ELF Internal structures
 
-Each of this structure are defined in ***elf.h*** and if you run ***man elf*** you will get the full documentation to work with that. Let's start by parsing in ELF header from disk (without loading anything in memory yet).
+Each of these structures are defined in ***elf.h*** and if you run ***man elf*** you will get it's full documentation. Let's start by parsing in ELF header from disk (without loading anything in memory yet).
 
 ```c
 #define EI_NIDENT 16
@@ -65,7 +64,7 @@ typedef struct {
 } ElfN_Ehdr;
 ```
 
-This struct specifies a struct that in the file it's equivalent to the first bytes, notice that we have a ***N*** in the variable name that can be used with ***32*** or ***64*** bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:
+This `struct` specifies a structure equivalent to the first bytes of the file. Notice that we have a ***N*** in the variable name that can be used with ***32*** or ***64*** bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:
 
 ```c
 #include <elf.h>
@@ -75,7 +74,7 @@ printf("%d bytes\n", sizeof(Elf64_Ehdr)); // 64 bytes
 ```
 
 ## Parsing the header from scratch
-As my system currently are in 64 bits, I will first dump out the first 64 bytes of data from my disk and use [BlobToChar](https://github.com/AandersonL/BlobToChar) to built a C array code with the header, with this dump I can load in my code and parse that quickly.
+As my system currently is in 64 bits, I will first dump out the first 64 bytes of data from my disk and use [BlobToChar](https://github.com/AandersonL/BlobToChar) to built a C array code with the header. With this dump I can load the header in my code and parse it quickly.
 
 
 First 64 bytes (Header):
@@ -104,7 +103,7 @@ unsigned char buff[] = {0x7f,0x45,0x4c,0x46,0x2,0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,
 unsigned int buff_size = 64;
 ```
 
-The parse code can ben written as:
+The parse code can be written as:
 
 ```c
 #include <elf.h>
@@ -120,7 +119,7 @@ int main(int argc, char** argv)
 }
 ```
 
-As structs are just aligned bytes in memory, we can use the struct ***Elf64_Ehdr*** to parse this raw bytes, with this we can access the elf header internal struct, in the above example I printed the ***e_indent***, which is an array with some basic information with the file itself, this are the first 16 bytes of this ***buf*** variable, and the very first 4 bytes: ***0x7f,0x45,0x4c,0x46*** contains the 'ELF' string starting from the second position.
+As structs are just aligned bytes in memory, we can use the struct ***Elf64_Ehdr*** to parse these raw bytes, with this we can access the elf header internal struct. In the above example I printed the ***e_indent***, which is an array with some basic information on the file itself, stored in the first 16 bytes of the ***buf*** variable. The very first 4 bytes: ***0x7f,0x45,0x4c,0x46*** contains the 'ELF' string starting from the second position.
 
 ```c
 ~ >>> ./parseheader                                                                              
@@ -130,9 +129,9 @@ Knowing that, we can now parse the whole file by reading the file itself and use
 
 ## Example: Patching sections names 
 
-Let's make a cool example, let's use a change the ***.text*** section name to another thing, this section holds all the executable code in the file.
+Let's make a cool example, let's change the ***.text*** section name to another thing. This section holds all the executable code in the file.
 
-In order to make that possible, we need to have access to the string table struct, which hold a array of strings with the ***0x00*** byte as delimiter.
+In order to make that possible, we need to have access to the string table struct, which holds an array of strings with the ***0x00*** byte as delimiter.
 
 
 ![]({{site.url}}{{page.images_prefix}}string_table.png)
@@ -157,13 +156,13 @@ typedef struct {
 
 
 
-With this struct in our hands, we just need to get the index of the section name (sh_name) and change by something else, notice that if we want to make the name greater or less then the real one, we will have to reshape this array and change all the sections and address information to maintain the file integrity, in order to make this simple as possible I will just change the ***.text*** name to ***.etxt***.
+With this struct in our hands, we just need to get the index of the section name (`sh_name`) and change it to something else. Notice that if we want to make the name greater or less then the real one, we will have to resize this array and change all the sections and address information to maintain the file integrity, in order to make this simple as possible I will just change the ***.text*** name to ***.etxt***.
 
 ### Loading the entire file in memory
 
-Before we continue, let's make a real code for this task and for that we need to load the file data in our memory, just like a loader will do.
+Before we continue, let's make some real code for this task and for that we need to load the file data in our memory, just like a loader would.
 
-For map files in memory in Linux, we will use the function [mmap](https://www.man7.org/linux/man-pages/man2/mmap.2.html) that will create a in ***memory mapping*** to a given [file descriptor](https://en.wikipedia.org/wiki/File_descriptor).
+To map files in memory in Linux, we will use the function [mmap](https://www.man7.org/linux/man-pages/man2/mmap.2.html) that will create a in ***memory mapping*** to a given [file descriptor](https://en.wikipedia.org/wiki/File_descriptor).
 
 Function definition:
 
@@ -246,13 +245,13 @@ elf->e_indent:
 
 ### Finding the section string table
 
-Ok, now let's start the real job to get the section ***.text*** his name, In order to accomplish that we need the the first entry in the section array structure and get the total bytes used by this array, all this informations can be found in the elf header in the following fields:
+Ok, now let's start the real job to get the section named ***.text***. In order to accomplish that we need the first entry in the **section array** structure and get the total bytes used by this array, all this information can be found in the following field of the **elf header**:
 
-* e_shnum - Holds the number of sections that our ELF file has
-* e_shentsize - Holds the total raw size of each section
-* e_shoff - Holds the offset of the first entry in the array
+* `e_shnum` - Holds the number of sections that our ELF file has
+* `e_shentsize` - Holds the total raw size of each section
+* `e_shoff` - Holds the offset of the first entry in the array
 
-Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the ***e_shoff*** and then create a ***for*** loop where each "jump" is the index * e_shentsize, that way we can jump in each element of the array, after reach the .text section we can get where in the string table his name is defined.
+Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the ***e_shoff*** and then create a `for` loop where each "jump" is the index * `e_shentsize`, that way we can jump in each element of the array, after reaching the .text section we can get where in the string table it's name is defined.
 
 ```c
 Elf64_Ehdr* elf_header = (Elf64_Ehdr*) addr;
@@ -267,7 +266,7 @@ printf("%d Sections, with %d bytes each and starting at address 0x%x\n", num_sec
 
 Your numbers might differ based in the file that are you using and the mapped address that is used to calculate the entry of the array.
 
-Now, we need to find the string table that will be used as an array, for our lucky index string table in the section array iseasily found in the ELF header in the field ***e_shstrndx***, to find the address using this index we just need to get the address of the first entry in the array and multiple the index with the size of each section.
+Now, we need to find the string table that will be used as an array, lucky for us, the index string table in the section array is easily found in the ELF header, in the field ***e_shstrndx***, to find the address using this index we just need to get the address of the first entry in the array and multiple the index with the size of each section.
 
 pseudo-code:
 ```
@@ -275,7 +274,7 @@ string_table_address = (index * section_size) + first_entry_address
 or
 string_table_address = section_size) + section
 ```
-Or even better, we can just get the first section address and just add the ***section_size***, if you are familiar in how array really works in memory, this will be easy to understand.
+Or even better, we can just get the first section address and just add the ***section_size***, if you are familiar in how an array really works in memory, this will be easy to understand.
 
 C code:
 ```c
@@ -309,7 +308,7 @@ for (int i = 0; i < num_sections; ++i) {
 
 ### Changing the .text name
 
-Now, it's pretty simple, we can modify the name directly and as this file is mapped in memory in read-write mode our changes will be flushed direct in the diskfile, take a look:
+Now, it's pretty simple, we can modify the name directly and as this file is mapped in memory in read-write mode our changes will be flushed directly in the disk file, take a look:
 
 ```c	
 for (int i = 0; i < num_sections; ++i) {
@@ -339,7 +338,7 @@ Now let's start the real reason of this article, let's talk about [felf](https:/
 
 A couple months, I wanted to build a simple program that extract section hashs of a bunch of elf files, I also wanted to write that in C++ because it's a languange that I enjoy, and I want to write everything from ***scratch*** without any helper library.
 
-My project don't worked the way I wanted and I just abandoned that, but I saw me with a new a and cool library in C++ to work with elf files, that's the story.
+My project didn't worked the way I wanted and I just abandoned it, but I developed new cool library in C++ to work with elf files, that's the story.
 
 The name ***Felf*** came from the [nasm](https://nasm.us/) command parameters, if you will want to build a elf file from a nasm file, you pass the paremeter ***-f*** with value ***elf***, almost everyone use that two together so the whole command become ***nasm -felf...***
 
@@ -356,7 +355,7 @@ The installation script will build for release and install/strip the shared libr
 
 ## First time using
 
-Let's start by the simpliest operation possible, load and print the elf magic number, just like we did before from scratch, in felf this is very simple to perform.
+Let's start by the simplest operation possible, load and print the elf magic number, just like we did before from scratch, in felf this is very simple to perform.
 
 ```cpp
 #include <felf/ELF.h>
@@ -385,7 +384,7 @@ Let's breakdown this call:
 * You also should check if the file is a valid elf file, this is done by a [magic number test](https://github.com/AandersonL/felf/blob/master/app/ELF.cpp#L19)
 * Almost all internal structures are now mapped inside the ELF object
 
-When opening a file, you must tells felf how to map this file in memory, as this is using [mmap](https://www.man7.org/linux/man-pages/man2/mmap.2.html) from behind the scenes:
+When opening a file, you must tell felf how to map this file in memory, as this is using [mmap](https://www.man7.org/linux/man-pages/man2/mmap.2.html) from behind the scenes:
 
 * MAP_RO: Map the file in Read only mode in memory 
     
@@ -434,7 +433,7 @@ int main(int argc, char** argv) {
 			std::printf("Section name: %s at ", it->first.c_str());
 			std::printf("0x%x\n", it->second->sh_offset);
 		}
-	
+	'
 	}
 }
 ```
@@ -465,7 +464,7 @@ if (symbolIter != elf.symbolTable.symbolDataMapped.end()) {
 
 ```
 
-Ignoring all the code that load and check the file, the code above it's pretty straight forward, make a quick lookup at the symbolData map, and extract the raw data of this section to the stdout, with that I will pipe that out to [radare2](https://github.com/radareorg/radare2) framework and dissasembly all (print disassembly all aka pdf).
+Ignoring all the code that load and check the file, the code above it's pretty straight forward, make a quick lookup at the symbolData map, and extract the raw data of this symbol to the stdout, with that I will pipe that out to [radare2](https://github.com/radareorg/radare2) framework and disassemble all (print disassembly all aka pdf).
 
 ![]({{site.url}}{{page.images_prefix}}dump_main_to_r2.png)
 
@@ -475,7 +474,7 @@ Very cool, right?
 
 Now that we fully understand the power of this simple library, let's build something cool from scratch, a ELF disassembler, for this we will need to write our asm parser or use a already created library for that, I will use the [Capstone engine](https://github.com/aquynh/capstone) to perform that for us, so go grab that before continue (if you are trying the examples above), and take a look at a simple [example](https://www.capstone-engine.org/lang_c.html) using this engine.
 
-In order to disassembly something, we must get the valid instructions that contains the ***opcodes***, opcode are just a byte that has a meaning in the CPU, and the readable value of this opcode is called ***mnemonic***, so the opcode ***0x55***  has the mnemonic ***push*** and the operators ***xbp*** where ***x*** differ based in the arch of the CPU, in x64 it's ***rbp*** and x86 ***ebp***, in order words, if one executable section of our memory contains any raw byte and the Instruction pointer are pointing to that area, our CPU will read this instructions and execute that.
+In order to disassemble something, we must get the valid instructions that contains the ***opcodes***, opcode are just a byte that has a meaning in the CPU, and the readable value of this opcode is called ***mnemonic***, so the opcode ***0x55***  has the mnemonic ***push*** and the operators ***xbp*** where ***x*** differ based in the arch of the CPU, in x64 it's ***rbp*** and x86 ***ebp***, in order words, if one executable section of our memory contains any raw byte and the Instruction pointer are pointing to that area, our CPU will read this instructions and execute that.
 
 For the sake of simplicity, I will disassembly the ***.text*** section of a elf file, I will use the sectionTable map to extract the raw data of this section and use the capstone engine to disassembly that.
 
@@ -524,7 +523,7 @@ void capstone_disas(unsigned char* data, unsigned size)
 }
 ```
 
-This function, start the capstone engine in x86 architecture and in x64 mode, then we just send the whole data that we want to disassembly and the ***cs_insn*** struct pointer, that hold informations like the mnemonic value and operators values.
+This function, starts the capstone engine in x86 architecture and in x64 mode, then we just send the whole data that we want to disassemble and the ***cs_insn*** struct pointer, that holds information like the mnemonic value and operators values.
 
 Compile:
 
@@ -535,13 +534,13 @@ Run:
 ![]({{site.url}}{{page.images_prefix}}elf_disas.png)
 
 
-Ready to build your own reverse engineers tools ?
+Ready to build your own reverse engineering tools ?
 
 # Conclusion
 
-You see that this tiny and little x64 elf parser can do, and it's have a very simple code to parse everything in C++ structures, I hope that this article helped you to understand more about the ELF format and executable formats in general. 
+You see that this tiny and little x64 elf parser can do, and it's has a very simple code to parse everything in C++ structures, I hope that this article helped you to understand more about the ELF format and executable formats in general. 
 
-This project has a lot potential to grow up, and I have a lot ideas like: Python  and Golang bindings, Code refactore and more support for differents architectures.
+This project has a lot potential to grow up, and I have a lot ideas like: Python and Golang bindings, Code refactoring and more support for different architectures.
 
 Thanks for reading all this, and if this article has any mistake, fell free to open a issue in the felf project and I will fix.
 
