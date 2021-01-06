@@ -545,3 +545,5 @@ This project has a lot potential to grow up, and I have a lot ideas like: Python
 Thanks for reading all this, and if this article has any mistake, fell free to open a issue in the felf project and I will fix.
 
 
+
+Revision by: [@jvslg](https://github.com/jvlsg)
