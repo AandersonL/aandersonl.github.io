@@ -42,8 +42,8 @@ var store = [{
         "teaser": null
       },{
         "title": "Manipulating elf files in C++ using felf",
-        "excerpt":"A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was have a C++ way to work in ELF files using STL structures like vector, unordered maps and so on. For this reason I wanna explore what was built and...","categories": ["programming","cybersec","linux","c++"],
+        "excerpt":"A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was to have a way in C++ to work on ELF files using STL structures like vector, unordered maps and so on. For this reason I wanna explore what was...","categories": ["programming","cybersec","linux","c++"],
         "tags": [],
-        "url": "https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf/",
+        "url": "https://aandersonl.github.io/Manipulating-elf-with-felf/",
         "teaser": null
       }]

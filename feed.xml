@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="https://aandersonl.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://aandersonl.github.io/" rel="alternate" type="text/html" /><updated>2021-01-06T19:20:29+00:00</updated><id>https://aandersonl.github.io/feed.xml</id><title type="html">$ Bit escape</title><subtitle>My personal writings about Security, Programming, Linux and much more.</subtitle><entry><title type="html">Manipulating elf files in C++ using felf</title><link href="https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf/" rel="alternate" type="text/html" title="Manipulating elf files in C++ using felf" /><published>2020-11-30T18:00:36+00:00</published><updated>2020-11-30T18:00:36+00:00</updated><id>https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf</id><content type="html" xml:base="https://aandersonl.github.io/programming/cybersec/linux/c++/Manipulating-elf-with-felf/">&lt;p&gt;A couple months ago I created &lt;a href=&quot;https://github.com/AandersonL/felf&quot;&gt;felf&lt;/a&gt;, a library to parse &lt;a href=&quot;https://en.wikipedia.org/wiki/Executable_and_Linkable_Format&quot;&gt;ELF&lt;/a&gt; files into C++ structures, the reason for this was have a C++ way to work in ELF files using &lt;a href=&quot;https://www.geeksforgeeks.org/the-c-standard-template-library-stl/&quot;&gt;STL&lt;/a&gt; structures like vector, unordered maps and so on.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="https://aandersonl.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://aandersonl.github.io/" rel="alternate" type="text/html" /><updated>2021-01-06T21:32:11+00:00</updated><id>https://aandersonl.github.io/feed.xml</id><title type="html">$ Bit escape</title><subtitle>My personal writings about Security, Programming, Linux and much more.</subtitle><entry><title type="html">Manipulating elf files in C++ using felf</title><link href="https://aandersonl.github.io/Manipulating-elf-with-felf/" rel="alternate" type="text/html" title="Manipulating elf files in C++ using felf" /><published>2020-11-30T18:00:36+00:00</published><updated>2020-11-30T18:00:36+00:00</updated><id>https://aandersonl.github.io/Manipulating-elf-with-felf</id><content type="html" xml:base="https://aandersonl.github.io/Manipulating-elf-with-felf/">&lt;p&gt;A couple months ago I created &lt;a href=&quot;https://github.com/AandersonL/felf&quot;&gt;felf&lt;/a&gt;, a library to parse &lt;a href=&quot;https://en.wikipedia.org/wiki/Executable_and_Linkable_Format&quot;&gt;ELF&lt;/a&gt; files into C++ structures, the reason for this was to have a way in C++ to work on ELF files using &lt;a href=&quot;https://www.geeksforgeeks.org/the-c-standard-template-library-stl/&quot;&gt;STL&lt;/a&gt; structures like vector, unordered maps and so on.&lt;/p&gt;
 
 &lt;p&gt;For this reason I wanna explore what was built and why, and show to you all the possibilities of this tiny yet nice library.&lt;/p&gt;
 
@@ -6,15 +6,15 @@
 
 &lt;h2 id=&quot;whats-this-&quot;&gt;What’s this ?&lt;/h2&gt;
 
-&lt;p&gt;This files is in your life more than ever, you can find that in your SmartTV, Videogames, IoT devices and Unix systems.&lt;/p&gt;
+&lt;p&gt;An &lt;strong&gt;&lt;em&gt;executable file&lt;/em&gt;&lt;/strong&gt; is designed to pack all information of a software into a single file that your OS will read, and do all the dirty work of mapping it’s code into memory and allocating resources that your CPU will use to execute.&lt;/p&gt;
 
-&lt;p&gt;The idea of this kind files knowns as &lt;strong&gt;&lt;em&gt;executable files&lt;/em&gt;&lt;/strong&gt; its to design a way to pack every information of a software into a single file that your OS will read, and do all the dirty work to map into memory every piece of code and resources that your CPU will use to execute.&lt;/p&gt;
+&lt;p&gt;These files are part of your life, now more than ever. You can find them in your SmartTV, Videogames, IoT devices and Unix systems&lt;/p&gt;
 
-&lt;p&gt;ELF it’s not the only one, &lt;a href=&quot;https://en.wikipedia.org/wiki/Portable_Executable&quot;&gt;PE&lt;/a&gt; is mainly used in Windows, &lt;a href=&quot;https://en.wikipedia.org/wiki/Mach-O&quot;&gt;Mach-o&lt;/a&gt; is used in MacOS systems, and for that article and library I will &lt;strong&gt;&lt;em&gt;focus in Linux machines&lt;/em&gt;&lt;/strong&gt;, although all the knowledge is the same that you need to work with PE and Mach-O files.&lt;/p&gt;
+&lt;p&gt;The ELF format is mainly &lt;strong&gt;&lt;em&gt;used on Linux machines&lt;/em&gt;&lt;/strong&gt;  but it it’s not the only one that exists &lt;a href=&quot;https://en.wikipedia.org/wiki/Portable_Executable&quot;&gt;PE&lt;/a&gt; is mainly used in Windows, &lt;a href=&quot;https://en.wikipedia.org/wiki/Mach-O&quot;&gt;Mach-o&lt;/a&gt; is used in MacOS systems. Although this article and library will be &lt;strong&gt;&lt;em&gt;focused on ELF and Linux machines&lt;/em&gt;&lt;/strong&gt;, all the knowledge is the same that you need to work with PE and Mach-O files.&lt;/p&gt;
 
 &lt;h2 id=&quot;from-disk-to-memory&quot;&gt;From disk to memory&lt;/h2&gt;
 
-&lt;p&gt;Imagine ELF files as a pre-fabricated home, the way the file is in disk contains almost the same structure that will be mapped in memory, inside the file contains all the information that your OS has to follow to do map the entire file in the correct way.&lt;/p&gt;
+&lt;p&gt;Imagine ELF files as a pre-fabricated home, the way the file is on disk contains almost the same structures that will be mapped in memory and the steps the OS has to follow to do so in a correct way.&lt;/p&gt;
 
 &lt;p&gt;The structure is the follow:&lt;/p&gt;
 
@@ -24,14 +24,14 @@
 
 &lt;ul&gt;
   &lt;li&gt;A ELF header that holds the basic information of the file&lt;/li&gt;
-  &lt;li&gt;A program header table that describe each segment of code that will be mapped&lt;/li&gt;
-  &lt;li&gt;Sections that hold some data like, executable code, string table, symbol table and so on&lt;/li&gt;
-  &lt;li&gt;Section header which is a array like structure that hold all sections information&lt;/li&gt;
+  &lt;li&gt;A program header table that describes each segment of code that will be mapped&lt;/li&gt;
+  &lt;li&gt;Sections that hold some data, like executable code, string table, symbol table and so on&lt;/li&gt;
+  &lt;li&gt;Section header which is a array like structure that holds information about a given section&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;elf-internal-structures&quot;&gt;ELF Internal structures&lt;/h1&gt;
 
-&lt;p&gt;Each of this structure are defined in &lt;strong&gt;&lt;em&gt;elf.h&lt;/em&gt;&lt;/strong&gt; and if you run &lt;strong&gt;&lt;em&gt;man elf&lt;/em&gt;&lt;/strong&gt; you will get the full documentation to work with that. Let’s start by parsing in ELF header from disk (without loading anything in memory yet).&lt;/p&gt;
+&lt;p&gt;Each of these structures are defined in &lt;strong&gt;&lt;em&gt;elf.h&lt;/em&gt;&lt;/strong&gt; and if you run &lt;strong&gt;&lt;em&gt;man elf&lt;/em&gt;&lt;/strong&gt; you will get it’s full documentation. Let’s start by parsing in ELF header from disk (without loading anything in memory yet).&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#define EI_NIDENT 16
 &lt;/span&gt;
@@ -53,7 +53,7 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ElfN_Ehdr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This struct specifies a struct that in the file it’s equivalent to the first bytes, notice that we have a &lt;strong&gt;&lt;em&gt;N&lt;/em&gt;&lt;/strong&gt; in the variable name that can be used with &lt;strong&gt;&lt;em&gt;32&lt;/em&gt;&lt;/strong&gt; or &lt;strong&gt;&lt;em&gt;64&lt;/em&gt;&lt;/strong&gt; bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:&lt;/p&gt;
+&lt;p&gt;This &lt;code class=&quot;highlighter-rouge&quot;&gt;struct&lt;/code&gt; specifies a structure equivalent to the first bytes of the file. Notice that we have a &lt;strong&gt;&lt;em&gt;N&lt;/em&gt;&lt;/strong&gt; in the variable name that can be used with &lt;strong&gt;&lt;em&gt;32&lt;/em&gt;&lt;/strong&gt; or &lt;strong&gt;&lt;em&gt;64&lt;/em&gt;&lt;/strong&gt; bits depending the OS and the file itself, the ELF header size can be 52 bytes in 32-bit files and 64 bytes in 64-bits files, you can verify that by looking the structs sizes:&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;elf.h&amp;gt;
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;...&lt;/span&gt;
@@ -62,7 +62,7 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;parsing-the-header-from-scratch&quot;&gt;Parsing the header from scratch&lt;/h2&gt;
-&lt;p&gt;As my system currently are in 64 bits, I will first dump out the first 64 bytes of data from my disk and use &lt;a href=&quot;https://github.com/AandersonL/BlobToChar&quot;&gt;BlobToChar&lt;/a&gt; to built a C array code with the header, with this dump I can load in my code and parse that quickly.&lt;/p&gt;
+&lt;p&gt;As my system currently is in 64 bits, I will first dump out the first 64 bytes of data from my disk and use &lt;a href=&quot;https://github.com/AandersonL/BlobToChar&quot;&gt;BlobToChar&lt;/a&gt; to built a C array code with the header. With this dump I can load the header in my code and parse it quickly.&lt;/p&gt;
 
 &lt;p&gt;First 64 bytes (Header):&lt;/p&gt;
 
@@ -87,7 +87,7 @@ unsigned char buff[] = {0x7f,0x45,0x4c,0x46,0x2,0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,
 unsigned int buff_size = 64;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;The parse code can ben written as:&lt;/p&gt;
+&lt;p&gt;The parse code can be written as:&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;elf.h&amp;gt;
 #include &amp;lt;stdio.h&amp;gt;
@@ -102,7 +102,7 @@ unsigned int buff_size = 64;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;As structs are just aligned bytes in memory, we can use the struct &lt;strong&gt;&lt;em&gt;Elf64_Ehdr&lt;/em&gt;&lt;/strong&gt; to parse this raw bytes, with this we can access the elf header internal struct, in the above example I printed the &lt;strong&gt;&lt;em&gt;e_indent&lt;/em&gt;&lt;/strong&gt;, which is an array with some basic information with the file itself, this are the first 16 bytes of this &lt;strong&gt;&lt;em&gt;buf&lt;/em&gt;&lt;/strong&gt; variable, and the very first 4 bytes: &lt;strong&gt;&lt;em&gt;0x7f,0x45,0x4c,0x46&lt;/em&gt;&lt;/strong&gt; contains the ‘ELF’ string starting from the second position.&lt;/p&gt;
+&lt;p&gt;As structs are just aligned bytes in memory, we can use the struct &lt;strong&gt;&lt;em&gt;Elf64_Ehdr&lt;/em&gt;&lt;/strong&gt; to parse these raw bytes, with this we can access the elf header internal struct. In the above example I printed the &lt;strong&gt;&lt;em&gt;e_indent&lt;/em&gt;&lt;/strong&gt;, which is an array with some basic information on the file itself, stored in the first 16 bytes of the &lt;strong&gt;&lt;em&gt;buf&lt;/em&gt;&lt;/strong&gt; variable. The very first 4 bytes: &lt;strong&gt;&lt;em&gt;0x7f,0x45,0x4c,0x46&lt;/em&gt;&lt;/strong&gt; contains the ‘ELF’ string starting from the second position.&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;parseheader&lt;/span&gt;                                                                              
 &lt;span class=&quot;n&quot;&gt;Magic&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ELF&lt;/span&gt;
@@ -111,9 +111,9 @@ unsigned int buff_size = 64;
 
 &lt;h2 id=&quot;example-patching-sections-names&quot;&gt;Example: Patching sections names&lt;/h2&gt;
 
-&lt;p&gt;Let’s make a cool example, let’s use a change the &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt; section name to another thing, this section holds all the executable code in the file.&lt;/p&gt;
+&lt;p&gt;Let’s make a cool example, let’s change the &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt; section name to another thing. This section holds all the executable code in the file.&lt;/p&gt;
 
-&lt;p&gt;In order to make that possible, we need to have access to the string table struct, which hold a array of strings with the &lt;strong&gt;&lt;em&gt;0x00&lt;/em&gt;&lt;/strong&gt; byte as delimiter.&lt;/p&gt;
+&lt;p&gt;In order to make that possible, we need to have access to the string table struct, which holds an array of strings with the &lt;strong&gt;&lt;em&gt;0x00&lt;/em&gt;&lt;/strong&gt; byte as delimiter.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/felflib/string_table.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
@@ -133,13 +133,13 @@ unsigned int buff_size = 64;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Elf64_Shdr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;With this struct in our hands, we just need to get the index of the section name (sh_name) and change by something else, notice that if we want to make the name greater or less then the real one, we will have to reshape this array and change all the sections and address information to maintain the file integrity, in order to make this simple as possible I will just change the &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt; name to &lt;strong&gt;&lt;em&gt;.etxt&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;With this struct in our hands, we just need to get the index of the section name (&lt;code class=&quot;highlighter-rouge&quot;&gt;sh_name&lt;/code&gt;) and change it to something else. Notice that if we want to make the name greater or less then the real one, we will have to resize this array and change all the sections and address information to maintain the file integrity, in order to make this simple as possible I will just change the &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt; name to &lt;strong&gt;&lt;em&gt;.etxt&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;loading-the-entire-file-in-memory&quot;&gt;Loading the entire file in memory&lt;/h3&gt;
 
-&lt;p&gt;Before we continue, let’s make a real code for this task and for that we need to load the file data in our memory, just like a loader will do.&lt;/p&gt;
+&lt;p&gt;Before we continue, let’s make some real code for this task and for that we need to load the file data in our memory, just like a loader would.&lt;/p&gt;
 
-&lt;p&gt;For map files in memory in Linux, we will use the function &lt;a href=&quot;https://www.man7.org/linux/man-pages/man2/mmap.2.html&quot;&gt;mmap&lt;/a&gt; that will create a in &lt;strong&gt;&lt;em&gt;memory mapping&lt;/em&gt;&lt;/strong&gt; to a given &lt;a href=&quot;https://en.wikipedia.org/wiki/File_descriptor&quot;&gt;file descriptor&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;To map files in memory in Linux, we will use the function &lt;a href=&quot;https://www.man7.org/linux/man-pages/man2/mmap.2.html&quot;&gt;mmap&lt;/a&gt; that will create a in &lt;strong&gt;&lt;em&gt;memory mapping&lt;/em&gt;&lt;/strong&gt; to a given &lt;a href=&quot;https://en.wikipedia.org/wiki/File_descriptor&quot;&gt;file descriptor&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Function definition:&lt;/p&gt;
 
@@ -218,15 +218,15 @@ unsigned int buff_size = 64;
 
 &lt;h3 id=&quot;finding-the-section-string-table&quot;&gt;Finding the section string table&lt;/h3&gt;
 
-&lt;p&gt;Ok, now let’s start the real job to get the section &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt; his name, In order to accomplish that we need the the first entry in the section array structure and get the total bytes used by this array, all this informations can be found in the elf header in the following fields:&lt;/p&gt;
+&lt;p&gt;Ok, now let’s start the real job to get the section named &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt;. In order to accomplish that we need the first entry in the &lt;strong&gt;section array&lt;/strong&gt; structure and get the total bytes used by this array, all this information can be found in the following field of the &lt;strong&gt;elf header&lt;/strong&gt;:&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;e_shnum - Holds the number of sections that our ELF file has&lt;/li&gt;
-  &lt;li&gt;e_shentsize - Holds the total raw size of each section&lt;/li&gt;
-  &lt;li&gt;e_shoff - Holds the offset of the first entry in the array&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;e_shnum&lt;/code&gt; - Holds the number of sections that our ELF file has&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;e_shentsize&lt;/code&gt; - Holds the total raw size of each section&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;e_shoff&lt;/code&gt; - Holds the offset of the first entry in the array&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the &lt;strong&gt;&lt;em&gt;e_shoff&lt;/em&gt;&lt;/strong&gt; and then create a &lt;strong&gt;&lt;em&gt;for&lt;/em&gt;&lt;/strong&gt; loop where each “jump” is the index * e_shentsize, that way we can jump in each element of the array, after reach the .text section we can get where in the string table his name is defined.&lt;/p&gt;
+&lt;p&gt;Knowing all that, we can calculate where the section array starts by getting the address of the mapped file + the &lt;strong&gt;&lt;em&gt;e_shoff&lt;/em&gt;&lt;/strong&gt; and then create a &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop where each “jump” is the index * &lt;code class=&quot;highlighter-rouge&quot;&gt;e_shentsize&lt;/code&gt;, that way we can jump in each element of the array, after reaching the .text section we can get where in the string table it’s name is defined.&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Elf64_Ehdr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elf_header&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Elf64_Ehdr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 &lt;span class=&quot;kt&quot;&gt;uint16_t&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_sections&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elf_header&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e_shnum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
@@ -242,14 +242,14 @@ unsigned int buff_size = 64;
 
 &lt;p&gt;Your numbers might differ based in the file that are you using and the mapped address that is used to calculate the entry of the array.&lt;/p&gt;
 
-&lt;p&gt;Now, we need to find the string table that will be used as an array, for our lucky index string table in the section array iseasily found in the ELF header in the field &lt;strong&gt;&lt;em&gt;e_shstrndx&lt;/em&gt;&lt;/strong&gt;, to find the address using this index we just need to get the address of the first entry in the array and multiple the index with the size of each section.&lt;/p&gt;
+&lt;p&gt;Now, we need to find the string table that will be used as an array, lucky for us, the index string table in the section array is easily found in the ELF header, in the field &lt;strong&gt;&lt;em&gt;e_shstrndx&lt;/em&gt;&lt;/strong&gt;, to find the address using this index we just need to get the address of the first entry in the array and multiple the index with the size of each section.&lt;/p&gt;
 
 &lt;p&gt;pseudo-code:&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;string_table_address = (index * section_size) + first_entry_address
 or
 string_table_address = section_size) + section
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;Or even better, we can just get the first section address and just add the &lt;strong&gt;&lt;em&gt;section_size&lt;/em&gt;&lt;/strong&gt;, if you are familiar in how array really works in memory, this will be easy to understand.&lt;/p&gt;
+&lt;p&gt;Or even better, we can just get the first section address and just add the &lt;strong&gt;&lt;em&gt;section_size&lt;/em&gt;&lt;/strong&gt;, if you are familiar in how an array really works in memory, this will be easy to understand.&lt;/p&gt;
 
 &lt;p&gt;C code:&lt;/p&gt;
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;Elf64_Shdr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;string_table_section&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Elf64_Shdr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint64_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;section&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint64_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;section_size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;elf_header&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;e_shstrndx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
@@ -280,7 +280,7 @@ string_table_address = section_size) + section
 
 &lt;h3 id=&quot;changing-the-text-name&quot;&gt;Changing the .text name&lt;/h3&gt;
 
-&lt;p&gt;Now, it’s pretty simple, we can modify the name directly and as this file is mapped in memory in read-write mode our changes will be flushed direct in the diskfile, take a look:&lt;/p&gt;
+&lt;p&gt;Now, it’s pretty simple, we can modify the name directly and as this file is mapped in memory in read-write mode our changes will be flushed directly in the disk file, take a look:&lt;/p&gt;
 
 &lt;div class=&quot;language-c highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;num_sections&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;section&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Elf64_Shdr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;uint64_t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;section&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;section_size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
@@ -306,7 +306,7 @@ string_table_address = section_size) + section
 
 &lt;p&gt;A couple months, I wanted to build a simple program that extract section hashs of a bunch of elf files, I also wanted to write that in C++ because it’s a languange that I enjoy, and I want to write everything from &lt;strong&gt;&lt;em&gt;scratch&lt;/em&gt;&lt;/strong&gt; without any helper library.&lt;/p&gt;
 
-&lt;p&gt;My project don’t worked the way I wanted and I just abandoned that, but I saw me with a new a and cool library in C++ to work with elf files, that’s the story.&lt;/p&gt;
+&lt;p&gt;My project didn’t worked the way I wanted and I just abandoned it, but I developed new cool library in C++ to work with elf files, that’s the story.&lt;/p&gt;
 
 &lt;p&gt;The name &lt;strong&gt;&lt;em&gt;Felf&lt;/em&gt;&lt;/strong&gt; came from the &lt;a href=&quot;https://nasm.us/&quot;&gt;nasm&lt;/a&gt; command parameters, if you will want to build a elf file from a nasm file, you pass the paremeter &lt;strong&gt;&lt;em&gt;-f&lt;/em&gt;&lt;/strong&gt; with value &lt;strong&gt;&lt;em&gt;elf&lt;/em&gt;&lt;/strong&gt;, almost everyone use that two together so the whole command become &lt;strong&gt;&lt;em&gt;nasm -felf…&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
 
@@ -322,7 +322,7 @@ cd felf &amp;amp;&amp;amp; ./install.sh
 
 &lt;h2 id=&quot;first-time-using&quot;&gt;First time using&lt;/h2&gt;
 
-&lt;p&gt;Let’s start by the simpliest operation possible, load and print the elf magic number, just like we did before from scratch, in felf this is very simple to perform.&lt;/p&gt;
+&lt;p&gt;Let’s start by the simplest operation possible, load and print the elf magic number, just like we did before from scratch, in felf this is very simple to perform.&lt;/p&gt;
 
 &lt;div class=&quot;language-cpp highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#include &amp;lt;felf/ELF.h&amp;gt;
 #include &amp;lt;iostream&amp;gt;
@@ -354,7 +354,7 @@ cd felf &amp;amp;&amp;amp; ./install.sh
   &lt;li&gt;Almost all internal structures are now mapped inside the ELF object&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;When opening a file, you must tells felf how to map this file in memory, as this is using &lt;a href=&quot;https://www.man7.org/linux/man-pages/man2/mmap.2.html&quot;&gt;mmap&lt;/a&gt; from behind the scenes:&lt;/p&gt;
+&lt;p&gt;When opening a file, you must tell felf how to map this file in memory, as this is using &lt;a href=&quot;https://www.man7.org/linux/man-pages/man2/mmap.2.html&quot;&gt;mmap&lt;/a&gt; from behind the scenes:&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;
@@ -404,7 +404,7 @@ somehow, this will reflect directly in the file.&lt;/p&gt;
 			&lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Section name: %s at &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;c_str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
 			&lt;span class=&quot;n&quot;&gt;std&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;0x%x&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sh_offset&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	
+	&lt;span class=&quot;err&quot;&gt;'&lt;/span&gt;
 	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -433,7 +433,7 @@ somehow, this will reflect directly in the file.&lt;/p&gt;
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;Ignoring all the code that load and check the file, the code above it’s pretty straight forward, make a quick lookup at the symbolData map, and extract the raw data of this section to the stdout, with that I will pipe that out to &lt;a href=&quot;https://github.com/radareorg/radare2&quot;&gt;radare2&lt;/a&gt; framework and dissasembly all (print disassembly all aka pdf).&lt;/p&gt;
+&lt;p&gt;Ignoring all the code that load and check the file, the code above it’s pretty straight forward, make a quick lookup at the symbolData map, and extract the raw data of this symbol to the stdout, with that I will pipe that out to &lt;a href=&quot;https://github.com/radareorg/radare2&quot;&gt;radare2&lt;/a&gt; framework and disassemble all (print disassembly all aka pdf).&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/felflib/dump_main_to_r2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
@@ -443,7 +443,7 @@ somehow, this will reflect directly in the file.&lt;/p&gt;
 
 &lt;p&gt;Now that we fully understand the power of this simple library, let’s build something cool from scratch, a ELF disassembler, for this we will need to write our asm parser or use a already created library for that, I will use the &lt;a href=&quot;https://github.com/aquynh/capstone&quot;&gt;Capstone engine&lt;/a&gt; to perform that for us, so go grab that before continue (if you are trying the examples above), and take a look at a simple &lt;a href=&quot;https://www.capstone-engine.org/lang_c.html&quot;&gt;example&lt;/a&gt; using this engine.&lt;/p&gt;
 
-&lt;p&gt;In order to disassembly something, we must get the valid instructions that contains the &lt;strong&gt;&lt;em&gt;opcodes&lt;/em&gt;&lt;/strong&gt;, opcode are just a byte that has a meaning in the CPU, and the readable value of this opcode is called &lt;strong&gt;&lt;em&gt;mnemonic&lt;/em&gt;&lt;/strong&gt;, so the opcode &lt;strong&gt;&lt;em&gt;0x55&lt;/em&gt;&lt;/strong&gt;  has the mnemonic &lt;strong&gt;&lt;em&gt;push&lt;/em&gt;&lt;/strong&gt; and the operators &lt;strong&gt;&lt;em&gt;xbp&lt;/em&gt;&lt;/strong&gt; where &lt;strong&gt;&lt;em&gt;x&lt;/em&gt;&lt;/strong&gt; differ based in the arch of the CPU, in x64 it’s &lt;strong&gt;&lt;em&gt;rbp&lt;/em&gt;&lt;/strong&gt; and x86 &lt;strong&gt;&lt;em&gt;ebp&lt;/em&gt;&lt;/strong&gt;, in order words, if one executable section of our memory contains any raw byte and the Instruction pointer are pointing to that area, our CPU will read this instructions and execute that.&lt;/p&gt;
+&lt;p&gt;In order to disassemble something, we must get the valid instructions that contains the &lt;strong&gt;&lt;em&gt;opcodes&lt;/em&gt;&lt;/strong&gt;, opcode are just a byte that has a meaning in the CPU, and the readable value of this opcode is called &lt;strong&gt;&lt;em&gt;mnemonic&lt;/em&gt;&lt;/strong&gt;, so the opcode &lt;strong&gt;&lt;em&gt;0x55&lt;/em&gt;&lt;/strong&gt;  has the mnemonic &lt;strong&gt;&lt;em&gt;push&lt;/em&gt;&lt;/strong&gt; and the operators &lt;strong&gt;&lt;em&gt;xbp&lt;/em&gt;&lt;/strong&gt; where &lt;strong&gt;&lt;em&gt;x&lt;/em&gt;&lt;/strong&gt; differ based in the arch of the CPU, in x64 it’s &lt;strong&gt;&lt;em&gt;rbp&lt;/em&gt;&lt;/strong&gt; and x86 &lt;strong&gt;&lt;em&gt;ebp&lt;/em&gt;&lt;/strong&gt;, in order words, if one executable section of our memory contains any raw byte and the Instruction pointer are pointing to that area, our CPU will read this instructions and execute that.&lt;/p&gt;
 
 &lt;p&gt;For the sake of simplicity, I will disassembly the &lt;strong&gt;&lt;em&gt;.text&lt;/em&gt;&lt;/strong&gt; section of a elf file, I will use the sectionTable map to extract the raw data of this section and use the capstone engine to disassembly that.&lt;/p&gt;
 
@@ -489,7 +489,7 @@ somehow, this will reflect directly in the file.&lt;/p&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;This function, start the capstone engine in x86 architecture and in x64 mode, then we just send the whole data that we want to disassembly and the &lt;strong&gt;&lt;em&gt;cs_insn&lt;/em&gt;&lt;/strong&gt; struct pointer, that hold informations like the mnemonic value and operators values.&lt;/p&gt;
+&lt;p&gt;This function, starts the capstone engine in x86 architecture and in x64 mode, then we just send the whole data that we want to disassemble and the &lt;strong&gt;&lt;em&gt;cs_insn&lt;/em&gt;&lt;/strong&gt; struct pointer, that holds information like the mnemonic value and operators values.&lt;/p&gt;
 
 &lt;p&gt;Compile:&lt;/p&gt;
 
@@ -501,15 +501,15 @@ somehow, this will reflect directly in the file.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://aandersonl.github.io/assets/images/felflib/elf_disas.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Ready to build your own reverse engineers tools ?&lt;/p&gt;
+&lt;p&gt;Ready to build your own reverse engineering tools ?&lt;/p&gt;
 
 &lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
 
-&lt;p&gt;You see that this tiny and little x64 elf parser can do, and it’s have a very simple code to parse everything in C++ structures, I hope that this article helped you to understand more about the ELF format and executable formats in general.&lt;/p&gt;
+&lt;p&gt;You see that this tiny and little x64 elf parser can do, and it’s has a very simple code to parse everything in C++ structures, I hope that this article helped you to understand more about the ELF format and executable formats in general.&lt;/p&gt;
 
-&lt;p&gt;This project has a lot potential to grow up, and I have a lot ideas like: Python  and Golang bindings, Code refactore and more support for differents architectures.&lt;/p&gt;
+&lt;p&gt;This project has a lot potential to grow up, and I have a lot ideas like: Python and Golang bindings, Code refactoring and more support for different architectures.&lt;/p&gt;
 
-&lt;p&gt;Thanks for reading all this, and if this article has any mistake, fell free to open a issue in the felf project and I will fix.&lt;/p&gt;</content><author><name></name></author><category term="programming" /><category term="cybersec" /><category term="linux" /><category term="c++" /><summary type="html">A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was have a C++ way to work in ELF files using STL structures like vector, unordered maps and so on.</summary></entry><entry><title type="html">Data exfiltration: From shellcode to flag</title><link href="https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7/" rel="alternate" type="text/html" title="Data exfiltration: From shellcode to flag" /><published>2020-10-23T23:25:36+00:00</published><updated>2020-10-23T23:25:36+00:00</updated><id>https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7</id><content type="html" xml:base="https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7/">&lt;p&gt;At Flare 7th edition, my favorite challenge was &lt;strong&gt;&lt;em&gt;re_crowd&lt;/em&gt;&lt;/strong&gt;, this challenge was really close to a very real world scenario, with just an &lt;strong&gt;&lt;em&gt;pcap&lt;/em&gt;&lt;/strong&gt; we are able to understand how the company was attacked, what exploit was used and what shellcode was sent, literally: &lt;strong&gt;&lt;em&gt;Why, what and how ?&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Thanks for reading all this, and if this article has any mistake, fell free to open a issue in the felf project and I will fix.&lt;/p&gt;</content><author><name></name></author><category term="programming" /><category term="cybersec" /><category term="linux" /><category term="c++" /><summary type="html">A couple months ago I created felf, a library to parse ELF files into C++ structures, the reason for this was to have a way in C++ to work on ELF files using STL structures like vector, unordered maps and so on.</summary></entry><entry><title type="html">Data exfiltration: From shellcode to flag</title><link href="https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7/" rel="alternate" type="text/html" title="Data exfiltration: From shellcode to flag" /><published>2020-10-23T23:25:36+00:00</published><updated>2020-10-23T23:25:36+00:00</updated><id>https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7</id><content type="html" xml:base="https://aandersonl.github.io/Retrieving-the-exfiltrated-flag-flareon7/">&lt;p&gt;At Flare 7th edition, my favorite challenge was &lt;strong&gt;&lt;em&gt;re_crowd&lt;/em&gt;&lt;/strong&gt;, this challenge was really close to a very real world scenario, with just an &lt;strong&gt;&lt;em&gt;pcap&lt;/em&gt;&lt;/strong&gt; we are able to understand how the company was attacked, what exploit was used and what shellcode was sent, literally: &lt;strong&gt;&lt;em&gt;Why, what and how ?&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;why-is-this-useful-&quot;&gt;Why is this useful ?&lt;/h1&gt;
 
