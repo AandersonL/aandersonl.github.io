@@ -29,7 +29,7 @@ Imagine ELF files as a pre-fabricated home, the way the file is on disk contains
 
 The structure is the follow:
 
-![]({{site.url}}{{page.images_prefix}}elf.svg){:height="50%" width="50%"}
+![]({{site.url}}{{page.images_prefix}}elf.png){:height="50%" width="50%"}
 
 
 Everything is pretty straight forward:
